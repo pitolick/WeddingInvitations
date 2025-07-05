@@ -19,4 +19,14 @@
 # Development Rules:
 # - All commit messages must be written in Japanese
 # - Use descriptive commit messages that explain what was changed and why
-# - Follow conventional commit format when possible 
+# - Follow conventional commit format when possible
+# - Fix all Linter Errors before committing
+# - Ensure code quality by resolving all linting issues
+# - Run linting checks before pushing code
+
+# Chat Session Rules:
+# - When a new chat session starts, ALWAYS check the files in docs/chat-prompts/ first
+# - Review initial-setup.md to understand current project status
+# - Follow development-guidelines.md for coding standards
+# - Use figma-integration.md for Figma-related tasks
+# - Ensure project context is properly understood before proceeding 
