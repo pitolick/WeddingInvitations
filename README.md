@@ -37,8 +37,7 @@ Figma-Context-MCPを使用して、Figmaデザインから結婚式のWeb招待�
 
 ## プロジェクト構造
 
-```
-WeddingInvitations/
+``` プロジェクト構造
 ├── .cursorrules          # Cursor設定ファイル
 ├── env.example           # 環境変数サンプル
 ├── package.json          # プロジェクト設定
@@ -54,4 +53,4 @@ WeddingInvitations/
 ## 注意事項
 
 - Figma APIキーは機密情報です。公開リポジトリにコミットしないでください
-- 環境変数ファイル（.env）は.gitignoreに含めることを推奨します 
+- 環境変数ファイル（.env）は.gitignoreに含めることを推奨します
