@@ -1,0 +1,22 @@
+# Cursor Configuration for Figma-Context-MCP
+# This file configures the Figma MCP server for Cursor
+
+# MCP Server Configuration
+{
+  "mcpServers": {
+    "Framelink Figma MCP": {
+      "command": "npx",
+      "args": ["-y", "figma-developer-mcp", "--figma-api-key=YOUR_FIGMA_API_KEY", "--stdio"]
+    }
+  }
+}
+
+# Instructions:
+# 1. Replace YOUR_FIGMA_API_KEY with your actual Figma API key
+# 2. Get your Figma API key from: https://www.figma.com/settings
+# 3. Restart Cursor after making changes
+
+# Development Rules:
+# - All commit messages must be written in Japanese
+# - Use descriptive commit messages that explain what was changed and why
+# - Follow conventional commit format when possible 
