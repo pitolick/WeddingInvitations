@@ -1,23 +1,37 @@
 {
-  "name": "weddinginvitations",
+  "name": "wedding-invitations",
   "version": "1.0.0",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pitolick/WeddingInvitations.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/pitolick/WeddingInvitations/issues"
   },
   "homepage": "https://github.com/pitolick/WeddingInvitations#readme",
-  "description": "",
   "dependencies": {
-    "figma-developer-mcp": "^0.4.3"
+    "@octokit/rest": "^22.0.0",
+    "next": "15.3.5",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.5",
+    "figma-developer-mcp": "^0.4.3",
+    "tailwindcss": "^4",
+    "typescript": "^5"
   }
 }
