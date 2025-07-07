@@ -12,8 +12,8 @@
 6. **テスト**: Linter Errors の確認と修正
 7. **コミット**: 日本語メッセージでコミット（`fixes #{issue番号}`を含める）
 8. **push**: コミット完了後に push
-9. **PR 作成**: 実装完了後に Pull Request を作成
-10. **レビュー**: コードレビューを実施し、必要に応じて修正
+9. **PR 作成**: 実装完了後に Pull Request を作成（GitHub Copilot をレビュー依頼者に設定）
+10. **レビュー**: GitHub Copilot によるコードレビューを実施し、必要に応じて修正
 11. **マージ**: レビュー完了後に main ブランチにマージ
 12. **issue 更新**: 完了した issue をクローズ
 
@@ -50,9 +50,19 @@
 
 ### フロントエンド
 
-- **HTML5**: セマンティックな構造
-- **CSS3**: レスポンシブデザイン、Flexbox/Grid
-- **JavaScript**: モダン ES6+構文
+- **Next.js**: App Router、Server Components（最新版）
+- **TypeScript**: 型安全性の確保
+- **Tailwind CSS**: ユーティリティファースト CSS
+- **Framer Motion**: アニメーションライブラリ
+- **React Hook Form**: フォーム管理
+
+### バックエンド
+
+- **Next.js**: API Routes（最新版）
+- **TypeScript**: 型安全性の確保
+- **microCMS**: コンテンツ管理システム
+- **Google Apps Script**: RSVP データ処理
+- **Google Maps API**: 地図表示
 
 ### Figma 連携
 
@@ -108,7 +118,7 @@
 - [ ] テストが通っている
 - [ ] コミットメッセージが適切
 - [ ] PR の説明に issue 番号を含める
-- [ ] レビュー依頼を適切な人に送る
+- [ ] GitHub Copilot をレビュー依頼者に設定
 
 ### マージ前確認
 
