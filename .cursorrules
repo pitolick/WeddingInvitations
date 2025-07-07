@@ -56,11 +56,9 @@
 
 # Development Workflow Rules:
 
-# - Always follow the GitHub Flow: issue → branch → commit → CodeRabbit review → push → PR → review → merge
+# - Always follow the GitHub Flow: issue → branch → commit → push → PR → review → merge
 
-# - Use CodeRabbit extension in Cursor for automated code review before push
-
-# - Fix CodeRabbit feedback before pushing code
+# - Ensure code quality by resolving all linting issues before push
 
 # - Include issue number in commit messages (fixes #123)
 
