@@ -12,9 +12,10 @@
 },
 "GitHub MCP": {
 "command": "npx",
-"args": ["-y", "@modelcontextprotocol/server-github", "--stdio"],
+"args": ["-y", "github-mcp-custom", "--stdio"],
 "env": {
-"GITHUB_TOKEN": "${GITHUB_TOKEN}"
+"GITHUB_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}",
+"GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
 }
 }
 }
