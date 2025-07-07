@@ -53,3 +53,17 @@
 # - Use figma-integration.md for Figma-related tasks
 
 # - Ensure project context is properly understood before proceeding
+
+# Development Workflow Rules:
+
+# - Always follow the GitHub Flow: issue → branch → commit → CodeRabbit review → push → PR → review → merge
+
+# - Use CodeRabbit extension in Cursor for automated code review before push
+
+# - Fix CodeRabbit feedback before pushing code
+
+# - Include issue number in commit messages (fixes #123)
+
+# - Create feature branches with format: feature/issue-{number}-{title}
+
+# - Ensure all linting errors are resolved before committing
