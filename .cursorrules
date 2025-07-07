@@ -12,10 +12,9 @@
 },
 "GitHub MCP": {
 "command": "npx",
-"args": ["-y", "github-mcp-custom", "--stdio"],
+"args": ["-y", "@modelcontextprotocol/server-github", "--stdio"],
 "env": {
-"GITHUB_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}",
-"GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+"GITHUB_TOKEN": "${GITHUB_TOKEN}"
 }
 }
 }
@@ -66,3 +65,15 @@
 # - Create feature branches with format: feature/issue-{number}-{title}
 
 # - Ensure all linting errors are resolved before committing
+
+# GitHub Operations Rules:
+
+# - Use GitHub MCP for all GitHub operations (issues, PRs, repositories)
+
+# - Do not use direct GitHub API calls or curl commands for GitHub operations
+
+# - Use GitHub MCP to create, update, and manage issues
+
+# - Use GitHub MCP to search and retrieve repository information
+
+# - Follow the GitHub MCP setup guide in docs/chat-prompts/github-mcp-commands.md
