@@ -1,133 +1,144 @@
+/**
+ * @description 画像ユーティリティ関数のテスト
+ * @author WeddingInvitations
+ * @since 1.0.0
+ */
+
 import {
-  getResponsiveImagePath,
   createResponsiveImage,
-  getBreakpoint,
-  generateSrcSet,
-  generateSizes,
+  getResponsiveImagePath,
+  getImageOptimization,
+  getLazyLoadConfig,
+  getImageErrorHandling,
 } from "../index";
+import { ResponsiveImage } from "../index";
 
-describe("Responsive Image Utils", () => {
-  describe("getResponsiveImagePath", () => {
-    it("should generate correct mobile image path", () => {
-      const path = getResponsiveImagePath("/images/sections/mv/hero", "mobile");
-      expect(path).toBe("/images/sections/mv/hero-mobile.webp");
+/**
+ * @description createResponsiveImage関数のテスト
+ */
+describe("createResponsiveImage", () => {
+  it("レスポンシブ画像オブジェクトを正しく作成する", () => {
+    const basePath = "/images/sections/mv/hero";
+    const description = "ヒーロー画像";
+
+    const result = createResponsiveImage(basePath, description);
+
+    expect(result).toEqual({
+      description: "ヒーロー画像",
+      mobile: "/images/sections/mv/hero-mobile.webp",
+      tablet: "/images/sections/mv/hero-tablet.webp",
+      desktop: "/images/sections/mv/hero-desktop.webp",
+      alt: "ヒーロー画像",
     });
+  });
+});
 
-    it("should generate correct tablet image path", () => {
-      const path = getResponsiveImagePath("/images/sections/mv/hero", "tablet");
-      expect(path).toBe("/images/sections/mv/hero-tablet.webp");
-    });
+/**
+ * @description getResponsiveImagePath関数のテスト
+ */
+describe("getResponsiveImagePath", () => {
+  const mockResponsiveImage: ResponsiveImage = {
+    description: "テスト画像",
+    mobile: "/images/test-mobile.webp",
+    tablet: "/images/test-tablet.webp",
+    desktop: "/images/test-desktop.webp",
+    alt: "テスト画像",
+  };
 
-    it("should generate correct desktop image path", () => {
-      const path = getResponsiveImagePath(
-        "/images/sections/mv/hero",
-        "desktop"
-      );
-      expect(path).toBe("/images/sections/mv/hero-desktop.webp");
-    });
+  it("モバイル幅でモバイル画像パスを返す", () => {
+    const result = getResponsiveImagePath(mockResponsiveImage, 375);
+    expect(result).toBe("/images/test-mobile.webp");
+  });
 
-    it("should use custom extension", () => {
-      const path = getResponsiveImagePath(
-        "/images/sections/mv/hero",
-        "mobile",
-        "png"
-      );
-      expect(path).toBe("/images/sections/mv/hero-mobile.png");
+  it("タブレット幅でタブレット画像パスを返す", () => {
+    const result = getResponsiveImagePath(mockResponsiveImage, 768);
+    expect(result).toBe("/images/test-tablet.webp");
+  });
+
+  it("デスクトップ幅でデスクトップ画像パスを返す", () => {
+    const result = getResponsiveImagePath(mockResponsiveImage, 1200);
+    expect(result).toBe("/images/test-desktop.webp");
+  });
+});
+
+/**
+ * @description getImageOptimization関数のテスト
+ */
+describe("getImageOptimization", () => {
+  it("デフォルト設定で最適化設定を返す", () => {
+    const result = getImageOptimization();
+
+    expect(result).toEqual({
+      priority: false,
+      sizes: {},
+      quality: 85,
+      format: "webp",
     });
   });
 
-  describe("createResponsiveImage", () => {
-    it("should create responsive image object", () => {
-      const responsiveImage = createResponsiveImage(
-        "/images/sections/mv/hero",
-        "Hero image"
-      );
+  it("カスタム設定で最適化設定を返す", () => {
+    const priority = true;
+    const sizes = { mobile: "100vw", desktop: "50vw" };
 
-      expect(responsiveImage).toEqual({
-        mobile: "/images/sections/mv/hero-mobile.webp",
-        tablet: "/images/sections/mv/hero-tablet.webp",
-        desktop: "/images/sections/mv/hero-desktop.webp",
-        alt: "Hero image",
-      });
+    const result = getImageOptimization(priority, sizes);
+
+    expect(result).toEqual({
+      priority: true,
+      sizes: { mobile: "100vw", desktop: "50vw" },
+      quality: 85,
+      format: "webp",
     });
+  });
+});
 
-    it("should use custom extension", () => {
-      const responsiveImage = createResponsiveImage(
-        "/images/sections/mv/hero",
-        "Hero image",
-        "png"
-      );
+/**
+ * @description getLazyLoadConfig関数のテスト
+ */
+describe("getLazyLoadConfig", () => {
+  it("デフォルト設定で遅延読み込み設定を返す", () => {
+    const result = getLazyLoadConfig();
 
-      expect(responsiveImage).toEqual({
-        mobile: "/images/sections/mv/hero-mobile.png",
-        tablet: "/images/sections/mv/hero-tablet.png",
-        desktop: "/images/sections/mv/hero-desktop.png",
-        alt: "Hero image",
-      });
+    expect(result).toEqual({
+      loading: "lazy",
+      threshold: 0.1,
     });
   });
 
-  describe("getBreakpoint", () => {
-    it("should return mobile for width <= 640", () => {
-      expect(getBreakpoint(320)).toBe("mobile");
-      expect(getBreakpoint(640)).toBe("mobile");
-    });
+  it("カスタム閾値で遅延読み込み設定を返す", () => {
+    const threshold = 0.5;
+    const result = getLazyLoadConfig(threshold);
 
-    it("should return tablet for width 641-1024", () => {
-      expect(getBreakpoint(641)).toBe("tablet");
-      expect(getBreakpoint(768)).toBe("tablet");
-      expect(getBreakpoint(1024)).toBe("tablet");
-    });
-
-    it("should return desktop for width > 1024", () => {
-      expect(getBreakpoint(1025)).toBe("desktop");
-      expect(getBreakpoint(1920)).toBe("desktop");
+    expect(result).toEqual({
+      loading: "lazy",
+      threshold: 0.5,
     });
   });
+});
 
-  describe("generateSrcSet", () => {
-    it("should generate correct srcset string", () => {
-      const responsiveImage = {
-        mobile: "/images/sections/mv/hero-mobile.webp",
-        tablet: "/images/sections/mv/hero-tablet.webp",
-        desktop: "/images/sections/mv/hero-desktop.webp",
-        alt: "Hero image",
-      };
+/**
+ * @description getImageErrorHandling関数のテスト
+ */
+describe("getImageErrorHandling", () => {
+  it("エラーハンドリング設定を返す", () => {
+    const fallbackSrc = "/images/fallback.webp";
+    const result = getImageErrorHandling(fallbackSrc);
 
-      const srcSet = generateSrcSet(responsiveImage);
-      expect(srcSet).toBe(
-        "/images/sections/mv/hero-mobile.webp 640w, /images/sections/mv/hero-tablet.webp 1024w, /images/sections/mv/hero-desktop.webp 1920w"
-      );
-    });
+    expect(result).toHaveProperty("onError");
+    expect(typeof result.onError).toBe("function");
   });
 
-  describe("generateSizes", () => {
-    it("should generate sizes with all breakpoints", () => {
-      const sizes = {
-        mobile: "100vw",
-        tablet: "50vw",
-        desktop: "33vw",
-      };
+  it("エラーハンドラーが正しく動作する", () => {
+    const fallbackSrc = "/images/fallback.webp";
+    const { onError } = getImageErrorHandling(fallbackSrc);
 
-      const sizesAttr = generateSizes(sizes);
-      expect(sizesAttr).toBe(
-        "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-      );
-    });
+    const mockEvent = {
+      target: {
+        src: "/images/original.webp",
+      },
+    } as React.SyntheticEvent<HTMLImageElement>;
 
-    it("should generate sizes with partial breakpoints", () => {
-      const sizes = {
-        mobile: "100vw",
-        desktop: "50vw",
-      };
+    onError(mockEvent);
 
-      const sizesAttr = generateSizes(sizes);
-      expect(sizesAttr).toBe("(max-width: 640px) 100vw, 50vw");
-    });
-
-    it("should handle empty sizes", () => {
-      const sizesAttr = generateSizes({});
-      expect(sizesAttr).toBe("");
-    });
+    expect(mockEvent.target.src).toBe(fallbackSrc);
   });
 });

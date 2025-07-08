@@ -1,124 +1,117 @@
-// レスポンシブ画像管理ユーティリティ
+/**
+ * @description 画像関連のユーティリティ関数
+ * @author WeddingInvitations
+ * @since 1.0.0
+ */
 
-export type Breakpoint = "mobile" | "tablet" | "desktop";
+import { BREAKPOINTS } from "@/app/lib/constants";
 
+/**
+ * @description レスポンシブ画像オブジェクトの型定義
+ * @interface ResponsiveImage
+ * @since 1.0.0
+ */
 export interface ResponsiveImage {
+  /** 画像の説明 */
+  description: string;
+  /** モバイル用画像パス */
   mobile: string;
+  /** タブレット用画像パス */
   tablet: string;
+  /** デスクトップ用画像パス */
   desktop: string;
+  /** 代替テキスト */
   alt: string;
 }
 
 /**
- * ブレークポイントに基づいて適切な画像パスを取得
- * @description 指定されたベースパスとブレークポイントから、適切な画像パスを生成します
- * @param basePath - 画像のベースパス（例: '/images/sections/mv/hero'）
- * @param breakpoint - ブレークポイント（'mobile' | 'tablet' | 'desktop'）
- * @param extension - ファイル拡張子（デフォルト: 'webp'）
- * @returns 生成された画像パス
+ * @description レスポンシブ画像オブジェクトを作成する
+ * @param basePath - 画像のベースパス
+ * @param description - 画像の説明
+ * @returns ResponsiveImage
  * @example
- * ```typescript
- * const mobilePath = getResponsiveImagePath('/images/sections/mv/hero', 'mobile');
- * // 結果: '/images/sections/mv/hero-mobile.webp'
- * ```
- */
-export const getResponsiveImagePath = (
-  basePath: string,
-  breakpoint: Breakpoint,
-  extension: string = "webp"
-): string => {
-  return `${basePath}-${breakpoint}.${extension}`;
-};
-
-/**
- * レスポンシブ画像オブジェクトを生成
- * @description 指定されたベースパスと代替テキストから、モバイル・タブレット・デスクトップ用の画像パスを持つオブジェクトを生成します
- * @param basePath - 画像のベースパス（例: '/images/sections/mv/hero'）
- * @param alt - 画像の代替テキスト
- * @param extension - ファイル拡張子（デフォルト: 'webp'）
- * @returns レスポンシブ画像オブジェクト
- * @example
- * ```typescript
  * const heroImage = createResponsiveImage('/images/sections/mv/hero', 'ヒーロー画像');
- * // 結果: { mobile: '/images/sections/mv/hero-mobile.webp', ... }
- * ```
  */
-export const createResponsiveImage = (
+export function createResponsiveImage(
   basePath: string,
-  alt: string,
-  extension: string = "webp"
-): ResponsiveImage => {
+  description: string
+): ResponsiveImage {
   return {
-    mobile: getResponsiveImagePath(basePath, "mobile", extension),
-    tablet: getResponsiveImagePath(basePath, "tablet", extension),
-    desktop: getResponsiveImagePath(basePath, "desktop", extension),
-    alt,
+    description,
+    mobile: `${basePath}-mobile.webp`,
+    tablet: `${basePath}-tablet.webp`,
+    desktop: `${basePath}-desktop.webp`,
+    alt: description,
   };
-};
+}
 
 /**
- * 現在のブレークポイントを判定
- * @description 指定された画面幅から、適切なブレークポイントを判定します
- * @param width - 画面幅（ピクセル）
- * @returns ブレークポイント（'mobile' | 'tablet' | 'desktop'）
- * @example
- * ```typescript
- * const breakpoint = getBreakpoint(768);
- * // 結果: 'tablet'
- * ```
- */
-export const getBreakpoint = (width: number): Breakpoint => {
-  if (width <= 640) return "mobile";
-  if (width <= 1024) return "tablet";
-  return "desktop";
-};
-
-/**
- * レスポンシブ画像のsrcset文字列を生成
- * @description レスポンシブ画像オブジェクトから、HTMLのsrcset属性用の文字列を生成します
+ * @description 現在のブレークポイントに応じた画像パスを取得する
  * @param responsiveImage - レスポンシブ画像オブジェクト
- * @returns srcset文字列
+ * @param width - 現在の画面幅
+ * @returns string
  * @example
- * ```typescript
- * const srcSet = generateSrcSet(heroImage);
- * // 結果: '/images/sections/mv/hero-mobile.webp 640w, /images/sections/mv/hero-tablet.webp 1024w, ...'
- * ```
+ * const imagePath = getResponsiveImagePath(heroImage, 768);
  */
-export const generateSrcSet = (responsiveImage: ResponsiveImage): string => {
-  return `${responsiveImage.mobile} 640w, ${responsiveImage.tablet} 1024w, ${responsiveImage.desktop} 1920w`;
-};
+export function getResponsiveImagePath(
+  responsiveImage: ResponsiveImage,
+  width: number
+): string {
+  if (width <= BREAKPOINTS.MOBILE) {
+    return responsiveImage.mobile;
+  } else if (width <= BREAKPOINTS.TABLET) {
+    return responsiveImage.tablet;
+  } else {
+    return responsiveImage.desktop;
+  }
+}
 
 /**
- * レスポンシブ画像のsizes属性を生成
- * @description 各ブレークポイントでのサイズ指定から、HTMLのsizes属性用の文字列を生成します
- * @param sizes - 各ブレークポイントでのサイズ指定
- * @returns sizes文字列
+ * @description 画像の最適化設定を取得する
+ * @param priority - 優先読み込みフラグ
+ * @param sizes - サイズ設定
+ * @returns object
  * @example
- * ```typescript
- * const sizes = generateSizes({
- *   mobile: '100vw',
- *   tablet: '50vw',
- *   desktop: '33vw'
- * });
- * // 結果: '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
- * ```
+ * const optimization = getImageOptimization(true, { mobile: '100vw', desktop: '50vw' });
  */
-export const generateSizes = (sizes: {
-  mobile?: string;
-  tablet?: string;
-  desktop?: string;
-}): string => {
-  const parts = [];
+export function getImageOptimization(
+  priority: boolean = false,
+  sizes: Record<string, string> = {}
+) {
+  return {
+    priority,
+    sizes: sizes,
+    quality: 85,
+    format: "webp" as const,
+  };
+}
 
-  if (sizes.mobile) {
-    parts.push(`(max-width: 640px) ${sizes.mobile}`);
-  }
-  if (sizes.tablet) {
-    parts.push(`(max-width: 1024px) ${sizes.tablet}`);
-  }
-  if (sizes.desktop) {
-    parts.push(sizes.desktop);
-  }
+/**
+ * @description 画像の遅延読み込み設定を取得する
+ * @param threshold - 読み込み開始の閾値
+ * @returns object
+ * @example
+ * const lazyLoad = getLazyLoadConfig(0.1);
+ */
+export function getLazyLoadConfig(threshold: number = 0.1) {
+  return {
+    loading: "lazy" as const,
+    threshold,
+  };
+}
 
-  return parts.join(", ");
-};
+/**
+ * @description 画像のエラーハンドリング設定を取得する
+ * @param fallbackSrc - フォールバック画像パス
+ * @returns object
+ * @example
+ * const errorHandling = getImageErrorHandling('/images/fallback.webp');
+ */
+export function getImageErrorHandling(fallbackSrc: string) {
+  return {
+    onError: (event: React.SyntheticEvent<HTMLImageElement>) => {
+      const target = event.target as HTMLImageElement;
+      target.src = fallbackSrc;
+    },
+  };
+}

@@ -1,68 +1,119 @@
-import React from "react";
-import Image from "next/image";
-import { ResponsiveImage, generateSizes } from "@/app/lib/utils/image";
+/**
+ * @description レスポンシブ画像コンポーネント
+ * @author WeddingInvitations
+ * @since 1.0.0
+ */
+
+import React, { useState, useEffect } from "react";
+import { ResponsiveImage, getResponsiveImagePath } from "@/app/lib/utils/image";
 
 /**
- * レスポンシブ画像コンポーネントのプロパティ
- * @description レスポンシブ画像を表示するためのプロパティを定義します
+ * @description レスポンシブ画像コンポーネントのProps型定義
+ * @interface ResponsiveImageComponentProps
+ * @since 1.0.0
  */
-interface ResponsiveImageProps {
+interface ResponsiveImageComponentProps {
   /** レスポンシブ画像オブジェクト */
   responsiveImage: ResponsiveImage;
-  /** CSSクラス名 */
+  /** 追加のCSSクラス */
   className?: string;
-  /** 各ブレークポイントでのサイズ指定 */
-  sizes?: {
-    mobile?: string;
-    tablet?: string;
-    desktop?: string;
-  };
-  /** 優先読み込みフラグ */
+  /** サイズ設定 */
+  sizes?: Record<string, string>;
+  /** 優先読み込みフラグ（Next.js Imageコンポーネント用） */
   priority?: boolean;
-  /** 読み込み方法 */
-  loading?: "lazy" | "eager";
+  /** 遅延読み込み設定 */
+  lazy?: boolean;
+  /** フォールバック画像パス */
+  fallbackSrc?: string;
 }
 
 /**
- * レスポンシブ画像コンポーネント
- * @description デバイスサイズに応じて最適な画像を表示するコンポーネントです
- * @param props - コンポーネントのプロパティ
- * @returns レスポンシブ画像コンポーネント
+ * @description レスポンシブ画像コンポーネント
+ * @param props - コンポーネントのProps
+ * @returns JSX.Element
  * @example
- * ```typescript
  * <ResponsiveImageComponent
  *   responsiveImage={heroImage}
  *   className="w-full h-64 object-cover"
- *   sizes={{ mobile: '100vw', tablet: '100vw', desktop: '50vw' }}
+ *   sizes={{ mobile: "100vw", desktop: "50vw" }}
  *   priority={true}
  * />
- * ```
  */
-export const ResponsiveImageComponent: React.FC<ResponsiveImageProps> = ({
+const ResponsiveImageComponent: React.FC<ResponsiveImageComponentProps> = ({
   responsiveImage,
   className = "",
-  sizes = {
-    mobile: "100vw",
-    tablet: "100vw",
-    desktop: "100vw",
-  },
-  priority = false,
-  loading = "lazy",
+  sizes = {},
+  lazy = true,
+  fallbackSrc = "/images/fallback.webp",
 }) => {
-  const sizesAttr = generateSizes(sizes);
+  const [currentSrc, setCurrentSrc] = useState<string>("");
+  const [windowWidth, setWindowWidth] = useState<number>(0);
+
+  /**
+   * @description ウィンドウサイズの変更を監視する
+   */
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    // 初期サイズを設定
+    setWindowWidth(window.innerWidth);
+
+    // リサイズイベントリスナーを追加
+    window.addEventListener("resize", handleResize);
+
+    // クリーンアップ
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  /**
+   * @description 現在の画面幅に応じた画像パスを取得する
+   */
+  useEffect(() => {
+    if (windowWidth > 0) {
+      const imagePath = getResponsiveImagePath(responsiveImage, windowWidth);
+      setCurrentSrc(imagePath);
+    }
+  }, [responsiveImage, windowWidth]);
+
+  /**
+   * @description エラーハンドリング
+   */
+  const handleError = (event: React.SyntheticEvent<HTMLImageElement>) => {
+    const target = event.target as HTMLImageElement;
+    target.src = fallbackSrc;
+  };
+
+  /**
+   * @description sizes属性を生成する
+   */
+  const generateSizes = (): string => {
+    const parts = [];
+
+    if (sizes.mobile) {
+      parts.push(`(max-width: 640px) ${sizes.mobile}`);
+    }
+    if (sizes.tablet) {
+      parts.push(`(max-width: 1024px) ${sizes.tablet}`);
+    }
+    if (sizes.desktop) {
+      parts.push(sizes.desktop);
+    }
+
+    return parts.join(", ") || "100vw";
+  };
 
   return (
-    <Image
-      src={responsiveImage.desktop} // デフォルト画像
+    <img
+      src={currentSrc}
       alt={responsiveImage.alt}
-      width={1920}
-      height={1080}
       className={className}
-      sizes={sizesAttr}
-      priority={priority}
-      loading={loading}
-      placeholder="blur"
-      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
+      loading={lazy ? "lazy" : "eager"}
+      sizes={generateSizes()}
+      onError={handleError}
     />
   );
 };
