@@ -1,0 +1,74 @@
+{
+  "MV": {
+    "components": [],
+    "colors": [],
+    "typography": [],
+    "layout": {},
+    "animations": [],
+    "responsive": {}
+  },
+  "Navigation": {
+    "components": [],
+    "colors": [],
+    "typography": [],
+    "layout": {},
+    "animations": [],
+    "responsive": {}
+  },
+  "Countdown": {
+    "components": [],
+    "colors": [],
+    "typography": [],
+    "layout": {},
+    "animations": [],
+    "responsive": {}
+  },
+  "Host": {
+    "components": [],
+    "colors": [],
+    "typography": [],
+    "layout": {},
+    "animations": [],
+    "responsive": {}
+  },
+  "Message": {
+    "components": [],
+    "colors": [],
+    "typography": [],
+    "layout": {},
+    "animations": [],
+    "responsive": {}
+  },
+  "Event": {
+    "components": [],
+    "colors": [],
+    "typography": [],
+    "layout": {},
+    "animations": [],
+    "responsive": {}
+  },
+  "Gallery": {
+    "components": [],
+    "colors": [],
+    "typography": [],
+    "layout": {},
+    "animations": [],
+    "responsive": {}
+  },
+  "RSVP": {
+    "components": [],
+    "colors": [],
+    "typography": [],
+    "layout": {},
+    "animations": [],
+    "responsive": {}
+  },
+  "Footer": {
+    "components": [],
+    "colors": [],
+    "typography": [],
+    "layout": {},
+    "animations": [],
+    "responsive": {}
+  }
+}

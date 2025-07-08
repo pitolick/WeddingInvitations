@@ -133,3 +133,27 @@
 # - Link commits to issues using "fixes #issue-number" format
 
 # - Use any available method to get GitHub information (MCP, API, web interface, etc.)
+
+# Task Completion Workflow Rules:
+
+# - Always perform action verification after task completion
+
+# - Run development server and check functionality: npm run dev
+
+# - Check for Linter Errors: npm run lint
+
+# - Check TypeScript errors: npx tsc --noEmit
+
+# - Verify responsive design and browser compatibility
+
+# - Commit with Japanese message format: "feat: {description} fixes #{issue_number}"
+
+# - Update issue with completion report before closing
+
+# - Change issue label to "completed" after successful completion
+
+# - Close issue only after all verification steps are complete
+
+# - Follow the task completion workflow from development-guidelines.md
+
+# - Ensure all quality checks pass before marking task as complete
