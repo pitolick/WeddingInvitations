@@ -46,6 +46,12 @@
 
 # - Run linting checks before pushing code
 
+# - Write JSDocs comments in Japanese for all functions, classes, and interfaces
+
+# - Include required JSDocs tags: @description, @param, @returns, @example
+
+# - Include optional JSDocs tags when applicable: @throws, @deprecated, @since
+
 # Chat Session Rules:
 
 # - When a new chat session starts, ALWAYS check the files in docs/chat-prompts/ first
