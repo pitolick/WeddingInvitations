@@ -56,7 +56,21 @@
 
 # - Use figma-integration.md for Figma-related tasks
 
+# - Use github-mcp-commands.md for GitHub MCP operations
+
 # - Ensure project context is properly understood before proceeding
+
+# New Chat Session Workflow:
+
+# - ALWAYS use GitHub MCP to check current issue status first
+
+# - Get open issues and identify priority tasks
+
+# - Propose next tasks based on GitHub issue status
+
+# - Consider dependencies and parallel execution possibilities
+
+# - Provide clear action plan based on issue analysis
 
 # Development Workflow Rules:
 
@@ -81,3 +95,15 @@
 # - Use GitHub MCP to search and retrieve repository information
 
 # - Follow the GitHub MCP setup guide in docs/chat-prompts/github-mcp-commands.md
+
+# Issue Management Rules:
+
+# - All project tasks are managed through GitHub issues
+
+# - Use enhancement labels for new features (parent issues)
+
+# - Use task labels for implementation tasks (sub-issues)
+
+# - Use phase1-4 labels for development phases
+
+# - Use specific labels: setup, implementation, api, design, optimization, deploy, section, microcms, google-apps-script, figma-mcp
