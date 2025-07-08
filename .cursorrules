@@ -107,3 +107,25 @@
 # - Use phase1-4 labels for development phases
 
 # - Use specific labels: setup, implementation, api, design, optimization, deploy, section, microcms, google-apps-script, figma-mcp
+
+# Progress Management Rules:
+
+# - Use GitHub MCP for all progress management operations
+
+# - Update issue content directly for progress updates
+
+# - Use comments for detailed progress reports
+
+# - Change labels based on status: in-progress, completed, blocked, review
+
+# - Assign tasks to appropriate team members
+
+# - Report progress regularly with detailed updates
+
+# - Report blocking issues immediately with detailed descriptions
+
+# - Use progress report templates from development-guidelines.md
+
+# - Close issues only after completion and review
+
+# - Link commits to issues using "fixes #issue-number" format
