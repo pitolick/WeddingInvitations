@@ -254,9 +254,9 @@ Issue テンプレートは `.github/ISSUE_TEMPLATE` ディレクトリ内のフ
 - 完了条件 3
 ```
 
-## GitHub MCP の活用方法
+## GitHub 情報取得の活用方法
 
-### 1. Issue 作成
+### 1. GitHub MCP を使用した方法
 
 ```javascript
 // GitHub MCPを使ってissueを作成
@@ -269,26 +269,25 @@ const issue = await github.createIssue({
 });
 ```
 
-### 2. Issue 検索
+### 2. GitHub API を使用した方法
 
-```javascript
-// 特定のラベルのissueを検索
-const issues = await github.searchIssues({
-  query: "repo:username/WeddingInvitations label:phase3",
-});
+```bash
+# GitHub APIを使用してissue一覧を取得
+curl -H "Authorization: token YOUR_TOKEN" \
+  https://api.github.com/repos/username/WeddingInvitations/issues
 ```
 
-### 3. Issue 更新
+### 3. Web インターフェースを使用した方法
 
-```javascript
-// issueのステータスを更新
-await github.updateIssue({
-  owner: "username",
-  repo: "WeddingInvitations",
-  issueNumber: 123,
-  state: "closed",
-});
-```
+- GitHub の Web インターフェースで直接 issue を確認
+- ブラウザでリポジトリページにアクセスして issue 一覧を確認
+
+### 4. 柔軟な情報取得
+
+- **GitHub MCP**: 利用可能な場合は最優先で使用
+- **GitHub API**: MCP が利用できない場合の代替手段
+- **Web インターフェース**: 手動での確認が必要な場合
+- **curl コマンド**: コマンドラインでの直接アクセス
 
 ## プロジェクト進行管理
 
@@ -317,6 +316,7 @@ await github.updateIssue({
 2. **権限設定**: リポジトリへの適切な権限が必要
 3. **Rate Limit**: GitHub API の制限に注意
 4. **stdio モード**: MCP サーバーは stdio モードで実行されるため、直接的なコマンド実行はできない
+5. **柔軟な情報取得**: GitHub MCP が利用できない場合は、他の方法（API、Web インターフェース、curl 等）を使用して GitHub 情報を取得する
 
 ## トラブルシューティング
 
@@ -359,6 +359,7 @@ await github.updateIssue({
 3. **Cursor 設定更新**: `.cursorrules`の更新
 4. **Issue 作成**: スクリプトの実行
 5. **プロジェクト開始**: Phase 1 から順次実装
+6. **柔軟な情報取得**: 必要に応じて GitHub MCP、API、Web インターフェース等を使用
 
 ## 参考情報
 

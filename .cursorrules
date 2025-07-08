@@ -62,7 +62,7 @@
 
 # New Chat Session Workflow:
 
-# - ALWAYS use GitHub MCP to check current issue status first
+# - Check current issue status using any available method (GitHub MCP, API, web interface, etc.)
 
 # - Get open issues and identify priority tasks
 
@@ -86,15 +86,17 @@
 
 # GitHub Operations Rules:
 
-# - Use GitHub MCP for all GitHub operations (issues, PRs, repositories)
+# - Use GitHub MCP for GitHub operations when available
 
-# - Do not use direct GitHub API calls or curl commands for GitHub operations
+# - Use direct GitHub API calls or curl commands for GitHub operations when needed
 
-# - Use GitHub MCP to create, update, and manage issues
+# - Use GitHub MCP to create, update, and manage issues when available
 
-# - Use GitHub MCP to search and retrieve repository information
+# - Use GitHub MCP to search and retrieve repository information when available
 
-# - Follow the GitHub MCP setup guide in docs/chat-prompts/github-mcp-commands.md
+# - Follow the GitHub MCP setup guide in docs/chat-prompts/github-mcp-commands.md when using MCP
+
+# - Use any available method to get GitHub information (MCP, API, web interface, etc.)
 
 # Issue Management Rules:
 
@@ -110,9 +112,9 @@
 
 # Progress Management Rules:
 
-# - Use GitHub MCP for all progress management operations
+# - Use GitHub MCP for progress management operations when available
 
-# - Update issue content directly for progress updates
+# - Use any available method to update issue content for progress updates
 
 # - Use comments for detailed progress reports
 
@@ -129,3 +131,5 @@
 # - Close issues only after completion and review
 
 # - Link commits to issues using "fixes #issue-number" format
+
+# - Use any available method to get GitHub information (MCP, API, web interface, etc.)
