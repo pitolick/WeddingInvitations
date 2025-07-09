@@ -90,7 +90,7 @@ Figma で作成されたデザインを基に、結婚式の Web 招待状を実
 - **フレームワーク**: Next.js 14 (App Router)
 - **言語**: TypeScript
 - **スタイリング**: Tailwind CSS + CSS Modules
-- **アニメーション**: Framer Motion
+- **アニメーション**: Motion for React（motion パッケージ）
 - **状態管理**: React Context API
 - **フォーム**: React Hook Form + Zod
 - **画像最適化**: Next.js Image Component
@@ -118,9 +118,9 @@ Figma で作成されたデザインを基に、結婚式の Web 招待状を実
 
 #### 2.2.4 アニメーション要件
 
-- **ライブラリ**: Framer Motion
+- **ライブラリ**: Motion for React（motion パッケージ）
 - **スクロールアニメーション**: Intersection Observer API
-- **ホバーエフェクト**: CSS Transitions + Framer Motion
+- **ホバーエフェクト**: CSS Transitions + Motion for React
 - **ローディングアニメーション**: Skeleton Loading
 - **パララックス効果**: CSS Transform + Scroll Events
 - **パフォーマンス**: GPU アクセラレーション活用
