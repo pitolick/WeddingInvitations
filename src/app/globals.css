@@ -64,8 +64,13 @@
     600: var(--color-pink-600);
   }
 
+  /* フォントファミリーの設定 */
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-noto: var(--font-noto-sans-jp);
+  --font-great-vibes: var(--font-great-vibes);
+  --font-berkshire: var(--font-berkshire-swash);
+  --font-rock: var(--font-rock-salt);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -78,5 +83,5 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-noto), Arial, Helvetica, sans-serif;
 }
