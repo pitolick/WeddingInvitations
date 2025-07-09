@@ -23,6 +23,7 @@
 - **コード可読性**: 適切なコメントと構造
 - **JSDocs コメント**: 全ての関数・クラス・インターフェースに日本語の JSDocs コメントを記述
 - **デザイン忠実性**: Figma デザインとの一致度確認
+- **Tailwind CSS 優先**: style 属性は可能な限り使用せず、Tailwind CSS クラスでスタイリング
 
 ### 3. ファイル命名規則
 
@@ -69,6 +70,10 @@
 - **Next.js**: App Router、Server Components（最新版）
 - **TypeScript**: 型安全性の確保
 - **Tailwind CSS**: ユーティリティファースト CSS
+  - **優先方針**: style 属性は可能な限り使用せず、Tailwind CSS クラスでスタイリング
+  - **動的スタイル**: 必要最小限の場合のみ style 属性を使用
+  - **レスポンシブ**: Tailwind のブレークポイントクラスを活用
+  - **カスタムカラー**: プロジェクトで定義されたカスタムカラーを使用
 - **Framer Motion**: アニメーションライブラリ
 - **React Hook Form**: フォーム管理
 
@@ -172,6 +177,7 @@ export function HomeClient() {
 - [ ] Linter Errors が 0 件
 - [ ] レスポンシブ対応確認
 - [ ] Figma デザインとの一致度確認
+- [ ] Tailwind CSS クラスを優先したスタイリング
 - [ ] 日本語コミットメッセージ
 - [ ] 適切なファイル構造
 - [ ] issue 番号をコミットメッセージに含める

@@ -27,3 +27,6 @@ export * from "./responsive";
 
 // 画像コンポーネント
 export * from "./image";
+
+// 装飾コンポーネント
+export * from "./decoration";

@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { HomeClient } from "./components/HomeClient";
-import { Hr } from "./components/common/icon";
+import { Hr } from "./components/common/decoration";
 
 export const metadata: Metadata = {
   title: "結婚式招待状 - 共通コンポーネントサンプル",

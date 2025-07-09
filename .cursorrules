@@ -54,6 +54,10 @@
 
 # - Include optional JSDocs tags when applicable: @throws, @deprecated, @since
 
+# - Prioritize Tailwind CSS classes over inline styles whenever possible
+
+# - Use style attributes only when absolutely necessary for dynamic styling
+
 # Next.js App Router Component Design Rules:
 
 # - page.tsx and layout.tsx must be implemented as Server Components
@@ -167,6 +171,8 @@
 # - Check TypeScript errors: npx tsc --noEmit
 
 # - Verify responsive design and browser compatibility
+
+# - Ensure Tailwind CSS classes are used instead of inline styles where possible
 
 # - Commit with Japanese message format: "feat: {description} fixes #{issue_number}"
 
