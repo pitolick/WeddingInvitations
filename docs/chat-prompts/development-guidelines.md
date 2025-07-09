@@ -40,7 +40,22 @@
 - **ドキュメント**: `docs/issue-{番号}-{タイトル}`
   - 例: `docs/issue-8-readme-update`
 
-### 5. コミットメッセージ規則
+### 5. コンポーネント設計規則
+
+#### サーバーコンポーネント
+
+- **page.tsx**: サーバーコンポーネントとして実装
+- **layout.tsx**: サーバーコンポーネントとして実装
+- **メタデータ**: SEO 対応のための metadata 設定
+- **静的コンテンツ**: サーバーサイドでレンダリング可能なコンテンツ
+
+#### クライアントコンポーネント
+
+- **命名規則**: `{ComponentName}Client.tsx`
+- **分離対象**: useState、useEffect、イベントハンドラーを含むコンポーネント
+- **インポート**: サーバーコンポーネントから呼び出し
+
+### 6. コミットメッセージ規則
 
 - **形式**: `{タイプ}: {日本語での説明}`
 - **タイプ**: feat, fix, docs, style, refactor, test, chore
@@ -56,6 +71,61 @@
 - **Tailwind CSS**: ユーティリティファースト CSS
 - **Framer Motion**: アニメーションライブラリ
 - **React Hook Form**: フォーム管理
+
+### Next.js App Router コンポーネント設計
+
+#### サーバーコンポーネントの使用方針
+
+- **page.tsx**: サーバーコンポーネントとして実装
+
+  - メタデータ（metadata）の設定
+  - SEO 対応のための静的コンテンツ
+  - クライアントコンポーネントの呼び出し
+  - JSDocs コメントの追加
+
+- **layout.tsx**: サーバーコンポーネントとして実装
+  - フォント設定（next/font/google）
+  - グローバルメタデータ
+  - HTML 構造の定義
+  - 共通レイアウト要素
+
+#### クライアントコンポーネントの分離
+
+- **インタラクティブな機能**: useState、useEffect、イベントハンドラーを含むコンポーネント
+- **動的コンテンツ**: フォーム、モーダル、ナビゲーションなど
+- **ファイル命名**: `{ComponentName}Client.tsx`形式で分離
+- **インポート**: サーバーコンポーネントからクライアントコンポーネントを呼び出し
+
+#### 実装例
+
+```typescript
+// page.tsx (サーバーコンポーネント)
+import { Metadata } from "next";
+import { HomeClient } from "./components/HomeClient";
+
+export const metadata: Metadata = {
+  title: "結婚式招待状",
+  description: "美しい結婚式招待状のWebサイト",
+};
+
+export default function Home() {
+  return (
+    <main className="min-h-screen">
+      <HomeClient />
+    </main>
+  );
+}
+
+// HomeClient.tsx (クライアントコンポーネント)
+("use client");
+
+import { useState } from "react";
+
+export function HomeClient() {
+  const [state, setState] = useState();
+  // インタラクティブな機能を実装
+}
+```
 
 ### バックエンド
 

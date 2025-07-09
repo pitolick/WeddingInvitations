@@ -46,11 +46,27 @@
 
 # - Run linting checks before pushing code
 
+# - Follow Next.js App Router best practices for Server/Client Components
+
 # - Write JSDocs comments in Japanese for all functions, classes, and interfaces
 
 # - Include required JSDocs tags: @description, @param, @returns, @example
 
 # - Include optional JSDocs tags when applicable: @throws, @deprecated, @since
+
+# Next.js App Router Component Design Rules:
+
+# - page.tsx and layout.tsx must be implemented as Server Components
+
+# - Use metadata export for SEO optimization in page.tsx
+
+# - Separate interactive functionality into Client Components with {ComponentName}Client.tsx naming
+
+# - Import Client Components from Server Components when needed
+
+# - Use "use client" directive only in Client Components
+
+# - Keep Server Components as the default for better performance and SEO
 
 # Chat Session Rules:
 
@@ -163,3 +179,5 @@
 # - Follow the task completion workflow from development-guidelines.md
 
 # - Ensure all quality checks pass before marking task as complete
+
+# - Verify Server/Client Component separation is properly implemented

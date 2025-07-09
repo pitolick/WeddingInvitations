@@ -53,6 +53,8 @@ const ResponsiveImageComponent: React.FC<ResponsiveImageComponentProps> = ({
    * @description ウィンドウサイズの変更を監視する
    */
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
