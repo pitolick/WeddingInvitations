@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { HomeClient } from "./components/HomeClient";
+import { Hr } from "./components/common/icon";
 
 export const metadata: Metadata = {
   title: "結婚式招待状 - 共通コンポーネントサンプル",
@@ -18,6 +19,17 @@ export default function Home() {
         <h1 className="text-4xl font-bold text-gray-900 mb-8">
           結婚式招待状 - 共通コンポーネントサンプル
         </h1>
+
+        {/* Hrコンポーネント（デフォルト） */}
+        <Hr />
+        {/* Hrコンポーネント（カスタム例） */}
+        <Hr
+          width={800}
+          iconSize={24}
+          color="#73357a"
+          lineColor="#73357a"
+          className="my-8"
+        />
 
         <HomeClient />
       </div>

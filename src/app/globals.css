@@ -38,31 +38,25 @@
   );
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
   /* Custom カラーの設定 */
-  --color-lavender: {
-    300: var(--color-lavender-300);
-    400: var(--color-lavender-400);
-    500: var(--color-lavender-500);
-    600: var(--color-lavender-600);
-  }
+  --color-lavender-300: var(--color-lavender-300);
+  --color-lavender-400: var(--color-lavender-400);
+  --color-lavender-500: var(--color-lavender-500);
+  --color-lavender-600: var(--color-lavender-600);
 
-  --color-yellow: {
-    300: var(--color-yellow-300);
-    400: var(--color-yellow-400);
-    500: var(--color-yellow-500);
-    600: var(--color-yellow-600);
-  }
+  --color-yellow-300: var(--color-yellow-300);
+  --color-yellow-400: var(--color-yellow-400);
+  --color-yellow-500: var(--color-yellow-500);
+  --color-yellow-600: var(--color-yellow-600);
 
-  --color-pink: {
-    300: var(--color-pink-300);
-    400: var(--color-pink-400);
-    500: var(--color-pink-500);
-    600: var(--color-pink-600);
-  }
+  --color-pink-300: var(--color-pink-300);
+  --color-pink-400: var(--color-pink-400);
+  --color-pink-500: var(--color-pink-500);
+  --color-pink-600: var(--color-pink-600);
 
   /* フォントファミリーの設定 */
   --font-sans: var(--font-geist-sans);

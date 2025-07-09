@@ -14,5 +14,6 @@ export { default as PlusCircle } from "./PlusCircle";
 export { default as Dust } from "./Dust";
 export { default as HrRight } from "./HrRight";
 export { default as HrLeft } from "./HrLeft";
+export { default as Hr } from "./Hr";
 export { default as Castle } from "./Castle";
 export { default as Sun } from "./Sun";
