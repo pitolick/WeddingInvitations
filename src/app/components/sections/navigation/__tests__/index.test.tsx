@@ -134,13 +134,14 @@ describe('Navigation', () => {
 
     const links = screen.getAllByRole('link');
     links.forEach(link => {
-      expect(link).toHaveClass(
-        'flex',
-        'flex-col',
-        'items-center',
-        'gap-0\\.5',
-        'w-28'
-      );
+      expect(link).toHaveClass('flex');
+      expect(link).toHaveClass('flex-col');
+      expect(link).toHaveClass('items-center');
+      expect(link).toHaveClass('gap-0.5');
+      expect(link).toHaveClass('w-28');
+      expect(link).toHaveClass('hover:opacity-80');
+      expect(link).toHaveClass('transition-opacity');
+      expect(link).toHaveClass('duration-200');
     });
   });
 

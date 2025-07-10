@@ -96,6 +96,8 @@ function RsvpSection() {
 /**
  * @description ギャラリーセクションコンポーネント
  * @returns JSX.Element
+ * @example
+ * <GallerySection />
  */
 function GallerySection() {
   return (

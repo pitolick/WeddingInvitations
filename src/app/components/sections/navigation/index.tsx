@@ -1,5 +1,7 @@
 /**
  * @description Figmaデザイン準拠のナビゲーションセクション（3カラム）
+ * @example
+ * <Navigation />
  * @author WeddingInvitations
  * @since 1.0.0
  */
@@ -30,7 +32,9 @@ const NAV_ITEMS = [
 
 /**
  * @description ナビゲーションセクション（3カラム）
- * @returns JSX.Element
+ * @returns JSX.Element - ナビゲーション要素
+ * @example
+ * <Navigation />
  */
 const Navigation = () => {
   return (

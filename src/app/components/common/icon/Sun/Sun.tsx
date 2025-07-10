@@ -26,6 +26,7 @@ interface SunProps {
  * @returns JSX.Element
  * @example
  * <Sun size={794} color="#f4e462" />
+ * @throws なし
  */
 const Sun: React.FC<SunProps> = ({
   size = 794,
