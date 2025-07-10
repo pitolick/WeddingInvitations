@@ -58,6 +58,10 @@
 
 # - Use style attributes only when absolutely necessary for dynamic styling
 
+# - For debugging, use VibeCoding Logger from src/app/lib/logger
+
+# - Check logs in the logs folder for debugging information
+
 # Next.js App Router Component Design Rules:
 
 # - page.tsx and layout.tsx must be implemented as Server Components
@@ -187,3 +191,17 @@
 # - Ensure all quality checks pass before marking task as complete
 
 # - Verify Server/Client Component separation is properly implemented
+
+# Debugging Rules:
+
+# - Use VibeCoding Logger from src/app/lib/logger for debugging
+
+# - Check logs in the logs folder for debugging information
+
+# - Use structured logging with context, humanNote, and aiTodo fields
+
+# - Log files are automatically generated in logs/wedding-invitations/ directory
+
+# - Use devLogger for development environment debugging
+
+# - Use logUtils for common logging patterns (user actions, errors, API calls)

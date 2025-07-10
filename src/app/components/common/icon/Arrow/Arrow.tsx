@@ -1,4 +1,5 @@
 import React from 'react';
+import { devLogger } from '../../../../lib/logger';
 
 interface ArrowProps {
   className?: string;
@@ -34,6 +35,17 @@ export const Arrow: React.FC<ArrowProps> = ({
     }
   };
 
+  // コンポーネント使用をログに記録
+  React.useEffect(() => {
+    devLogger.info('component_rendered', 'Arrow component rendered', {
+      direction,
+      width,
+      height,
+      color,
+      className: className || 'default',
+    });
+  }, [direction, width, height, color, className]);
+
   return (
     <svg
       width={width}
@@ -42,12 +54,12 @@ export const Arrow: React.FC<ArrowProps> = ({
       fill='none'
       xmlns='http://www.w3.org/2000/svg'
       className={className}
-      style={{ transform: getTransform() }}
       role='img'
       aria-label={ariaLabel}
+      style={{ transform: getTransform() }}
     >
       <path
-        d='M9 18L15 12L9 6'
+        d='M9 6L15 12L9 18'
         stroke={color}
         strokeWidth='2'
         strokeLinecap='round'

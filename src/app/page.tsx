@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { HomeClient } from './components/HomeClient';
 import { Hr } from './components/common/decoration';
+import { logger } from './lib/logger';
+import React from 'react';
 
 export const metadata: Metadata = {
   title: '結婚式招待状 - 共通コンポーネントサンプル',
@@ -12,7 +14,17 @@ export const metadata: Metadata = {
  * @description 結婚式招待状のメインページ（サーバーコンポーネント）
  * @returns メインページのJSX要素
  */
-export default function Home() {
+export default async function Page() {
+  // 初回アクセス時にログを記録
+  await logger.info('page_access', 'トップページにアクセス', {
+    context: {
+      timestamp: new Date().toISOString(),
+      page: 'home',
+    },
+    humanNote: 'ユーザーがトップページにアクセス',
+    aiTodo: 'アクセス傾向を分析',
+  });
+
   return (
     <main className='min-h-screen p-8'>
       <div className='max-w-4xl mx-auto space-y-8'>

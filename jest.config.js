@@ -16,6 +16,7 @@ const customJestConfig = {
   // モジュール名マッピング
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^vibelogger$': '<rootDir>/src/app/lib/logger/__mocks__/vibelogger.ts',
   },
 
   // セットアップファイル
