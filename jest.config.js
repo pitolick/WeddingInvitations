@@ -27,9 +27,11 @@ const customJestConfig = {
     'src/**/*.{ts,tsx}',
     '!src/**/*.d.ts',
     '!src/**/*.stories.{ts,tsx}',
-    '!src/**/index.{ts,tsx}',
     '!src/app/layout.tsx',
     '!src/app/page.tsx',
+    // 関数が記述されているindexファイルは除外しない
+    '!src/app/lib/constants/index.ts', // 定数定義のみ
+    '!src/app/lib/types/index.ts', // 型定義のみ
   ],
 
   // カバレッジレポート設定

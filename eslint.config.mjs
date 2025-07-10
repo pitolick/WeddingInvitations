@@ -29,6 +29,7 @@ const eslintConfig = [
       'jest.config.js',
       'jest.setup.js',
       '*.config.js',
+      '*.config.mjs',
     ],
   },
 ];
