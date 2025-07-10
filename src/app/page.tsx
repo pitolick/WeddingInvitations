@@ -1,11 +1,11 @@
-import { Metadata } from "next";
-import { HomeClient } from "./components/HomeClient";
-import { Hr } from "./components/common/decoration";
+import { Metadata } from 'next';
+import { HomeClient } from './components/HomeClient';
+import { Hr } from './components/common/decoration';
 
 export const metadata: Metadata = {
-  title: "結婚式招待状 - 共通コンポーネントサンプル",
+  title: '結婚式招待状 - 共通コンポーネントサンプル',
   description:
-    "美しい結婚式招待状のWebサイト - 共通コンポーネントのサンプルページ",
+    '美しい結婚式招待状のWebサイト - 共通コンポーネントのサンプルページ',
 };
 
 /**
@@ -14,9 +14,9 @@ export const metadata: Metadata = {
  */
 export default function Home() {
   return (
-    <main className="min-h-screen p-8">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-8">
+    <main className='min-h-screen p-8'>
+      <div className='max-w-4xl mx-auto space-y-8'>
+        <h1 className='text-4xl font-bold text-gray-900 mb-8'>
           結婚式招待状 - 共通コンポーネントサンプル
         </h1>
 
@@ -26,9 +26,9 @@ export default function Home() {
         <Hr
           width={800}
           iconSize={24}
-          color="#73357a"
-          lineColor="#73357a"
-          className="my-8"
+          color='#73357a'
+          lineColor='#73357a'
+          className='my-8'
         />
 
         <HomeClient />

@@ -4,7 +4,7 @@
  * @since 1.0.0
  */
 
-import React from "react";
+import React from 'react';
 
 /**
  * @description CardコンポーネントのProps型定義
@@ -15,9 +15,9 @@ interface CardProps {
   /** カードの内容 */
   children: React.ReactNode;
   /** カードのバリアント */
-  variant?: "default" | "elevated" | "outlined";
+  variant?: 'default' | 'elevated' | 'outlined';
   /** カードのサイズ */
-  size?: "sm" | "md" | "lg";
+  size?: 'sm' | 'md' | 'lg';
   /** ホバー効果 */
   hover?: boolean;
   /** 追加のCSSクラス */
@@ -44,30 +44,30 @@ interface CardProps {
  */
 const Card: React.FC<CardProps> = ({
   children,
-  variant = "default",
-  size = "md",
+  variant = 'default',
+  size = 'md',
   hover = false,
-  className = "",
+  className = '',
   onClick,
   id,
 }) => {
-  const baseClasses = "bg-white rounded-lg transition-all duration-200";
+  const baseClasses = 'bg-white rounded-lg transition-all duration-200';
 
   const variantClasses = {
-    default: "border border-gray-200",
-    elevated: "shadow-md",
-    outlined: "border-2 border-lavender-200",
+    default: 'border border-gray-200',
+    elevated: 'shadow-md',
+    outlined: 'border-2 border-lavender-200',
   };
 
   const sizeClasses = {
-    sm: "p-4",
-    md: "p-6",
-    lg: "p-8",
+    sm: 'p-4',
+    md: 'p-6',
+    lg: 'p-8',
   };
 
   const hoverClasses = hover
-    ? "hover:shadow-lg hover:transform hover:scale-105 cursor-pointer"
-    : "";
+    ? 'hover:shadow-lg hover:transform hover:scale-105 cursor-pointer'
+    : '';
 
   return (
     <div

@@ -4,4 +4,4 @@
  * @since 1.0.0
  */
 
-export { default as ResponsiveImage } from "./ResponsiveImage";
+export { default as ResponsiveImage } from './ResponsiveImage';

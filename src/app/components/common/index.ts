@@ -5,28 +5,28 @@
  */
 
 // ボタンコンポーネント
-export { default as Button } from "./button";
+export { default as Button } from './button';
 
 // フォームコンポーネント
-export * from "./form";
+export * from './form';
 
 // モーダルコンポーネント
-export * from "./modal";
+export * from './modal';
 
 // アイコンコンポーネント
-export * from "./icon";
+export * from './icon';
 
 // カードコンポーネント
-export * from "./card";
+export * from './card';
 
 // アニメーションコンポーネント
-export * from "./animation";
+export * from './animation';
 
 // レスポンシブコンポーネント
-export * from "./responsive";
+export * from './responsive';
 
 // 画像コンポーネント
-export * from "./image";
+export * from './image';
 
 // 装飾コンポーネント
-export * from "./decoration";
+export * from './decoration';

@@ -4,4 +4,4 @@
  * @since 1.0.0
  */
 
-export { default } from "./Sun";
+export { default } from './Sun';

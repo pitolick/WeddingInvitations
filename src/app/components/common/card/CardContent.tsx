@@ -4,7 +4,7 @@
  * @since 1.0.0
  */
 
-import React from "react";
+import React from 'react';
 
 /**
  * @description CardContentコンポーネントのProps型定義
@@ -29,7 +29,7 @@ interface CardContentProps {
  */
 const CardContent: React.FC<CardContentProps> = ({
   children,
-  className = "",
+  className = '',
 }) => {
   return <div className={`pt-4 ${className}`}>{children}</div>;
 };

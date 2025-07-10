@@ -4,8 +4,8 @@
  * @since 1.0.0
  */
 
-import React from "react";
-import { motion } from "motion/react";
+import React from 'react';
+import { motion } from 'motion/react';
 
 /**
  * @description フェードインアニメーションコンポーネントのProps型定義
@@ -22,7 +22,7 @@ interface FadeInProps {
   /** 追加のCSSクラス */
   className?: string;
   /** アニメーションの方向 */
-  direction?: "up" | "down" | "left" | "right";
+  direction?: 'up' | 'down' | 'left' | 'right';
   /** アニメーションの距離 */
   distance?: number;
 }
@@ -40,19 +40,19 @@ const FadeIn: React.FC<FadeInProps> = ({
   children,
   delay = 0,
   duration = 0.5,
-  className = "",
-  direction = "up",
+  className = '',
+  direction = 'up',
   distance = 20,
 }) => {
   const getInitialPosition = () => {
     switch (direction) {
-      case "up":
+      case 'up':
         return { y: distance, opacity: 0 };
-      case "down":
+      case 'down':
         return { y: -distance, opacity: 0 };
-      case "left":
+      case 'left':
         return { x: distance, opacity: 0 };
-      case "right":
+      case 'right':
         return { x: -distance, opacity: 0 };
       default:
         return { opacity: 0 };
@@ -61,11 +61,11 @@ const FadeIn: React.FC<FadeInProps> = ({
 
   const getAnimatePosition = () => {
     switch (direction) {
-      case "up":
-      case "down":
+      case 'up':
+      case 'down':
         return { y: 0, opacity: 1 };
-      case "left":
-      case "right":
+      case 'left':
+      case 'right':
         return { x: 0, opacity: 1 };
       default:
         return { opacity: 1 };
@@ -79,7 +79,7 @@ const FadeIn: React.FC<FadeInProps> = ({
       transition={{
         duration,
         delay,
-        ease: "easeOut",
+        ease: 'easeOut',
       }}
       className={className}
     >

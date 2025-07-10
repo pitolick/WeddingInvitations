@@ -4,4 +4,4 @@
  * @since 1.0.0
  */
 
-export { default } from "./Hr";
+export { default } from './Hr';

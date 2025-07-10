@@ -11,7 +11,7 @@ export interface RSVPData {
   guestName: string;
 
   /** 参加予定イベント */
-  events: ("ceremony" | "reception" | "afterparty")[];
+  events: ('ceremony' | 'reception' | 'afterparty')[];
 
   /** 参加人数 */
   attendees: number;
@@ -72,9 +72,9 @@ export interface SpreadsheetRow {
  * イベント種別の定義
  */
 export const EVENT_TYPES = {
-  CEREMONY: "ceremony" as const,
-  RECEPTION: "reception" as const,
-  AFTERPARTY: "afterparty" as const,
+  CEREMONY: 'ceremony' as const,
+  RECEPTION: 'reception' as const,
+  AFTERPARTY: 'afterparty' as const,
 } as const;
 
 export type EventType = (typeof EVENT_TYPES)[keyof typeof EVENT_TYPES];
@@ -83,16 +83,16 @@ export type EventType = (typeof EVENT_TYPES)[keyof typeof EVENT_TYPES];
  * イベント種別の日本語表示名
  */
 export const EVENT_DISPLAY_NAMES: Record<EventType, string> = {
-  [EVENT_TYPES.CEREMONY]: "挙式",
-  [EVENT_TYPES.RECEPTION]: "披露宴",
-  [EVENT_TYPES.AFTERPARTY]: "二次会",
+  [EVENT_TYPES.CEREMONY]: '挙式',
+  [EVENT_TYPES.RECEPTION]: '披露宴',
+  [EVENT_TYPES.AFTERPARTY]: '二次会',
 };
 
 /**
  * イベント種別の説明
  */
 export const EVENT_DESCRIPTIONS: Record<EventType, string> = {
-  [EVENT_TYPES.CEREMONY]: "挙式にご参加いただけますか？",
-  [EVENT_TYPES.RECEPTION]: "披露宴にご参加いただけますか？",
-  [EVENT_TYPES.AFTERPARTY]: "二次会にご参加いただけますか？",
+  [EVENT_TYPES.CEREMONY]: '挙式にご参加いただけますか？',
+  [EVENT_TYPES.RECEPTION]: '披露宴にご参加いただけますか？',
+  [EVENT_TYPES.AFTERPARTY]: '二次会にご参加いただけますか？',
 };

@@ -4,8 +4,8 @@
  * @since 1.0.0
  */
 
-import React from "react";
-import { motion } from "motion/react";
+import React from 'react';
+import { motion } from 'motion/react';
 
 /**
  * @description スケールインアニメーションコンポーネントのProps型定義
@@ -26,7 +26,7 @@ interface ScaleInProps {
   /** 最終スケール */
   finalScale?: number;
   /** アニメーションのイージング */
-  ease?: "linear" | "easeIn" | "easeOut" | "easeInOut";
+  ease?: 'linear' | 'easeIn' | 'easeOut' | 'easeInOut';
 }
 
 /**
@@ -42,10 +42,10 @@ const ScaleIn: React.FC<ScaleInProps> = ({
   children,
   delay = 0,
   duration = 0.5,
-  className = "",
+  className = '',
   initialScale = 0.8,
   finalScale = 1,
-  ease = "easeOut" as const,
+  ease = 'easeOut' as const,
 }) => {
   return (
     <motion.div

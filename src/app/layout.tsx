@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata } from 'next';
 import {
   Geist,
   Geist_Mono,
@@ -6,50 +6,50 @@ import {
   Great_Vibes,
   Berkshire_Swash,
   Rock_Salt,
-} from "next/font/google";
-import "./globals.css";
+} from 'next/font/google';
+import './globals.css';
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
 });
 
 const notoSansJP = Noto_Sans_JP({
-  variable: "--font-noto-sans-jp",
-  subsets: ["latin"],
-  weight: ["100", "300", "400", "500", "700", "900"],
-  display: "swap",
+  variable: '--font-noto-sans-jp',
+  subsets: ['latin'],
+  weight: ['100', '300', '400', '500', '700', '900'],
+  display: 'swap',
 });
 
 const greatVibes = Great_Vibes({
-  variable: "--font-great-vibes",
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
+  variable: '--font-great-vibes',
+  subsets: ['latin'],
+  weight: ['400'],
+  display: 'swap',
 });
 
 const berkshireSwash = Berkshire_Swash({
-  variable: "--font-berkshire-swash",
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
+  variable: '--font-berkshire-swash',
+  subsets: ['latin'],
+  weight: ['400'],
+  display: 'swap',
 });
 
 const rockSalt = Rock_Salt({
-  variable: "--font-rock-salt",
-  subsets: ["latin"],
-  weight: ["400"],
-  display: "swap",
+  variable: '--font-rock-salt',
+  subsets: ['latin'],
+  weight: ['400'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
-  title: "結婚式招待状",
-  description: "美しい結婚式招待状のWebサイト",
+  title: '結婚式招待状',
+  description: '美しい結婚式招待状のWebサイト',
 };
 
 export default function RootLayout({
@@ -58,7 +58,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja">
+    <html lang='ja'>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${notoSansJP.variable} ${greatVibes.variable} ${berkshireSwash.variable} ${rockSalt.variable} antialiased`}
       >

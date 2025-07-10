@@ -9,18 +9,18 @@
  * 3. このスクリプトを実行
  */
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 // プロジェクトのタスク定義
 const PROJECT_TASKS = {
   // Phase 1: 基盤構築
   基盤構築: {
-    description: "プロジェクトの基盤となる環境とシステムの構築",
+    description: 'プロジェクトの基盤となる環境とシステムの構築',
     tasks: [
       {
-        title: "microCMSセットアップ",
-        description: "招待者データ管理のためのmicroCMS環境構築",
+        title: 'microCMSセットアップ',
+        description: '招待者データ管理のためのmicroCMS環境構築',
         body: `## 概要
 招待者データを管理するためのmicroCMS環境を構築する。
 
@@ -40,11 +40,11 @@ const PROJECT_TASKS = {
 - microCMSで招待者データが管理できる
 - APIから招待者データが取得できる
 - テストデータが正常に動作する`,
-        labels: ["setup", "microcms", "phase1"],
+        labels: ['setup', 'microcms', 'phase1'],
       },
       {
-        title: "Google Apps Scriptデプロイ",
-        description: "RSVPデータ保存のためのGoogle Apps Script環境構築",
+        title: 'Google Apps Scriptデプロイ',
+        description: 'RSVPデータ保存のためのGoogle Apps Script環境構築',
         body: `## 概要
 RSVPフォームのデータをGoogleスプレッドシートに保存するためのGoogle Apps Scriptをデプロイする。
 
@@ -65,11 +65,11 @@ RSVPフォームのデータをGoogleスプレッドシートに保存するた�
 - RSVPデータがスプレッドシートに保存される
 - エラーハンドリングが正常に動作する
 - テストデータの送信が成功する`,
-        labels: ["setup", "google-apps-script", "phase1"],
+        labels: ['setup', 'google-apps-script', 'phase1'],
       },
       {
-        title: "Figma MCP詳細分析",
-        description: "Figmaデザインの詳細分析とデザイントークンの抽出",
+        title: 'Figma MCP詳細分析',
+        description: 'Figmaデザインの詳細分析とデザイントークンの抽出',
         body: `## 概要
 Figma MCPを使って各セクションのデザイン詳細を分析し、デザイントークンを抽出する。
 
@@ -90,18 +90,18 @@ Figma MCPを使って各セクションのデザイン詳細を分析し、デ�
 - 全セクションのデザイン詳細が把握できている
 - デザイントークンが整理されている
 - 実装に必要な情報が揃っている`,
-        labels: ["design", "figma-mcp", "phase1"],
+        labels: ['design', 'figma-mcp', 'phase1'],
       },
     ],
   },
 
   // Phase 2: 招待者別ページ実装
   招待者別ページ実装: {
-    description: "招待者ごとにカスタマイズされたページの実装",
+    description: '招待者ごとにカスタマイズされたページの実装',
     tasks: [
       {
-        title: "動的ルート実装",
-        description: "Next.js App Routerでの招待者別ページ実装",
+        title: '動的ルート実装',
+        description: 'Next.js App Routerでの招待者別ページ実装',
         body: `## 概要
 Next.js App Routerを使用して招待者別の動的ルートを実装する。
 
@@ -121,11 +121,11 @@ Next.js App Routerを使用して招待者別の動的ルートを実装する�
 - /[id] で招待者別ページが表示される
 - 無効なIDでアクセスした場合の適切な処理
 - ローディング状態が適切に表示される`,
-        labels: ["implementation", "nextjs", "phase2"],
+        labels: ['implementation', 'nextjs', 'phase2'],
       },
       {
-        title: "招待者データ取得API",
-        description: "microCMSから招待者データを取得するAPI実装",
+        title: '招待者データ取得API',
+        description: 'microCMSから招待者データを取得するAPI実装',
         body: `## 概要
 microCMSから招待者データを取得し、招待者別ページで使用するAPIを実装する。
 
@@ -145,18 +145,18 @@ microCMSから招待者データを取得し、招待者別ページで使用す
 - 招待者IDでデータが取得できる
 - エラー時の適切なレスポンス
 - パフォーマンスが最適化されている`,
-        labels: ["api", "microcms", "phase2"],
+        labels: ['api', 'microcms', 'phase2'],
       },
     ],
   },
 
   // Phase 3: セクション実装
   セクション実装: {
-    description: "9つのセクションコンポーネントの実装",
+    description: '9つのセクションコンポーネントの実装',
     tasks: [
       {
-        title: "MVセクション実装",
-        description: "メインビジュアルセクションの実装",
+        title: 'MVセクション実装',
+        description: 'メインビジュアルセクションの実装',
         body: `## 概要
 結婚式の印象的なメインビジュアルセクションを実装する。
 
@@ -177,11 +177,11 @@ microCMSから招待者データを取得し、招待者別ページで使用す
 - ディズニーテーマに合ったデザイン
 - スムーズなアニメーション
 - モバイル・デスクトップ対応`,
-        labels: ["implementation", "section", "mv", "phase3"],
+        labels: ['implementation', 'section', 'mv', 'phase3'],
       },
       {
-        title: "Countdownセクション実装",
-        description: "結婚式までのカウントダウン機能実装",
+        title: 'Countdownセクション実装',
+        description: '結婚式までのカウントダウン機能実装',
         body: `## 概要
 結婚式までの残り日数を表示するカウントダウンセクションを実装する。
 
@@ -202,11 +202,11 @@ microCMSから招待者データを取得し、招待者別ページで使用す
 - 正確なカウントダウン表示
 - リアルタイム更新
 - 美しいアニメーション`,
-        labels: ["implementation", "section", "countdown", "phase3"],
+        labels: ['implementation', 'section', 'countdown', 'phase3'],
       },
       {
-        title: "Navigationセクション実装",
-        description: "ナビゲーションメニューの実装",
+        title: 'Navigationセクション実装',
+        description: 'ナビゲーションメニューの実装',
         body: `## 概要
 各セクションへのスムーズな移動を提供するナビゲーションを実装する。
 
@@ -227,11 +227,11 @@ microCMSから招待者データを取得し、招待者別ページで使用す
 - スムーズなスクロール体験
 - 現在位置の表示
 - モバイル・デスクトップ対応`,
-        labels: ["implementation", "section", "navigation", "phase3"],
+        labels: ['implementation', 'section', 'navigation', 'phase3'],
       },
       {
-        title: "Hostセクション実装",
-        description: "新郎新婦紹介セクションの実装",
+        title: 'Hostセクション実装',
+        description: '新郎新婦紹介セクションの実装',
         body: `## 概要
 新郎新婦の紹介セクションを実装する。
 
@@ -252,11 +252,11 @@ microCMSから招待者データを取得し、招待者別ページで使用す
 - 美しいプロフィール表示
 - 最適化された画像
 - アクセシブルな実装`,
-        labels: ["implementation", "section", "host", "phase3"],
+        labels: ['implementation', 'section', 'host', 'phase3'],
       },
       {
-        title: "Messageセクション実装",
-        description: "招待者別カスタムメッセージセクションの実装",
+        title: 'Messageセクション実装',
+        description: '招待者別カスタムメッセージセクションの実装',
         body: `## 概要
 招待者ごとにカスタマイズされたメッセージを表示するセクションを実装する。
 
@@ -277,11 +277,11 @@ microCMSから招待者データを取得し、招待者別ページで使用す
 - 招待者別メッセージが表示される
 - 美しいアニメーション
 - 適切な文字数制限`,
-        labels: ["implementation", "section", "message", "phase3"],
+        labels: ['implementation', 'section', 'message', 'phase3'],
       },
       {
-        title: "Galleryセクション実装",
-        description: "写真ギャラリーセクションの実装",
+        title: 'Galleryセクション実装',
+        description: '写真ギャラリーセクションの実装',
         body: `## 概要
 新郎新婦の思い出写真を表示するギャラリーセクションを実装する。
 
@@ -302,11 +302,11 @@ microCMSから招待者データを取得し、招待者別ページで使用す
 - 美しいギャラリー表示
 - 最適化された画像読み込み
 - スムーズなライトボックス`,
-        labels: ["implementation", "section", "gallery", "phase3"],
+        labels: ['implementation', 'section', 'gallery', 'phase3'],
       },
       {
-        title: "Eventセクション実装",
-        description: "結婚式詳細情報とGoogle Maps連携セクションの実装",
+        title: 'Eventセクション実装',
+        description: '結婚式詳細情報とGoogle Maps連携セクションの実装',
         body: `## 概要
 結婚式の詳細情報とGoogle Mapsを表示するセクションを実装する。
 
@@ -327,11 +327,11 @@ microCMSから招待者データを取得し、招待者別ページで使用す
 - 詳細なイベント情報表示
 - インタラクティブな地図
 - モバイル・デスクトップ対応`,
-        labels: ["implementation", "section", "event", "google-maps", "phase3"],
+        labels: ['implementation', 'section', 'event', 'google-maps', 'phase3'],
       },
       {
-        title: "RSVPセクション実装",
-        description: "出欠確認フォームとGoogle Apps Script連携の実装",
+        title: 'RSVPセクション実装',
+        description: '出欠確認フォームとGoogle Apps Script連携の実装',
         body: `## 概要
 出欠確認フォームとGoogle Apps Script連携を実装する。
 
@@ -354,16 +354,16 @@ microCMSから招待者データを取得し、招待者別ページで使用す
 - 適切なバリデーション
 - データの正常な保存`,
         labels: [
-          "implementation",
-          "section",
-          "rsvp",
-          "google-apps-script",
-          "phase3",
+          'implementation',
+          'section',
+          'rsvp',
+          'google-apps-script',
+          'phase3',
         ],
       },
       {
-        title: "Footerセクション実装",
-        description: "フッター情報セクションの実装",
+        title: 'Footerセクション実装',
+        description: 'フッター情報セクションの実装',
         body: `## 概要
 連絡先やその他の情報を表示するフッターセクションを実装する。
 
@@ -384,18 +384,18 @@ microCMSから招待者データを取得し、招待者別ページで使用す
 - 必要な情報の表示
 - アクセシブルな実装
 - モバイル・デスクトップ対応`,
-        labels: ["implementation", "section", "footer", "phase3"],
+        labels: ['implementation', 'section', 'footer', 'phase3'],
       },
     ],
   },
 
   // Phase 4: 最適化・デプロイ
-  "最適化・デプロイ": {
-    description: "パフォーマンス最適化と本番デプロイ",
+  '最適化・デプロイ': {
+    description: 'パフォーマンス最適化と本番デプロイ',
     tasks: [
       {
-        title: "パフォーマンス最適化",
-        description: "Core Web Vitals対応とパフォーマンス最適化",
+        title: 'パフォーマンス最適化',
+        description: 'Core Web Vitals対応とパフォーマンス最適化',
         body: `## 概要
 Core Web Vitalsに対応し、パフォーマンスを最適化する。
 
@@ -417,11 +417,11 @@ Core Web Vitalsに対応し、パフォーマンスを最適化する。
 - Core Web Vitalsが基準を満たす
 - 高速な読み込み
 - 最適化されたバンドルサイズ`,
-        labels: ["optimization", "performance", "core-web-vitals", "phase4"],
+        labels: ['optimization', 'performance', 'core-web-vitals', 'phase4'],
       },
       {
-        title: "アクセシビリティ対応",
-        description: "WCAG 2.1 AA準拠のアクセシビリティ対応",
+        title: 'アクセシビリティ対応',
+        description: 'WCAG 2.1 AA準拠のアクセシビリティ対応',
         body: `## 概要
 WCAG 2.1 AA準拠のアクセシビリティ対応を実装する。
 
@@ -443,11 +443,11 @@ WCAG 2.1 AA準拠のアクセシビリティ対応を実装する。
 - WCAG 2.1 AA準拠
 - キーボードでの操作可能
 - スクリーンリーダー対応`,
-        labels: ["accessibility", "wcag", "phase4"],
+        labels: ['accessibility', 'wcag', 'phase4'],
       },
       {
-        title: "Vercelデプロイ",
-        description: "本番環境へのデプロイと設定",
+        title: 'Vercelデプロイ',
+        description: '本番環境へのデプロイと設定',
         body: `## 概要
 Vercelを使用して本番環境にデプロイし、設定を行う。
 
@@ -469,7 +469,7 @@ Vercelを使用して本番環境にデプロイし、設定を行う。
 - 本番環境での正常動作
 - 適切な環境変数設定
 - 監視・バックアップ体制`,
-        labels: ["deploy", "vercel", "production", "phase4"],
+        labels: ['deploy', 'vercel', 'production', 'phase4'],
       },
     ],
   },
@@ -485,7 +485,7 @@ const GITHUB_CONFIG = {
 // メイン処理
 async function createProjectIssues() {
   console.log(
-    "🚀 GitHub MCPを使ってプロジェクトのタスクをissueとして登録します...\n"
+    '🚀 GitHub MCPを使ってプロジェクトのタスクをissueとして登録します...\n'
   );
 
   for (const [phase, phaseData] of Object.entries(PROJECT_TASKS)) {
@@ -503,7 +503,7 @@ async function createProjectIssues() {
     }
   }
 
-  console.log("🎉 全てのタスクがissueとして登録されました！");
+  console.log('🎉 全てのタスクがissueとして登録されました！');
 }
 
 // スクリプト実行

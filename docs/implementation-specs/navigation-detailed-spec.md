@@ -1,19 +1,23 @@
 # Navigationセクション実装仕様書
 
 ## 概要
+
 Navigationセクションの実装仕様を定義します。
 
 ## デザイン仕様
 
 ### 色
+
 - #73357a
 - #ffffff
 
 ### フォント
+
 - Berkshire Swash 400
 - Noto Sans JP 700
 
 ## レイアウト仕様
+
 ```json
 {
   "Navigation": {
@@ -68,6 +72,7 @@ Navigationセクションの実装仕様を定義します。
 ```
 
 ## コンポーネント
+
 - NavList (COMPONENT)
 - NavList (INSTANCE)
 - NavList (INSTANCE)
@@ -76,9 +81,11 @@ Navigationセクションの実装仕様を定義します。
 - NavList (INSTANCE)
 
 ## アニメーション仕様
+
 - 未定義
 
 ## レスポンシブ対応
+
 ```json
 {
   "mobile": {},
@@ -88,12 +95,14 @@ Navigationセクションの実装仕様を定義します。
 ```
 
 ## 実装ガイドライン
+
 1. コンポーネント設計
 2. スタイリング
 3. アニメーション実装
 4. レスポンシブ対応
 
 ## 完了条件
+
 - [ ] デザイン仕様に準拠した実装
 - [ ] アニメーションの実装
 - [ ] レスポンシブ対応の実装

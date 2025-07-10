@@ -4,9 +4,9 @@
  * @since 1.0.0
  */
 
-import React from "react";
-import HrLeft from "../../icon/HrLeft/HrLeft";
-import HrRight from "../../icon/HrRight/HrRight";
+import React from 'react';
+import HrLeft from '../../icon/HrLeft/HrLeft';
+import HrRight from '../../icon/HrRight/HrRight';
 
 /**
  * @description Hr装飾コンポーネントのProps型定義
@@ -23,11 +23,11 @@ interface HrProps {
   /** 追加のCSSクラス */
   className?: string;
   /** 水平線の高さ（Tailwindクラス） */
-  lineHeight?: "h-px" | "h-0.5" | "h-1" | "h-2" | "h-3" | "h-4";
+  lineHeight?: 'h-px' | 'h-0.5' | 'h-1' | 'h-2' | 'h-3' | 'h-4';
   /** 水平線の色（Tailwindクラス） */
   lineColor?: string;
   /** コンポーネントの高さ（Tailwindクラス） */
-  containerHeight?: "h-8" | "h-10" | "h-12" | "h-16" | "h-20" | "h-24" | "h-32";
+  containerHeight?: 'h-8' | 'h-10' | 'h-12' | 'h-16' | 'h-20' | 'h-24' | 'h-32';
 }
 
 /**
@@ -41,11 +41,11 @@ interface HrProps {
 const Hr: React.FC<HrProps> = ({
   width,
   iconSize = 38,
-  color = "text-lavender-600",
-  className = "",
-  lineHeight = "h-px",
-  lineColor = "bg-lavender-600",
-  containerHeight = "h-12",
+  color = 'text-lavender-600',
+  className = '',
+  lineHeight = 'h-px',
+  lineColor = 'bg-lavender-600',
+  containerHeight = 'h-12',
 }) => {
   return (
     <div
@@ -56,12 +56,12 @@ const Hr: React.FC<HrProps> = ({
       <div className={`flex-1 bg-lavender-600 ${lineHeight} ${lineColor}`} />
 
       {/* 左側の装飾アイコン（絶対位置で線の上に配置） */}
-      <div className="absolute left-0 -translate-y-1/2">
+      <div className='absolute left-0 -translate-y-1/2'>
         <HrLeft size={iconSize} className={`${color}`} />
       </div>
 
       {/* 右側の装飾アイコン（絶対位置で線の上に配置） */}
-      <div className="absolute right-0 -translate-y-1/2">
+      <div className='absolute right-0 -translate-y-1/2'>
         <HrRight size={iconSize} className={`${color}`} />
       </div>
     </div>

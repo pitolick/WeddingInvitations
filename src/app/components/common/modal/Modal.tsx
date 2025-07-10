@@ -4,7 +4,7 @@
  * @since 1.0.0
  */
 
-import React, { useEffect, useId } from "react";
+import React, { useEffect, useId } from 'react';
 
 /**
  * @description ModalコンポーネントのProps型定義
@@ -21,7 +21,7 @@ interface ModalProps {
   /** 閉じるハンドラー */
   onClose: () => void;
   /** モーダルのサイズ */
-  size?: "sm" | "md" | "lg" | "xl" | "fullscreen";
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'fullscreen';
   /** 閉じるボタンの表示 */
   showCloseButton?: boolean;
   /** 追加のCSSクラス */
@@ -49,9 +49,9 @@ const Modal: React.FC<ModalProps> = ({
   title,
   children,
   onClose,
-  size = "md",
+  size = 'md',
   showCloseButton = true,
-  className = "",
+  className = '',
   id,
 }) => {
   const generatedId = useId();
@@ -60,21 +60,21 @@ const Modal: React.FC<ModalProps> = ({
   // ESCキーでモーダルを閉じる
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && isOpen) {
+      if (event.key === 'Escape' && isOpen) {
         onClose();
       }
     };
 
-    if (isOpen && typeof document !== "undefined") {
-      document.addEventListener("keydown", handleEscape);
+    if (isOpen && typeof document !== 'undefined') {
+      document.addEventListener('keydown', handleEscape);
       // スクロールを無効化
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
     }
 
     return () => {
-      if (typeof document !== "undefined") {
-        document.removeEventListener("keydown", handleEscape);
-        document.body.style.overflow = "unset";
+      if (typeof document !== 'undefined') {
+        document.removeEventListener('keydown', handleEscape);
+        document.body.style.overflow = 'unset';
       }
     };
   }, [isOpen, onClose]);
@@ -83,45 +83,45 @@ const Modal: React.FC<ModalProps> = ({
   if (!isOpen) return null;
 
   const sizeClasses = {
-    sm: "max-w-sm",
-    md: "max-w-md",
-    lg: "max-w-lg",
-    xl: "max-w-xl",
-    fullscreen: "max-w-screen max-h-screen",
+    sm: 'max-w-sm',
+    md: 'max-w-md',
+    lg: 'max-w-lg',
+    xl: 'max-w-xl',
+    fullscreen: 'max-w-screen max-h-screen',
   };
 
   return (
     <>
       {/* オーバーレイ */}
       <div
-        className="fixed inset-0 bg-black/50 z-40"
+        className='fixed inset-0 bg-black/50 z-40'
         onClick={onClose}
-        aria-hidden="true"
+        aria-hidden='true'
       />
 
       {/* モーダル */}
       <div
-        className="fixed inset-0 z-50 flex items-center justify-center p-4"
-        role="dialog"
-        aria-modal="true"
+        className='fixed inset-0 z-50 flex items-center justify-center p-4'
+        role='dialog'
+        aria-modal='true'
         aria-labelledby={title ? `${modalId}-title` : undefined}
         id={modalId}
       >
         <div
           className={`w-full ${sizeClasses[size]} ${
-            size === "fullscreen"
-              ? "bg-transparent shadow-none rounded-none"
-              : "bg-white rounded-lg shadow-xl"
+            size === 'fullscreen'
+              ? 'bg-transparent shadow-none rounded-none'
+              : 'bg-white rounded-lg shadow-xl'
           } transform transition-all duration-300 ease-in-out ${className}`}
-          onClick={(e) => e.stopPropagation()}
+          onClick={e => e.stopPropagation()}
         >
           {/* ヘッダー */}
           {(title || showCloseButton) && (
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+            <div className='flex items-center justify-between p-6 border-b border-gray-200'>
               {title && (
                 <h2
                   id={`${modalId}-title`}
-                  className="font-noto text-lg font-semibold text-gray-900"
+                  className='font-noto text-lg font-semibold text-gray-900'
                 >
                   {title}
                 </h2>
@@ -129,20 +129,20 @@ const Modal: React.FC<ModalProps> = ({
               {showCloseButton && (
                 <button
                   onClick={onClose}
-                  className="p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lavender-500 focus:ring-offset-2 rounded-md"
-                  aria-label="モーダルを閉じる"
+                  className='p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lavender-500 focus:ring-offset-2 rounded-md'
+                  aria-label='モーダルを閉じる'
                 >
                   <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
+                    className='w-5 h-5'
+                    fill='none'
+                    stroke='currentColor'
+                    viewBox='0 0 24 24'
                   >
                     <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
                       strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
+                      d='M6 18L18 6M6 6l12 12'
                     />
                   </svg>
                 </button>
@@ -151,7 +151,7 @@ const Modal: React.FC<ModalProps> = ({
           )}
 
           {/* コンテンツ */}
-          <div className={size === "fullscreen" ? "" : "p-6"}>{children}</div>
+          <div className={size === 'fullscreen' ? '' : 'p-6'}>{children}</div>
         </div>
       </div>
     </>

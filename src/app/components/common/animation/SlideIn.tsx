@@ -4,8 +4,8 @@
  * @since 1.0.0
  */
 
-import React from "react";
-import { motion } from "motion/react";
+import React from 'react';
+import { motion } from 'motion/react';
 
 /**
  * @description スライドインアニメーションコンポーネントのProps型定義
@@ -22,11 +22,11 @@ interface SlideInProps {
   /** 追加のCSSクラス */
   className?: string;
   /** アニメーションの方向 */
-  direction?: "up" | "down" | "left" | "right";
+  direction?: 'up' | 'down' | 'left' | 'right';
   /** アニメーションの距離 */
   distance?: number;
   /** アニメーションのイージング */
-  ease?: "linear" | "easeIn" | "easeOut" | "easeInOut";
+  ease?: 'linear' | 'easeIn' | 'easeOut' | 'easeInOut';
 }
 
 /**
@@ -42,20 +42,20 @@ const SlideIn: React.FC<SlideInProps> = ({
   children,
   delay = 0,
   duration = 0.6,
-  className = "",
-  direction = "left",
+  className = '',
+  direction = 'left',
   distance = 50,
-  ease = "easeOut" as const,
+  ease = 'easeOut' as const,
 }) => {
   const getInitialPosition = () => {
     switch (direction) {
-      case "up":
+      case 'up':
         return { y: distance, opacity: 0 };
-      case "down":
+      case 'down':
         return { y: -distance, opacity: 0 };
-      case "left":
+      case 'left':
         return { x: distance, opacity: 0 };
-      case "right":
+      case 'right':
         return { x: -distance, opacity: 0 };
       default:
         return { x: distance, opacity: 0 };

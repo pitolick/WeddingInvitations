@@ -4,7 +4,7 @@
  * @since 1.0.0
  */
 
-import React, { useId } from "react";
+import React, { useId } from 'react';
 
 /**
  * @description InputコンポーネントのProps型定義
@@ -12,7 +12,7 @@ import React, { useId } from "react";
  * @since 1.0.0
  */
 interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
   /** 入力値 */
   value: string;
   /** ラベルテキスト */
@@ -45,10 +45,10 @@ const Input: React.FC<InputProps> = ({
   label,
   error,
   onChange,
-  className = "",
+  className = '',
   id,
   name,
-  type = "text",
+  type = 'text',
   placeholder,
   required = false,
   disabled = false,
@@ -63,21 +63,21 @@ const Input: React.FC<InputProps> = ({
   const inputId = id || `input-${name || generatedId}`;
 
   const baseClasses =
-    "w-full px-4 py-3 font-noto text-base text-gray-900 bg-white border border-gray-300 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lavender-500 focus:border-lavender-500 disabled:opacity-50 disabled:cursor-not-allowed read-only:bg-gray-50";
+    'w-full px-4 py-3 font-noto text-base text-gray-900 bg-white border border-gray-300 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lavender-500 focus:border-lavender-500 disabled:opacity-50 disabled:cursor-not-allowed read-only:bg-gray-50';
 
   const errorClasses = error
-    ? "border-pink-500 focus:ring-pink-500 focus:border-pink-500"
-    : "";
+    ? 'border-pink-500 focus:ring-pink-500 focus:border-pink-500'
+    : '';
 
   return (
     <div className={`space-y-2 ${className}`}>
       {label && (
         <label
           htmlFor={inputId}
-          className="block font-noto text-sm font-medium text-gray-700"
+          className='block font-noto text-sm font-medium text-gray-700'
         >
           {label}
-          {required && <span className="text-pink-500 ml-1">*</span>}
+          {required && <span className='text-pink-500 ml-1'>*</span>}
         </label>
       )}
       <input
@@ -90,20 +90,20 @@ const Input: React.FC<InputProps> = ({
         readOnly={readOnly}
         maxLength={maxLength}
         minLength={minLength}
-        onChange={(e) => onChange?.(e.target.value)}
+        onChange={e => onChange?.(e.target.value)}
         onFocus={onFocus}
         onBlur={onBlur}
         name={name}
         className={`${baseClasses} ${errorClasses}`}
         aria-describedby={error ? `${inputId}-error` : undefined}
-        aria-invalid={error ? "true" : "false"}
+        aria-invalid={error ? 'true' : 'false'}
         {...rest}
       />
       {error && (
         <p
           id={`${inputId}-error`}
-          className="font-noto text-sm text-pink-600"
-          role="alert"
+          className='font-noto text-sm text-pink-600'
+          role='alert'
         >
           {error}
         </p>

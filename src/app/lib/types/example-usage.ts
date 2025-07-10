@@ -19,7 +19,7 @@ import {
   ErrorInfo,
   ValidationResult,
   PerformanceMetrics,
-} from "./index";
+} from './index';
 
 import {
   APP_CONFIG,
@@ -42,7 +42,7 @@ import {
   VALIDATION_CONFIG,
   PERFORMANCE_CONFIG,
   ACCESSIBILITY_CONFIG,
-} from "../constants/index";
+} from '../constants/index';
 
 /**
  * @description 型定義と定数の使用例
@@ -54,19 +54,19 @@ export class TypeDefinitionExample {
    */
   static createGuestExample(): Guest {
     return {
-      id: "guest-1",
-      name: "テスト太郎",
-      email: "test@example.com",
+      id: 'guest-1',
+      name: 'テスト太郎',
+      email: 'test@example.com',
       companions: [
         {
-          id: "companion-1",
-          name: "お連れ様太郎",
+          id: 'companion-1',
+          name: 'お連れ様太郎',
           age: 30,
-          relationship: "友人",
+          relationship: '友人',
         },
       ],
       rsvpStatus: RSVP_STATUS.PENDING,
-      message: "参加します",
+      message: '参加します',
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -78,13 +78,13 @@ export class TypeDefinitionExample {
    */
   static createEventExample(): Event {
     return {
-      id: "event-1",
-      name: "結婚式",
+      id: 'event-1',
+      name: '結婚式',
       date: EVENT_INFO.WEDDING_DATE,
       venue: EVENT_INFO.VENUE,
       address: EVENT_INFO.ADDRESS,
       mapUrl: EVENT_INFO.MAP_URL,
-      description: "ディズニーテーマの結婚式",
+      description: 'ディズニーテーマの結婚式',
     };
   }
 
@@ -106,10 +106,10 @@ export class TypeDefinitionExample {
    */
   static createRSVPFormDataExample(): RSVPFormData {
     return {
-      guestId: "guest-1",
+      guestId: 'guest-1',
       status: RSVP_STATUS.ATTENDING,
       companionCount: 2,
-      message: "参加します",
+      message: '参加します',
       dietaryRestrictions: FORM_CONFIG.DIETARY_OPTIONS[1], // ベジタリアン
     };
   }
@@ -121,7 +121,7 @@ export class TypeDefinitionExample {
   static createImageConfigExample(): ImageConfig {
     return {
       src: `${IMAGE_PATHS.SECTIONS}/mv-hero.jpg`,
-      alt: "メインビジュアル画像",
+      alt: 'メインビジュアル画像',
       width: 1200,
       height: 800,
       responsive: {
@@ -141,7 +141,7 @@ export class TypeDefinitionExample {
       duration: ANIMATION_CONFIG.DURATION,
       easing: ANIMATION_CONFIG.EASING,
       delay: ANIMATION_CONFIG.DELAY,
-      direction: "up",
+      direction: 'up',
     };
   }
 
@@ -152,9 +152,9 @@ export class TypeDefinitionExample {
   static createNavigationItemExample(): NavigationItem {
     return {
       id: SECTION_IDS.MV,
-      name: "トップ",
+      name: 'トップ',
       href: `#${SECTION_IDS.MV}`,
-      icon: "home",
+      icon: 'home',
       isActive: true,
     };
   }
@@ -166,7 +166,7 @@ export class TypeDefinitionExample {
   static createCountdownConfigExample(): CountdownConfig {
     return {
       targetDate: COUNTDOWN_CONFIG.TARGET_DATE,
-      format: COUNTDOWN_CONFIG.FORMAT as CountdownConfig["format"],
+      format: COUNTDOWN_CONFIG.FORMAT as CountdownConfig['format'],
       interval: COUNTDOWN_CONFIG.UPDATE_INTERVAL,
     };
   }
@@ -177,11 +177,11 @@ export class TypeDefinitionExample {
    */
   static createGalleryItemExample(): GalleryItem {
     return {
-      id: "gallery-1",
+      id: 'gallery-1',
       image: this.createImageConfigExample(),
-      title: "結婚式の写真",
-      description: "素晴らしい結婚式の写真です",
-      category: "式場",
+      title: '結婚式の写真',
+      description: '素晴らしい結婚式の写真です',
+      category: '式場',
     };
   }
 
@@ -191,11 +191,11 @@ export class TypeDefinitionExample {
    */
   static createMessageItemExample(): MessageItem {
     return {
-      id: "message-1",
-      sender: "ゲスト太郎",
-      content: "おめでとうございます！素晴らしい結婚式でした。",
+      id: 'message-1',
+      sender: 'ゲスト太郎',
+      content: 'おめでとうございます！素晴らしい結婚式でした。',
       timestamp: new Date(),
-      avatar: "/images/avatars/guest.jpg",
+      avatar: '/images/avatars/guest.jpg',
     };
   }
 
@@ -209,7 +209,7 @@ export class TypeDefinitionExample {
       brideName: HOST_CONFIG.BRIDE.name,
       groomImage: HOST_CONFIG.GROOM.image,
       brideImage: HOST_CONFIG.BRIDE.image,
-      introduction: "新郎新婦の紹介文です",
+      introduction: '新郎新婦の紹介文です',
     };
   }
 
@@ -219,9 +219,9 @@ export class TypeDefinitionExample {
    */
   static createErrorInfoExample(): ErrorInfo {
     return {
-      code: "NETWORK_ERROR",
+      code: 'NETWORK_ERROR',
       message: ERROR_MESSAGES.NETWORK_ERROR,
-      details: "詳細なエラー情報",
+      details: '詳細なエラー情報',
       timestamp: new Date(),
     };
   }
@@ -234,7 +234,7 @@ export class TypeDefinitionExample {
     return {
       isValid: true,
       errors: [],
-      warnings: ["軽微な警告"],
+      warnings: ['軽微な警告'],
     };
   }
 

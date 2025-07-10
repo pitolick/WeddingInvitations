@@ -1,8 +1,8 @@
 ---
 name: タスク
 about: プロジェクトのタスク管理用issue
-title: "[タスク] "
-labels: ["task"]
+title: '[タスク] '
+labels: ['task']
 assignees: []
 ---
 

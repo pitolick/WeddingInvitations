@@ -19,7 +19,12 @@ Figma-Context-MCPを使用して、Figmaデザインから結婚式のWeb招待�
   "mcpServers": {
     "Framelink Figma MCP": {
       "command": "npx",
-      "args": ["-y", "figma-developer-mcp", "--figma-api-key=YOUR_ACTUAL_API_KEY", "--stdio"]
+      "args": [
+        "-y",
+        "figma-developer-mcp",
+        "--figma-api-key=YOUR_ACTUAL_API_KEY",
+        "--stdio"
+      ]
     }
   }
 }
@@ -37,7 +42,7 @@ Figma-Context-MCPを使用して、Figmaデザインから結婚式のWeb招待�
 
 ## プロジェクト構造
 
-``` プロジェクト構造
+```プロジェクト構造
 ├── .cursorrules          # Cursor設定ファイル
 ├── env.example           # 環境変数サンプル
 ├── package.json          # プロジェクト設定
@@ -55,7 +60,7 @@ Figma-Context-MCPを使用して、Figmaデザインから結婚式のWeb招待�
 - Figma APIキーは機密情報です。公開リポジトリにコミットしないでください
 - 環境変数ファイル（.env）は.gitignoreに含めることを推奨します
 
---------
+---
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 

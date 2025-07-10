@@ -4,4 +4,4 @@
  * @since 1.0.0
  */
 
-export { default } from "./Dust";
+export { default } from './Dust';

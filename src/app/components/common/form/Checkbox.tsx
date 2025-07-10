@@ -4,7 +4,7 @@
  * @since 1.0.0
  */
 
-import React, { useId } from "react";
+import React, { useId } from 'react';
 
 /**
  * @description チェックボックスオプションの型定義
@@ -73,7 +73,7 @@ interface CheckboxGroupProps {
   /** 名前属性 */
   name?: string;
   /** レイアウトタイプ */
-  layout?: "vertical" | "horizontal";
+  layout?: 'vertical' | 'horizontal';
   /** 横並び時のカラム数（レスポンシブ対応） */
   columns?: {
     mobile?: number;
@@ -99,7 +99,7 @@ const SingleCheckbox: React.FC<SingleCheckboxProps> = ({
   label,
   error,
   onChange,
-  className = "",
+  className = '',
   required = false,
   disabled = false,
   name,
@@ -110,31 +110,31 @@ const SingleCheckbox: React.FC<SingleCheckboxProps> = ({
 
   return (
     <div className={`space-y-2 ${className}`}>
-      <div className="flex items-start">
+      <div className='flex items-start'>
         <input
           id={checkboxId}
-          type="checkbox"
+          type='checkbox'
           checked={checked}
           disabled={disabled}
-          onChange={(e) => onChange?.(e.target.checked)}
+          onChange={e => onChange?.(e.target.checked)}
           name={name}
           value={value}
-          className="mt-1 h-4 w-4 text-lavender-600 border-gray-300 rounded focus:ring-lavender-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          className='mt-1 h-4 w-4 text-lavender-600 border-gray-300 rounded focus:ring-lavender-500 disabled:opacity-50 disabled:cursor-not-allowed'
           aria-describedby={error ? `${checkboxId}-error` : undefined}
-          aria-invalid={error ? "true" : "false"}
+          aria-invalid={error ? 'true' : 'false'}
         />
         {label && (
-          <div className="ml-3 flex-1">
+          <div className='ml-3 flex-1'>
             <label
               htmlFor={checkboxId}
               className={`block font-noto text-sm ${
                 disabled
-                  ? "text-gray-400 cursor-not-allowed"
-                  : "text-gray-900 cursor-pointer"
+                  ? 'text-gray-400 cursor-not-allowed'
+                  : 'text-gray-900 cursor-pointer'
               }`}
             >
               {label}
-              {required && <span className="text-pink-500 ml-1">*</span>}
+              {required && <span className='text-pink-500 ml-1'>*</span>}
             </label>
           </div>
         )}
@@ -142,8 +142,8 @@ const SingleCheckbox: React.FC<SingleCheckboxProps> = ({
       {error && (
         <p
           id={`${checkboxId}-error`}
-          className="font-noto text-sm text-pink-600"
-          role="alert"
+          className='font-noto text-sm text-pink-600'
+          role='alert'
         >
           {error}
         </p>
@@ -174,11 +174,11 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   label,
   error,
   onChange,
-  className = "",
+  className = '',
   required = false,
   disabled = false,
   name,
-  layout = "vertical",
+  layout = 'vertical',
   columns = { mobile: 1, tablet: 2, desktop: 3 },
 }) => {
   const generatedId = useId();
@@ -199,28 +199,28 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
     if (checked) {
       onChange([...values, optionValue]);
     } else {
-      onChange(values.filter((value) => value !== optionValue));
+      onChange(values.filter(value => value !== optionValue));
     }
   };
 
   return (
     <div className={`space-y-3 ${className}`}>
       {label && (
-        <div className="flex items-center">
-          <label className="block font-noto text-sm font-medium text-gray-700">
+        <div className='flex items-center'>
+          <label className='block font-noto text-sm font-medium text-gray-700'>
             {label}
-            {required && <span className="text-pink-500 ml-1">*</span>}
+            {required && <span className='text-pink-500 ml-1'>*</span>}
           </label>
         </div>
       )}
       <div
         className={`${
-          layout === "horizontal" ? getGridClasses() : "space-y-2"
+          layout === 'horizontal' ? getGridClasses() : 'space-y-2'
         }`}
-        role="group"
+        role='group'
         aria-labelledby={label ? `${groupId}-label` : undefined}
         aria-describedby={error ? `${groupId}-error` : undefined}
-        aria-invalid={error ? "true" : "false"}
+        aria-invalid={error ? 'true' : 'false'}
       >
         {options.map((option, index) => {
           const optionId = `${groupId}-${index}`;
@@ -228,29 +228,29 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
           const isOptionDisabled = disabled || option.disabled;
 
           return (
-            <div key={option.value} className="flex items-start">
+            <div key={option.value} className='flex items-start'>
               <input
                 id={optionId}
-                type="checkbox"
+                type='checkbox'
                 name={name}
                 value={option.value}
                 checked={isChecked}
                 disabled={isOptionDisabled}
-                onChange={(e) =>
+                onChange={e =>
                   handleOptionChange(option.value, e.target.checked)
                 }
-                className="mt-1 h-4 w-4 text-lavender-600 border-gray-300 rounded focus:ring-lavender-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className='mt-1 h-4 w-4 text-lavender-600 border-gray-300 rounded focus:ring-lavender-500 disabled:opacity-50 disabled:cursor-not-allowed'
                 aria-describedby={
                   option.description ? `${optionId}-description` : undefined
                 }
               />
-              <div className="ml-3 flex-1">
+              <div className='ml-3 flex-1'>
                 <label
                   htmlFor={optionId}
                   className={`block font-noto text-sm ${
                     isOptionDisabled
-                      ? "text-gray-400 cursor-not-allowed"
-                      : "text-gray-900 cursor-pointer"
+                      ? 'text-gray-400 cursor-not-allowed'
+                      : 'text-gray-900 cursor-pointer'
                   }`}
                 >
                   {option.label}
@@ -259,7 +259,7 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
                   <p
                     id={`${optionId}-description`}
                     className={`font-noto text-sm mt-1 ${
-                      isOptionDisabled ? "text-gray-400" : "text-gray-500"
+                      isOptionDisabled ? 'text-gray-400' : 'text-gray-500'
                     }`}
                   >
                     {option.description}
@@ -273,8 +273,8 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
       {error && (
         <p
           id={`${groupId}-error`}
-          className="font-noto text-sm text-pink-600"
-          role="alert"
+          className='font-noto text-sm text-pink-600'
+          role='alert'
         >
           {error}
         </p>
@@ -288,11 +288,9 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
  * @param props - コンポーネントのProps
  * @returns JSX.Element
  */
-const Checkbox: React.FC<SingleCheckboxProps | CheckboxGroupProps> = (
-  props
-) => {
+const Checkbox: React.FC<SingleCheckboxProps | CheckboxGroupProps> = props => {
   // グループかどうかを判定（optionsプロパティの存在で判定）
-  if ("options" in props) {
+  if ('options' in props) {
     return <CheckboxGroup {...(props as CheckboxGroupProps)} />;
   } else {
     return <SingleCheckbox {...(props as SingleCheckboxProps)} />;

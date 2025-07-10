@@ -4,7 +4,7 @@
  * @since 1.0.0
  */
 
-import { BREAKPOINTS } from "@/app/lib/constants";
+import { BREAKPOINTS } from '@/app/lib/constants';
 
 /**
  * @description レスポンシブ画像オブジェクトの型定義
@@ -82,7 +82,7 @@ export function getImageOptimization(
     priority,
     sizes: sizes,
     quality: 85,
-    format: "webp" as const,
+    format: 'webp' as const,
   };
 }
 
@@ -95,7 +95,7 @@ export function getImageOptimization(
  */
 export function getLazyLoadConfig(threshold: number = 0.1) {
   return {
-    loading: "lazy" as const,
+    loading: 'lazy' as const,
     threshold,
   };
 }

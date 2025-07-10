@@ -4,4 +4,4 @@
  * @since 1.0.0
  */
 
-export { default } from "./PlusCircle";
+export { default } from './PlusCircle';

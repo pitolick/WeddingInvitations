@@ -4,8 +4,8 @@
  * @since 1.0.0
  */
 
-import React, { useState, useEffect } from "react";
-import { ResponsiveImage, getResponsiveImagePath } from "@/app/lib/utils/image";
+import React, { useState, useEffect } from 'react';
+import { ResponsiveImage, getResponsiveImagePath } from '@/app/lib/utils/image';
 
 /**
  * @description レスポンシブ画像コンポーネントのProps型定義
@@ -41,19 +41,19 @@ interface ResponsiveImageComponentProps {
  */
 const ResponsiveImageComponent: React.FC<ResponsiveImageComponentProps> = ({
   responsiveImage,
-  className = "",
+  className = '',
   sizes = {},
   lazy = true,
-  fallbackSrc = "/images/fallback.webp",
+  fallbackSrc = '/images/fallback.webp',
 }) => {
-  const [currentSrc, setCurrentSrc] = useState<string>("");
+  const [currentSrc, setCurrentSrc] = useState<string>('');
   const [windowWidth, setWindowWidth] = useState<number>(0);
 
   /**
    * @description ウィンドウサイズの変更を監視する
    */
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === 'undefined') return;
 
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -63,11 +63,11 @@ const ResponsiveImageComponent: React.FC<ResponsiveImageComponentProps> = ({
     setWindowWidth(window.innerWidth);
 
     // リサイズイベントリスナーを追加
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     // クリーンアップ
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -105,7 +105,7 @@ const ResponsiveImageComponent: React.FC<ResponsiveImageComponentProps> = ({
       parts.push(sizes.desktop);
     }
 
-    return parts.join(", ") || "100vw";
+    return parts.join(', ') || '100vw';
   };
 
   return (
@@ -113,7 +113,7 @@ const ResponsiveImageComponent: React.FC<ResponsiveImageComponentProps> = ({
       src={currentSrc}
       alt={responsiveImage.alt}
       className={className}
-      loading={lazy ? "lazy" : "eager"}
+      loading={lazy ? 'lazy' : 'eager'}
       sizes={generateSizes()}
       onError={handleError}
     />

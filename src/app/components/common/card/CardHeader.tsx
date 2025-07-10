@@ -4,7 +4,7 @@
  * @since 1.0.0
  */
 
-import React from "react";
+import React from 'react';
 
 /**
  * @description CardHeaderコンポーネントのProps型定義
@@ -29,7 +29,7 @@ interface CardHeaderProps {
  */
 const CardHeader: React.FC<CardHeaderProps> = ({
   children,
-  className = "",
+  className = '',
 }) => {
   return (
     <div className={`pb-4 border-b border-gray-200 ${className}`}>
