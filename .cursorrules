@@ -205,3 +205,11 @@
 # - Use devLogger for development environment debugging
 
 # - Use logUtils for common logging patterns (user actions, errors, API calls)
+
+# コミット運用ルール
+
+# - コミット時に `--no-verify` オプションを付与して、Husky等のプリフックによるテスト・Lint・Formatチェックを回避することを**禁止**します。
+
+# - 必ず全てのチェックが通った状態でコミットすること
+
+# - 強制コミットが必要な場合は、必ずリーダーの承認を得てから実施すること
