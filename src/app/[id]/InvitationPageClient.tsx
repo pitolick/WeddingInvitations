@@ -9,6 +9,7 @@
 import React from 'react';
 import MainVisual from '@/app/components/sections/mv';
 import Navigation from '@/app/components/sections/navigation';
+import Countdown from '@/app/components/sections/countdown';
 import { clientDevLogger } from '@/app/lib/logger/client';
 
 /**
@@ -142,6 +143,9 @@ export default function InvitationPageClient({
     <div className='min-h-screen'>
       {/* メインビジュアル（MV）セクション */}
       <MainVisual />
+
+      {/* カウントダウンセクション */}
+      <Countdown />
 
       {/* ナビゲーションセクション */}
       <Navigation />

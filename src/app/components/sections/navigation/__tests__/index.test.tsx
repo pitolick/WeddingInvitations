@@ -124,7 +124,7 @@ describe('Navigation', () => {
 
     const section = screen.getByTestId('navigation-section');
     const container = section.querySelector(
-      '.flex.flex-col.items-center.sm\\:flex-row.sm\\:justify-center.gap-2'
+      '.flex.items-center.justify-center.gap-2'
     );
     expect(container).toBeInTheDocument();
   });
@@ -155,6 +155,62 @@ describe('Navigation', () => {
         'transition-opacity',
         'duration-200'
       );
+    });
+  });
+
+  /**
+   * @description モバイルレイアウトのテスト
+   */
+  it('モバイルレイアウトが正しく適用される', () => {
+    render(<Navigation />);
+
+    const section = screen.getByTestId('navigation-section');
+
+    // モバイル用のレスポンシブクラスが適用されていることを確認
+    expect(section).toHaveClass('w-full', 'bg-lavender-600', 'py-4');
+
+    // ナビゲーションコンテナのモバイルレイアウト
+    const container = section.querySelector(
+      '.flex.items-center.justify-center.gap-2'
+    );
+    expect(container).toBeInTheDocument();
+
+    // 各ナビゲーション項目のモバイルレイアウト
+    const links = screen.getAllByRole('link');
+    links.forEach(link => {
+      // モバイルでは縦並びレイアウト
+      expect(link).toHaveClass('flex', 'flex-col', 'items-center');
+      // モバイル用の幅設定
+      expect(link).toHaveClass('w-28');
+      // モバイル用の間隔設定
+      expect(link).toHaveClass('gap-0.5');
+    });
+  });
+
+  /**
+   * @description モバイル表示でのアクセシビリティテスト
+   */
+  it('モバイル表示でもアクセシビリティが保たれる', () => {
+    render(<Navigation />);
+
+    // 各ナビゲーション項目が適切なaria-labelを持つことを確認
+    const messageLink = screen.getByRole('link', {
+      name: /ご挨拶セクションへ移動/,
+    });
+    const eventLink = screen.getByRole('link', {
+      name: /日時・会場セクションへ移動/,
+    });
+    const rsvpLink = screen.getByRole('link', {
+      name: /ご出欠セクションへ移動/,
+    });
+
+    expect(messageLink).toBeInTheDocument();
+    expect(eventLink).toBeInTheDocument();
+    expect(rsvpLink).toBeInTheDocument();
+
+    // モバイルでもタッチターゲットサイズが適切であることを確認
+    [messageLink, eventLink, rsvpLink].forEach(link => {
+      expect(link).toHaveClass('w-28'); // 十分な幅を確保
     });
   });
 });
