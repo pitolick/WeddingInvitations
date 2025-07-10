@@ -42,7 +42,7 @@ const Navigation = () => {
       className='w-full bg-lavender-600 py-4'
       data-testid='navigation-section'
     >
-      <div className='flex flex-col items-center sm:flex-row sm:justify-center gap-2'>
+      <div className='flex items-center justify-center gap-2'>
         {NAV_ITEMS.map(item => (
           <a
             key={item.key}

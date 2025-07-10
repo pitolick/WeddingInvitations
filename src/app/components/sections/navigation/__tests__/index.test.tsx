@@ -124,7 +124,7 @@ describe('Navigation', () => {
 
     const section = screen.getByTestId('navigation-section');
     const container = section.querySelector(
-      '.flex.flex-col.items-center.sm\\:flex-row.sm\\:justify-center.gap-2'
+      '.flex.items-center.justify-center.gap-2'
     );
     expect(container).toBeInTheDocument();
   });
