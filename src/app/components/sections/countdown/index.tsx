@@ -66,7 +66,7 @@ const Countdown: React.FC = () => {
       setCountdown(calculateCountdown(weddingDate));
     }, 1000);
     return () => clearInterval(timer);
-  }, []);
+  }, []); // getWeddingDateとcalculateCountdownは純粋関数なので依存配列は空で問題ありません
 
   // アニメーション用variants
   const numberVariants = {
