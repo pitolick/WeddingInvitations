@@ -1,8 +1,8 @@
 ---
 name: 機能追加
 about: 新機能の追加用issue
-title: "[機能] "
-labels: ["enhancement"]
+title: '[機能] '
+labels: ['enhancement']
 assignees: []
 ---
 

@@ -261,11 +261,11 @@ Issue テンプレートは `.github/ISSUE_TEMPLATE` ディレクトリ内のフ
 ```javascript
 // GitHub MCPを使ってissueを作成
 const issue = await github.createIssue({
-  owner: "username",
-  repo: "WeddingInvitations",
-  title: "MVセクション実装",
-  body: "メインビジュアルセクションの実装...",
-  labels: ["implementation", "section", "mv", "phase3"],
+  owner: 'username',
+  repo: 'WeddingInvitations',
+  title: 'MVセクション実装',
+  body: 'メインビジュアルセクションの実装...',
+  labels: ['implementation', 'section', 'mv', 'phase3'],
 });
 ```
 
@@ -323,12 +323,10 @@ curl -H "Authorization: token YOUR_TOKEN" \
 ### よくあるエラー
 
 1. **GITHUB_TOKEN not set**
-
    - 環境変数が設定されていない
    - 解決: `export GITHUB_TOKEN=your_token`
 
 2. **権限エラー**
-
    - トークンの権限が不足
    - 解決: GitHub でトークンの権限を確認・更新
 
@@ -339,12 +337,10 @@ curl -H "Authorization: token YOUR_TOKEN" \
 ### よくある問題
 
 1. **権限エラー**
-
    - GitHub Token の権限を確認
    - リポジトリへのアクセス権限を確認
 
 2. **Rate Limit**
-
    - GitHub API の制限を確認
    - 必要に応じてトークンを更新
 

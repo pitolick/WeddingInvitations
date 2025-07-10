@@ -1,8 +1,8 @@
 ---
 name: バグ報告
 about: バグの報告用issue
-title: "[バグ] "
-labels: ["bug"]
+title: '[バグ] '
+labels: ['bug']
 assignees: []
 ---
 

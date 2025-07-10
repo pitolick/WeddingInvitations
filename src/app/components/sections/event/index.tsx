@@ -4,7 +4,7 @@
  * @since 1.0.0
  */
 
-import React from "react";
+import React from 'react';
 
 /**
  * @description イベントセクションのProps型定義
@@ -25,12 +25,12 @@ interface EventProps {
  * @example
  * <Event id="event" className="section-event" />
  */
-const Event: React.FC<EventProps> = ({ id = "event", className = "" }) => {
+const Event: React.FC<EventProps> = ({ id = 'event', className = '' }) => {
   return (
     <section id={id} className={`event-section ${className}`}>
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center">イベントセクション</h2>
-        <p className="text-center mt-4">イベント詳細セクション</p>
+      <div className='container mx-auto px-4'>
+        <h2 className='text-3xl font-bold text-center'>イベントセクション</h2>
+        <p className='text-center mt-4'>イベント詳細セクション</p>
       </div>
     </section>
   );

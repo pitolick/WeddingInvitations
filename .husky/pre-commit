@@ -1,0 +1,34 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# コミット前の自動テスト実行
+echo "🧪 Running tests before commit..."
+npm run test:ci
+
+# テストが失敗した場合はコミットを中止
+if [ $? -ne 0 ]; then
+  echo "❌ Tests failed. Commit aborted."
+  exit 1
+fi
+
+# コミット前のlintチェック
+echo "🔍 Running lint check before commit..."
+npm run lint
+
+# lintが失敗した場合はコミットを中止
+if [ $? -ne 0 ]; then
+  echo "❌ Lint check failed. Commit aborted."
+  exit 1
+fi
+
+# フォーマットチェック
+echo "🎨 Running format check before commit..."
+npm run format:check
+
+# フォーマットが失敗した場合はコミットを中止
+if [ $? -ne 0 ]; then
+  echo "❌ Format check failed. Commit aborted."
+  exit 1
+fi
+
+echo "✅ All checks passed. Proceeding with commit..."

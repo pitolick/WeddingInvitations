@@ -27,15 +27,16 @@
 
 #### 画像命名規則
 
-- **セクション別画像**: `{section-name}-{description}-{breakpoint}.{extension}`
-  - 例: `mv-hero-mobile.webp`, `gallery-photo1-tablet.webp`, `host-groom-desktop.webp`
-- **共通画像**: `{description}-{breakpoint}.{extension}`
-  - 例: `logo.png`, `background-mobile.webp`, `favicon.ico`
+- **セクション別画像**: `{section-name}-{description}[-{breakpoint}].{extension}`
+  - 例: `mv-hero.webp`, `mv-hero-mobile.webp`, `gallery-photo1-tablet.webp`, `host-groom-desktop.webp`
+- **共通画像**: `{description}[-{breakpoint}].{extension}`
+  - 例: `logo.png`, `background.webp`, `background-mobile.webp`, `favicon.ico`
 - **アイコン画像**: SVG は `src/app/components/common/icon/` で React コンポーネントとして管理
   - 例: `Arrow.tsx`, `Menu.tsx`, `Close.tsx`
 - **SNS アイコン**: SVG は `src/app/components/common/icon/` で React コンポーネントとして管理
   - 例: `Instagram.tsx`, `Facebook.tsx`, `Twitter.tsx`
 - **ブレークポイント**: `mobile` (640px 以下), `tablet` (641px-1024px), `desktop` (1025px 以上)
+- **注意**: デバイスごとの画像出し分けが不要な場合は `{breakpoint}` を省略可能
 
 #### 画像最適化設定
 
@@ -77,43 +78,53 @@ import ResponsiveImageComponent from "@/app/components/common/image/ResponsiveIm
 public/images/
 ├── sections/          # セクション別画像
 │   ├── mv/           # MVセクション画像
-│   │   ├── hero-mobile.webp    # モバイル用ヒーロー画像
-│   │   ├── hero-tablet.webp    # タブレット用ヒーロー画像
-│   │   ├── hero-desktop.webp   # デスクトップ用ヒーロー画像
-│   │   ├── background-mobile.webp
-│   │   ├── background-tablet.webp
-│   │   └── background-desktop.webp
+│   │   ├── hero.webp              # 共通ヒーロー画像（ブレークポイント省略）
+│   │   ├── hero-mobile.webp       # モバイル用ヒーロー画像
+│   │   ├── hero-tablet.webp       # タブレット用ヒーロー画像
+│   │   ├── hero-desktop.webp      # デスクトップ用ヒーロー画像
+│   │   ├── background.webp        # 共通背景画像
+│   │   ├── background-mobile.webp # モバイル用背景画像
+│   │   ├── background-tablet.webp # タブレット用背景画像
+│   │   └── background-desktop.webp # デスクトップ用背景画像
 │   ├── gallery/      # ギャラリー画像
-│   │   ├── photo1-mobile.webp
-│   │   ├── photo1-tablet.webp
-│   │   ├── photo1-desktop.webp
-│   │   ├── photo2-mobile.webp
-│   │   ├── photo2-tablet.webp
-│   │   └── photo2-desktop.webp
+│   │   ├── photo1.webp            # 共通写真1
+│   │   ├── photo1-mobile.webp     # モバイル用写真1
+│   │   ├── photo1-tablet.webp     # タブレット用写真1
+│   │   ├── photo1-desktop.webp    # デスクトップ用写真1
+│   │   ├── photo2.webp            # 共通写真2
+│   │   ├── photo2-mobile.webp     # モバイル用写真2
+│   │   ├── photo2-tablet.webp     # タブレット用写真2
+│   │   └── photo2-desktop.webp    # デスクトップ用写真2
 │   ├── host/         # ホスト画像
-│   │   ├── groom-mobile.webp
-│   │   ├── groom-tablet.webp
-│   │   ├── groom-desktop.webp
-│   │   ├── bride-mobile.webp
-│   │   ├── bride-tablet.webp
-│   │   └── bride-desktop.webp
+│   │   ├── groom.webp             # 共通新郎画像
+│   │   ├── groom-mobile.webp      # モバイル用新郎画像
+│   │   ├── groom-tablet.webp      # タブレット用新郎画像
+│   │   ├── groom-desktop.webp     # デスクトップ用新郎画像
+│   │   ├── bride.webp             # 共通新婦画像
+│   │   ├── bride-mobile.webp      # モバイル用新婦画像
+│   │   ├── bride-tablet.webp      # タブレット用新婦画像
+│   │   └── bride-desktop.webp     # デスクトップ用新婦画像
 │   ├── event/        # イベント画像
-│   │   ├── venue-mobile.webp
-│   │   ├── venue-tablet.webp
-│   │   ├── venue-desktop.webp
-│   │   ├── map-mobile.webp
-│   │   ├── map-tablet.webp
-│   │   └── map-desktop.webp
+│   │   ├── venue.webp             # 共通会場画像
+│   │   ├── venue-mobile.webp      # モバイル用会場画像
+│   │   ├── venue-tablet.webp      # タブレット用会場画像
+│   │   ├── venue-desktop.webp     # デスクトップ用会場画像
+│   │   ├── map.webp               # 共通地図画像
+│   │   ├── map-mobile.webp        # モバイル用地図画像
+│   │   ├── map-tablet.webp        # タブレット用地図画像
+│   │   └── map-desktop.webp       # デスクトップ用地図画像
 │   └── countdown/    # カウントダウン画像
-│       ├── background-mobile.webp
-│       ├── background-tablet.webp
-│       └── background-desktop.webp
+│       ├── background.webp        # 共通背景画像
+│       ├── background-mobile.webp # モバイル用背景画像
+│       ├── background-tablet.webp # タブレット用背景画像
+│       └── background-desktop.webp # デスクトップ用背景画像
 └── common/           # 共通画像
-    ├── logo.png      # ロゴ
-    ├── background-mobile.webp
-    ├── background-tablet.webp
-    ├── background-desktop.webp
-    └── favicon.ico   # ファビコン
+    ├── logo.png      # ロゴ（ブレークポイント省略）
+    ├── background.webp        # 共通背景画像
+    ├── background-mobile.webp # モバイル用背景画像
+    ├── background-tablet.webp # タブレット用背景画像
+    ├── background-desktop.webp # デスクトップ用背景画像
+    └── favicon.ico   # ファビコン（ブレークポイント省略）
 ```
 
 **注意**: SVG アイコンは `src/app/components/common/icon/` ディレクトリでコンポーネントとして管理します。
@@ -422,13 +433,11 @@ WeddingInvitations/
 **新しいチャットセッションを開始する際は、必ず以下の手順を実行してください：**
 
 1. **GitHub MCP を使用して issue 状況を確認**
-
    - 現在の open な issue を取得
    - 優先度の高い issue を特定
    - 進行中の issue の進捗を確認
 
 2. **次の作業の提案**
-
    - GitHub issue の状況に基づいて、次に着手すべきタスクを提案
    - 依存関係を考慮した作業順序の提示
    - 並行実行可能なタスクの特定

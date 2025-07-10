@@ -8,6 +8,7 @@
 - `initial-setup.md` - 初期セットアップ時の指示
 - `development-guidelines.md` - 開発時のガイドライン
 - `figma-integration.md` - Figma 連携時の指示
+- `nextjs-component-design.md` - Next.js App Router コンポーネント設計ガイドライン
 
 ## 使用方法
 
@@ -54,3 +55,4 @@
 ## 更新履歴
 
 - 2025-07-05: 初版作成
+- 2025-01-XX: Next.js App Router コンポーネント設計ガイドライン追加

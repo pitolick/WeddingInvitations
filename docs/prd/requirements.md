@@ -34,44 +34,36 @@ Figma で作成されたデザインを基に、結婚式の Web 招待状を実
 #### 2.1.2 セクション構成
 
 1. **MV (Main Visual)**
-
    - メインビジュアルセクション
    - 結婚式の印象的な画像やアニメーション
 
 2. **Countdown**
-
    - 結婚式までのカウントダウン機能
    - 日時表示
 
 3. **Navigation**
-
    - ナビゲーションメニュー
    - 各セクションへのスムーズな移動
 
 4. **Host**
-
    - 新郎新婦の紹介セクション
    - プロフィール情報
 
 5. **Message**
-
    - 新郎新婦からのメッセージ
    - 招待状の本文
    - **招待者別コンテンツ**: 招待者ごとにカスタマイズされたメッセージ
 
 6. **Gallery**
-
    - 写真ギャラリー
    - 新郎新婦の思い出写真
 
 7. **Event**
-
    - 結婚式の詳細情報
    - 日時、会場、アクセス情報
    - **Google Maps 連携**: 会場の地図表示とルート案内
 
 8. **RSVP**
-
    - 出欠確認フォーム
    - 参加者情報の入力
    - **招待者別フォーム**: 招待者ごとにカスタマイズされたフォーム
@@ -90,7 +82,7 @@ Figma で作成されたデザインを基に、結婚式の Web 招待状を実
 - **フレームワーク**: Next.js 14 (App Router)
 - **言語**: TypeScript
 - **スタイリング**: Tailwind CSS + CSS Modules
-- **アニメーション**: Framer Motion
+- **アニメーション**: Motion for React（motion パッケージ）
 - **状態管理**: React Context API
 - **フォーム**: React Hook Form + Zod
 - **画像最適化**: Next.js Image Component
@@ -118,9 +110,9 @@ Figma で作成されたデザインを基に、結婚式の Web 招待状を実
 
 #### 2.2.4 アニメーション要件
 
-- **ライブラリ**: Framer Motion
+- **ライブラリ**: Motion for React（motion パッケージ）
 - **スクロールアニメーション**: Intersection Observer API
-- **ホバーエフェクト**: CSS Transitions + Framer Motion
+- **ホバーエフェクト**: CSS Transitions + Motion for React
 - **ローディングアニメーション**: Skeleton Loading
 - **パララックス効果**: CSS Transform + Scroll Events
 - **パフォーマンス**: GPU アクセラレーション活用
@@ -172,7 +164,7 @@ Figma で作成されたデザインを基に、結婚式の Web 招待状を実
 interface Guest {
   id: string; // microCMSのデフォルトID
   name: string; // 招待者名
-  invitationType: ("ceremony" | "reception" | "afterparty")[]; // 招待種別（複数選択可能）
+  invitationType: ('ceremony' | 'reception' | 'afterparty')[]; // 招待種別（複数選択可能）
   message?: string; // カスタムメッセージ
   companions?: string[]; // お連れ様のID配列
 }

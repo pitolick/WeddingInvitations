@@ -15,7 +15,7 @@ export interface Guest {
   /** お連れ様情報 */
   companions?: Companion[];
   /** RSVP状況 */
-  rsvpStatus?: "pending" | "attending" | "not-attending";
+  rsvpStatus?: 'pending' | 'attending' | 'not-attending';
   /** メッセージ */
   message?: string;
   /** 作成日時 */
@@ -71,7 +71,7 @@ export interface RSVPFormData {
   /** 招待者ID */
   guestId: string;
   /** 出欠状況 */
-  status: "attending" | "not-attending";
+  status: 'attending' | 'not-attending';
   /** お連れ様数 */
   companionCount?: number;
   /** メッセージ */
@@ -145,7 +145,7 @@ export interface AnimationConfig {
   /** 遅延時間 */
   delay?: number;
   /** アニメーション方向 */
-  direction?: "up" | "down" | "left" | "right";
+  direction?: 'up' | 'down' | 'left' | 'right';
 }
 
 // セクション設定の型定義
@@ -179,7 +179,7 @@ export interface CountdownConfig {
   /** 目標日時 */
   targetDate: Date;
   /** 表示形式 */
-  format: "days" | "hours" | "minutes" | "seconds" | "all";
+  format: 'days' | 'hours' | 'minutes' | 'seconds' | 'all';
   /** 更新間隔（ミリ秒） */
   interval?: number;
 }

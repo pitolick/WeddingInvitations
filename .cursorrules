@@ -1,6 +1,6 @@
 # Cursor Configuration for Figma-Context-MCP
 
-# This file configures the Figma MCP server for Cursor
+# このファイルはCursor用のFigma MCPサーバーを設定します
 
 # MCP Server Configuration
 
@@ -24,142 +24,194 @@
 }
 }
 
-# Instructions:
+# 設定手順:
 
-# 1. Replace YOUR_FIGMA_API_KEY with your actual Figma API key
+# 1. YOUR_FIGMA_API_KEYを実際のFigma APIキーに置き換えてください
 
-# 2. Get your Figma API key from: https://www.figma.com/settings
+# 2. Figma APIキーは以下から取得してください: https://www.figma.com/settings
 
-# 3. Restart Cursor after making changes
+# 3. 変更後はCursorを再起動してください
 
-# Development Rules:
+# 開発ルール:
 
-# - All commit messages must be written in Japanese
+# - 全てのコミットメッセージは日本語で記述すること
 
-# - Use descriptive commit messages that explain what was changed and why
+# - 変更内容と理由を説明する説明的なコミットメッセージを使用すること
 
-# - Follow conventional commit format when possible
+# - 可能な限りconventional commit形式に従うこと
 
-# - Fix all Linter Errors before committing
+# - コミット前に全てのLinterエラーを修正すること
 
-# - Ensure code quality by resolving all linting issues
+# - コード品質を確保するため、lintingの問題を解決すること
 
-# - Run linting checks before pushing code
+# - プッシュ前にlintingチェックを実行すること
 
-# - Write JSDocs comments in Japanese for all functions, classes, and interfaces
+# - Next.js App Routerのベストプラクティスに従い、Server/Client Componentsを適切に分離すること
 
-# - Include required JSDocs tags: @description, @param, @returns, @example
+# - 全ての関数、クラス、インターフェースに日本語のJSDocsコメントを記述すること
 
-# - Include optional JSDocs tags when applicable: @throws, @deprecated, @since
+# - 必須JSDocsタグを含めること: @description, @param, @returns, @example
+
+# - 該当する場合はオプションJSDocsタグを含めること: @throws, @deprecated, @since
+
+# - 可能な限りTailwind CSSクラスをインラインスタイルより優先すること
+
+# - 動的スタイリングが絶対に必要な場合のみstyle属性を使用すること
+
+# - デバッグにはsrc/app/lib/loggerのVibeCoding Loggerを使用すること
+
+# - デバッグ情報はlogsフォルダで確認すること
+
+# Next.js App Router Component Design Rules:
+
+# - page.tsxとlayout.tsxはServer Componentsとして実装すること
+
+# - SEO最適化のためpage.tsxでmetadata exportを使用すること
+
+# - インタラクティブな機能は{ComponentName}Client.tsx命名でClient Componentsに分離すること
+
+# - 必要に応じてServer ComponentsからClient Componentsをインポートすること
+
+# - "use client"ディレクティブはClient Componentsでのみ使用すること
+
+# - パフォーマンスとSEOのため、Server Componentsをデフォルトとして保持すること
 
 # Chat Session Rules:
 
-# - When a new chat session starts, ALWAYS check the files in docs/chat-prompts/ first
+# - 新しいチャットセッション開始時は、必ずdocs/chat-prompts/のファイルを最初に確認すること
 
-# - Review initial-setup.md to understand current project status
+# - initial-setup.mdを確認して現在のプロジェクト状況を理解すること
 
-# - Follow development-guidelines.md for coding standards
+# - development-guidelines.mdに従ってコーディング標準を守ること
 
-# - Use figma-integration.md for Figma-related tasks
+# - Figma関連タスクにはfigma-integration.mdを使用すること
 
-# - Use github-mcp-commands.md for GitHub MCP operations
+# - GitHub MCP操作にはgithub-mcp-commands.mdを使用すること
 
-# - Ensure project context is properly understood before proceeding
+# - プロジェクトコンテキストが適切に理解されていることを確認してから進めること
 
 # New Chat Session Workflow:
 
-# - Check current issue status using any available method (GitHub MCP, API, web interface, etc.)
+# - 利用可能な方法（GitHub MCP、API、Webインターフェース等）で現在のissue状況を確認すること
 
-# - Get open issues and identify priority tasks
+# - openなissueを取得し、優先タスクを特定すること
 
-# - Propose next tasks based on GitHub issue status
+# - GitHub issue状況に基づいて次のタスクを提案すること
 
-# - Consider dependencies and parallel execution possibilities
+# - 依存関係と並行実行の可能性を考慮すること
 
-# - Provide clear action plan based on issue analysis
+# - issue分析に基づいて明確なアクションプランを提供すること
 
 # Development Workflow Rules:
 
-# - Always follow the GitHub Flow: issue → branch → commit → push → PR → review → merge
+# - 常にGitHub Flowに従うこと: issue → branch → commit → push → PR → review → merge
 
-# - Ensure code quality by resolving all linting issues before push
+# - プッシュ前にlinting問題を解決してコード品質を確保すること
 
-# - Include issue number in commit messages (fixes #123)
+# - コミットメッセージにissue番号を含めること（fixes #123）
 
-# - Create feature branches with format: feature/issue-{number}-{title}
+# - feature/issue-{number}-{title}形式でfeatureブランチを作成すること
 
-# - Ensure all linting errors are resolved before committing
+# - コミット前に全てのlintingエラーが解決されていることを確認すること
 
 # GitHub Operations Rules:
 
-# - Use GitHub MCP for GitHub operations when available
+# - 利用可能な場合はGitHub MCPをGitHub操作に使用すること
 
-# - Use direct GitHub API calls or curl commands for GitHub operations when needed
+# - 必要に応じてGitHub操作に直接GitHub API呼び出しやcurlコマンドを使用すること
 
-# - Use GitHub MCP to create, update, and manage issues when available
+# - 利用可能な場合はGitHub MCPでissueの作成、更新、管理を行うこと
 
-# - Use GitHub MCP to search and retrieve repository information when available
+# - 利用可能な場合はGitHub MCPでリポジトリ情報の検索と取得を行うこと
 
-# - Follow the GitHub MCP setup guide in docs/chat-prompts/github-mcp-commands.md when using MCP
+# - MCP使用時はdocs/chat-prompts/github-mcp-commands.mdのGitHub MCPセットアップガイドに従うこと
 
-# - Use any available method to get GitHub information (MCP, API, web interface, etc.)
+# - GitHub情報の取得には利用可能な方法（MCP、API、Webインターフェース等）を使用すること
 
 # Issue Management Rules:
 
-# - All project tasks are managed through GitHub issues
+# - 全てのプロジェクトタスクはGitHub issuesで管理すること
 
-# - Use enhancement labels for new features (parent issues)
+# - 新機能にはenhancementラベルを使用すること（親issue）
 
-# - Use task labels for implementation tasks (sub-issues)
+# - 実装タスクにはtaskラベルを使用すること（子issue）
 
-# - Use phase1-4 labels for development phases
+# - 開発フェーズにはphase1-4ラベルを使用すること
 
-# - Use specific labels: setup, implementation, api, design, optimization, deploy, section, microcms, google-apps-script, figma-mcp
+# - 特定ラベルを使用すること: setup, implementation, api, design, optimization, deploy, section, microcms, google-apps-script, figma-mcp
 
 # Progress Management Rules:
 
-# - Use GitHub MCP for progress management operations when available
+# - 利用可能な場合はGitHub MCPを進捗管理操作に使用すること
 
-# - Use any available method to update issue content for progress updates
+# - 進捗更新には利用可能な方法でissue内容を更新すること
 
-# - Use comments for detailed progress reports
+# - 詳細な進捗レポートにはコメントを使用すること
 
-# - Change labels based on status: in-progress, completed, blocked, review
+# - 状況に基づいてラベルを変更すること: in-progress, completed, blocked, review
 
-# - Assign tasks to appropriate team members
+# - 適切なチームメンバーにタスクを割り当てること
 
-# - Report progress regularly with detailed updates
+# - 詳細な更新で定期的に進捗を報告すること
 
-# - Report blocking issues immediately with detailed descriptions
+# - 詳細な説明でブロッキングissueを即座に報告すること
 
-# - Use progress report templates from development-guidelines.md
+# - development-guidelines.mdの進捗レポートテンプレートを使用すること
 
-# - Close issues only after completion and review
+# - 完了とレビューの後にのみissueをクローズすること
 
-# - Link commits to issues using "fixes #issue-number" format
+# - "fixes #issue-number"形式でコミットをissueにリンクすること
 
-# - Use any available method to get GitHub information (MCP, API, web interface, etc.)
+# - GitHub情報の取得には利用可能な方法（MCP、API、Webインターフェース等）を使用すること
 
 # Task Completion Workflow Rules:
 
-# - Always perform action verification after task completion
+# - タスク完了後は常にアクション検証を実行すること
 
-# - Run development server and check functionality: npm run dev
+# - 開発サーバーを実行して機能を確認すること: npm run dev
 
-# - Check for Linter Errors: npm run lint
+# - Linterエラーを確認すること: npm run lint
 
-# - Check TypeScript errors: npx tsc --noEmit
+# - TypeScriptエラーを確認すること: npx tsc --noEmit
 
-# - Verify responsive design and browser compatibility
+# - レスポンシブデザインとブラウザ互換性を確認すること
 
-# - Commit with Japanese message format: "feat: {description} fixes #{issue_number}"
+# - 可能な限りインラインスタイルの代わりにTailwind CSSクラスを使用すること
 
-# - Update issue with completion report before closing
+# - 日本語メッセージ形式でコミットすること: "feat: {description} fixes #{issue_number}"
 
-# - Change issue label to "completed" after successful completion
+# - クローズ前に完了レポートでissueを更新すること
 
-# - Close issue only after all verification steps are complete
+# - 成功完了後にissueラベルを"completed"に変更すること
 
-# - Follow the task completion workflow from development-guidelines.md
+# - 全ての検証ステップが完了した後にのみissueをクローズすること
 
-# - Ensure all quality checks pass before marking task as complete
+# - development-guidelines.mdのタスク完了ワークフローに従うこと
+
+# - タスク完了としてマークする前に全ての品質チェックが通ることを確認すること
+
+# - Server/Client Component分離が適切に実装されていることを確認すること
+
+# Debugging Rules:
+
+# - デバッグにはsrc/app/lib/loggerのVibeCoding Loggerを使用すること
+
+# - デバッグ情報はlogsフォルダで確認すること
+
+# - context、humanNote、aiTodoフィールドで構造化ログを使用すること
+
+# - ログファイルはlogs/wedding-invitations/ディレクトリに自動生成されること
+
+# - 開発環境デバッグにはdevLoggerを使用すること
+
+# - 一般的なログパターン（ユーザーアクション、エラー、API呼び出し）にはlogUtilsを使用すること
+
+# コミット運用ルール
+
+# - コミット時に `--no-verify` オプションを付与して、Husky等のプリフックによるテスト・Lint・Formatチェックを回避することを**禁止**します。
+#   - 必ず全てのチェックが通った状態でコミットすること
+#   - 強制コミットが必要な場合は、必ずリーダーの承認を得てから実施すること
+# - コミット時はテスト・lint・format必須
+#   - 全てのコミットでテスト・lint・formatチェックが通ることを確認すること
+#   - エラーがある場合は修正してからコミットすること
+#   - 品質を保つため、チェックをスキップすることは禁止

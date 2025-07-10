@@ -22,7 +22,7 @@ function doPost(e) {
       return ContentService.createTextOutput(
         JSON.stringify({
           success: false,
-          error: "Invalid data format",
+          error: 'Invalid data format',
         })
       ).setMimeType(ContentService.MimeType.JSON);
     }
@@ -34,7 +34,7 @@ function doPost(e) {
       return ContentService.createTextOutput(
         JSON.stringify({
           success: true,
-          message: "RSVP data saved successfully",
+          message: 'RSVP data saved successfully',
         })
       ).setMimeType(ContentService.MimeType.JSON);
     } else {
@@ -46,11 +46,11 @@ function doPost(e) {
       ).setMimeType(ContentService.MimeType.JSON);
     }
   } catch (error) {
-    console.error("Error processing RSVP data:", error);
+    console.error('Error processing RSVP data:', error);
     return ContentService.createTextOutput(
       JSON.stringify({
         success: false,
-        error: "Internal server error",
+        error: 'Internal server error',
       })
     ).setMimeType(ContentService.MimeType.JSON);
   }
@@ -65,7 +65,7 @@ function doGet(e) {
   return ContentService.createTextOutput(
     JSON.stringify({
       success: true,
-      message: "RSVP API is running",
+      message: 'RSVP API is running',
       timestamp: new Date().toISOString(),
     })
   ).setMimeType(ContentService.MimeType.JSON);
@@ -78,7 +78,7 @@ function doGet(e) {
  */
 function validateData(data) {
   // 必須フィールドのチェック
-  const requiredFields = ["guestId", "guestName", "events"];
+  const requiredFields = ['guestId', 'guestName', 'events'];
 
   for (const field of requiredFields) {
     if (!data[field]) {
@@ -88,7 +88,7 @@ function validateData(data) {
   }
 
   // イベントの値チェック
-  const validEvents = ["ceremony", "reception", "afterparty"];
+  const validEvents = ['ceremony', 'reception', 'afterparty'];
   for (const event of data.events) {
     if (!validEvents.includes(event)) {
       console.error(`Invalid event: ${event}`);
@@ -108,38 +108,38 @@ function saveToSpreadsheet(data) {
   try {
     // アクティブなスプレッドシートを取得
     const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-    const sheet = spreadsheet.getSheetByName("RSVP_Responses");
+    const sheet = spreadsheet.getSheetByName('RSVP_Responses');
 
     // シートが存在しない場合は作成
     if (!sheet) {
-      const newSheet = spreadsheet.insertSheet("RSVP_Responses");
+      const newSheet = spreadsheet.insertSheet('RSVP_Responses');
       // ヘッダー行を追加
       newSheet
         .getRange(1, 1, 1, 7)
         .setValues([
           [
-            "招待者ID",
-            "招待者名",
-            "参加予定イベント",
-            "参加人数",
-            "お連れ様情報",
-            "メッセージ",
-            "送信日時",
+            '招待者ID',
+            '招待者名',
+            '参加予定イベント',
+            '参加人数',
+            'お連れ様情報',
+            'メッセージ',
+            '送信日時',
           ],
         ]);
-      newSheet.getRange(1, 1, 1, 7).setFontWeight("bold");
+      newSheet.getRange(1, 1, 1, 7).setFontWeight('bold');
     }
 
-    const targetSheet = sheet || spreadsheet.getSheetByName("RSVP_Responses");
+    const targetSheet = sheet || spreadsheet.getSheetByName('RSVP_Responses');
 
     // データを配列に変換
     const rowData = [
-      data.guestId || "",
-      data.guestName || "",
-      data.events.join(", ") || "",
+      data.guestId || '',
+      data.guestName || '',
+      data.events.join(', ') || '',
       data.attendees || 1,
-      data.companions ? JSON.stringify(data.companions) : "",
-      data.message || "",
+      data.companions ? JSON.stringify(data.companions) : '',
+      data.message || '',
       new Date().toISOString(),
     ];
 
@@ -148,7 +148,7 @@ function saveToSpreadsheet(data) {
 
     return { success: true };
   } catch (error) {
-    console.error("Error saving to spreadsheet:", error);
+    console.error('Error saving to spreadsheet:', error);
     return { success: false, error: error.toString() };
   }
 }
@@ -162,30 +162,30 @@ function setupSpreadsheet() {
     const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
 
     // RSVP_Responses シートを作成
-    let sheet = spreadsheet.getSheetByName("RSVP_Responses");
+    let sheet = spreadsheet.getSheetByName('RSVP_Responses');
     if (!sheet) {
-      sheet = spreadsheet.insertSheet("RSVP_Responses");
+      sheet = spreadsheet.insertSheet('RSVP_Responses');
     }
 
     // ヘッダー行を設定
     const headers = [
-      "招待者ID",
-      "招待者名",
-      "参加予定イベント",
-      "参加人数",
-      "お連れ様情報",
-      "メッセージ",
-      "送信日時",
+      '招待者ID',
+      '招待者名',
+      '参加予定イベント',
+      '参加人数',
+      'お連れ様情報',
+      'メッセージ',
+      '送信日時',
     ];
 
     sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-    sheet.getRange(1, 1, 1, headers.length).setFontWeight("bold");
+    sheet.getRange(1, 1, 1, headers.length).setFontWeight('bold');
 
     // 列幅を調整
     sheet.autoResizeColumns(1, headers.length);
 
-    console.log("Spreadsheet setup completed successfully");
+    console.log('Spreadsheet setup completed successfully');
   } catch (error) {
-    console.error("Error setting up spreadsheet:", error);
+    console.error('Error setting up spreadsheet:', error);
   }
 }

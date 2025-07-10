@@ -4,7 +4,7 @@
  * @since 1.0.0
  */
 
-import React from "react";
+import React from 'react';
 
 /**
  * @description ナビゲーションセクションのProps型定義
@@ -26,16 +26,16 @@ interface NavigationProps {
  * <Navigation id="navigation" className="section-navigation" />
  */
 const Navigation: React.FC<NavigationProps> = ({
-  id = "navigation",
-  className = "",
+  id = 'navigation',
+  className = '',
 }) => {
   return (
     <section id={id} className={`navigation-section ${className}`}>
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center">
+      <div className='container mx-auto px-4'>
+        <h2 className='text-3xl font-bold text-center'>
           ナビゲーションセクション
         </h2>
-        <p className="text-center mt-4">
+        <p className='text-center mt-4'>
           スムーススクロール機能とアクティブ状態管理
         </p>
       </div>
