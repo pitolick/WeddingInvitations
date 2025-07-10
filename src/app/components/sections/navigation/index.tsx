@@ -1,45 +1,72 @@
 /**
- * @description ナビゲーションセクションコンポーネント
+ * @description Figmaデザイン準拠のナビゲーションセクション（3カラム）
+ * @example
+ * <Navigation />
  * @author WeddingInvitations
  * @since 1.0.0
  */
 
 import React from 'react';
+import Sun from '@/app/components/common/icon/Sun';
 
 /**
- * @description ナビゲーションセクションのProps型定義
- * @interface NavigationProps
- * @since 1.0.0
+ * @description ナビゲーション項目の型
  */
-interface NavigationProps {
-  /** セクションのID */
-  id?: string;
-  /** 追加のCSSクラス */
-  className?: string;
-}
+const NAV_ITEMS = [
+  {
+    key: 'message',
+    en: 'Message',
+    ja: 'ご挨拶',
+  },
+  {
+    key: 'event',
+    en: 'Event',
+    ja: '日時・会場',
+  },
+  {
+    key: 'rsvp',
+    en: 'RSVP',
+    ja: 'ご出欠',
+  },
+];
 
 /**
- * @description ナビゲーションセクションコンポーネント
- * @param props - コンポーネントのProps
- * @returns JSX.Element
+ * @description ナビゲーションセクション（3カラム）
+ * @returns JSX.Element - ナビゲーション要素
  * @example
- * <Navigation id="navigation" className="section-navigation" />
+ * <Navigation />
  */
-const Navigation: React.FC<NavigationProps> = ({
-  id = 'navigation',
-  className = '',
-}) => {
+const Navigation = () => {
   return (
-    <section id={id} className={`navigation-section ${className}`}>
-      <div className='container mx-auto px-4'>
-        <h2 className='text-3xl font-bold text-center'>
-          ナビゲーションセクション
-        </h2>
-        <p className='text-center mt-4'>
-          スムーススクロール機能とアクティブ状態管理
-        </p>
+    <nav
+      className='w-full bg-lavender-600 py-4'
+      data-testid='navigation-section'
+    >
+      <div className='flex flex-col items-center sm:flex-row sm:justify-center gap-2'>
+        {NAV_ITEMS.map(item => (
+          <a
+            key={item.key}
+            href={`#${item.key}`}
+            className='flex flex-col items-center gap-0.5 w-28 hover:opacity-80 transition-opacity duration-200'
+            aria-label={`${item.ja}セクションへ移動`}
+          >
+            <Sun size={50} className='text-yellow-500' />
+            <p
+              className='font-berkshire text-white text-xl'
+              style={{ fontFamily: 'Berkshire Swash, cursive' }}
+            >
+              {item.en}
+            </p>
+            <p
+              className='font-noto font-bold text-white text-sm'
+              style={{ fontFamily: 'Noto Sans JP, sans-serif' }}
+            >
+              {item.ja}
+            </p>
+          </a>
+        ))}
       </div>
-    </section>
+    </nav>
   );
 };
 

@@ -8,6 +8,7 @@
 
 import React from 'react';
 import MainVisual from '@/app/components/sections/mv';
+import Navigation from '@/app/components/sections/navigation';
 import { clientDevLogger } from '@/app/lib/logger/client';
 
 /**
@@ -24,7 +25,7 @@ interface InvitationPageClientProps {
  */
 function InvitationInfoSection({ invitationId }: { invitationId: string }) {
   return (
-    <section className='py-16 px-8 bg-white'>
+    <section id='invitation' className='py-16 px-8 bg-white'>
       <div className='max-w-4xl mx-auto text-center'>
         <h2 className='font-great-vibes text-4xl md:text-5xl text-gray-800 mb-8'>
           ご招待
@@ -46,29 +47,70 @@ function InvitationInfoSection({ invitationId }: { invitationId: string }) {
 }
 
 /**
- * @description プレースホルダーセクションコンポーネント
+ * @description イベント詳細セクションコンポーネント
  * @returns JSX.Element
  */
-function PlaceholderSection() {
+function EventSection() {
   return (
-    <section className='py-16 px-8 bg-gradient-to-br from-lavender-50 to-pink-50'>
+    <section
+      id='event'
+      className='py-16 px-8 bg-gradient-to-br from-lavender-50 to-pink-50'
+    >
       <div className='max-w-4xl mx-auto text-center'>
         <h3 className='font-great-vibes text-3xl text-gray-800 mb-8'>
-          セクション実装予定
+          イベント詳細
         </h3>
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
-          <div className='bg-white p-6 rounded-lg shadow-md'>
-            <h4 className='font-semibold text-lg mb-2'>イベント詳細</h4>
-            <p className='text-gray-600'>日時・場所・アクセス情報</p>
-          </div>
-          <div className='bg-white p-6 rounded-lg shadow-md'>
-            <h4 className='font-semibold text-lg mb-2'>RSVP</h4>
-            <p className='text-gray-600'>出欠のご回答</p>
-          </div>
-          <div className='bg-white p-6 rounded-lg shadow-md'>
-            <h4 className='font-semibold text-lg mb-2'>ギャラリー</h4>
-            <p className='text-gray-600'>思い出の写真</p>
-          </div>
+        <div className='bg-white p-8 rounded-lg shadow-md'>
+          <h4 className='font-semibold text-xl mb-4'>結婚式</h4>
+          <p className='text-gray-600 mb-4'>2024年12月25日（水）</p>
+          <p className='text-gray-600 mb-4'>18:00 開場 / 18:30 開宴</p>
+          <p className='text-gray-600'>東京ガーデンパレス</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * @description RSVPセクションコンポーネント
+ * @returns JSX.Element
+ */
+function RsvpSection() {
+  return (
+    <section id='rsvp' className='py-16 px-8 bg-white'>
+      <div className='max-w-4xl mx-auto text-center'>
+        <h3 className='font-great-vibes text-3xl text-gray-800 mb-8'>
+          出欠のご回答
+        </h3>
+        <div className='bg-gradient-to-r from-lavender-300 to-pink-300 p-8 rounded-lg'>
+          <p className='text-lg text-gray-800 mb-4'>
+            ご出席・ご欠席をお知らせください
+          </p>
+          <p className='text-gray-700'>RSVPフォームは準備中です</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * @description ギャラリーセクションコンポーネント
+ * @returns JSX.Element
+ * @example
+ * <GallerySection />
+ */
+function GallerySection() {
+  return (
+    <section
+      id='gallery'
+      className='py-16 px-8 bg-gradient-to-br from-lavender-50 to-pink-50'
+    >
+      <div className='max-w-4xl mx-auto text-center'>
+        <h3 className='font-great-vibes text-3xl text-gray-800 mb-8'>
+          思い出の写真
+        </h3>
+        <div className='bg-white p-8 rounded-lg shadow-md'>
+          <p className='text-gray-600'>ギャラリーは準備中です</p>
         </div>
       </div>
     </section>
@@ -101,11 +143,20 @@ export default function InvitationPageClient({
       {/* メインビジュアル（MV）セクション */}
       <MainVisual />
 
+      {/* ナビゲーションセクション */}
+      <Navigation />
+
       {/* 招待情報セクション */}
       <InvitationInfoSection invitationId={invitationId} />
 
-      {/* 今後のセクション用のプレースホルダー */}
-      <PlaceholderSection />
+      {/* イベント詳細セクション */}
+      <EventSection />
+
+      {/* RSVPセクション */}
+      <RsvpSection />
+
+      {/* ギャラリーセクション */}
+      <GallerySection />
     </div>
   );
 }

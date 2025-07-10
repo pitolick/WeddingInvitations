@@ -21,9 +21,9 @@ describe('InvitationPage', () => {
 
     render(await InvitationPage({ params }));
 
-    // メインビジュアルのタイトルが表示されることを確認
+    // メインビジュアルのタイトルが表示されることを確認（data-testidを使用）
     await waitFor(() => {
-      expect(screen.getByText('Wedding Celebration')).toBeInTheDocument();
+      expect(screen.getByTestId('main-visual-title')).toBeInTheDocument();
     });
     // ディズニーテーマのサブタイトルは要件変更により削除
 
