@@ -38,16 +38,17 @@ describe('InvitationPage', () => {
    * @description 招待IDの検証テスト
    */
   it('招待IDの検証が正しく動作する', () => {
-    // 有効なID
+    // 有効なID（最小長3文字以上）
     expect(validateInvitationId('wedding-123')).toBe(true);
     expect(validateInvitationId('test123')).toBe(true);
     expect(validateInvitationId('my-wedding')).toBe(true);
+    expect(validateInvitationId('abc')).toBe(true); // 最小長
+    expect(validateInvitationId('test@123')).toBe(true); // 特殊文字も許可
+    expect(validateInvitationId('test 123')).toBe(true); // スペースも許可
 
     // 無効なID
     expect(validateInvitationId('')).toBe(false);
     expect(validateInvitationId('ab')).toBe(false); // 最小長未満
-    expect(validateInvitationId('test@123')).toBe(false); // 特殊文字
-    expect(validateInvitationId('test 123')).toBe(false); // スペース
   });
 
   /**

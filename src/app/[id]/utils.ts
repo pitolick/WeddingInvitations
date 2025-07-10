@@ -9,28 +9,14 @@ import type { InvitationInfo } from './types';
 
 /**
  * @description 招待IDの検証
- * @param id - 招待ID
- * @returns boolean
+ * @param id - 検証する招待ID
+ * @returns boolean - 有効な招待IDの場合はtrue、無効な場合はfalse
  * @example
- * const isValid = validateInvitationId('wedding-123');
+ * const isValid = validateInvitationId("wedding-123"); // true
+ * const isInvalid = validateInvitationId("ab"); // false
  */
 export function validateInvitationId(id: string): boolean {
-  if (!id || typeof id !== 'string') {
-    return false;
-  }
-
-  // 最小長チェック
-  if (id.length < 3) {
-    return false;
-  }
-
-  // 許可される文字のみチェック（英数字、ハイフン、アンダースコア）
-  const validPattern = /^[a-zA-Z0-9-_]+$/;
-  if (!validPattern.test(id)) {
-    return false;
-  }
-
-  return true;
+  return Boolean(id && id.length >= 3);
 }
 
 /**

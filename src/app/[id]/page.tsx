@@ -8,6 +8,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import InvitationPageClient from './InvitationPageClient';
 import { devLogger } from '@/app/lib/logger';
+import { validateInvitationId } from './utils';
 
 /**
  * @description 動的メタデータ生成
@@ -74,7 +75,7 @@ export default async function InvitationPage({
   /**
    * @description 招待IDの検証
    */
-  if (!invitationId || invitationId.length < 3) {
+  if (!validateInvitationId(invitationId)) {
     devLogger.error('InvitationPage', `無効な招待ID: ${invitationId}`, {
       context: 'InvitationPage',
       humanNote: '招待ID検証エラー',

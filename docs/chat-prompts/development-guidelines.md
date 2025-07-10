@@ -50,13 +50,19 @@ gh issue create-branch {issue_number} --repo {owner}/{repo}
 gh pr create --title "feat: 機能説明 fixes #123" --body "実装内容の説明"
 ```
 
+詳細な CLI 例は「GitHub CLI」セクションを参照。
+
 **API経由:**
 
 ```bash
 curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
   "https://api.github.com/repos/{owner}/{repo}/issues/{issue_number}/links" \
-  -d '{"link_type": "branch", "link_url": "https://github.com/{owner}/{repo}/tree/{branch_name}"}'
+  -d '{"link_type": "pull_request", "link_url": "https://github.com/{owner}/{repo}/pull/{pr_number}"}'
 ```
+
+**GitHub CLI経由:**
+
+詳細な CLI 例は「GitHub CLI」セクションを参照。
 
 #### プルリクエスト作成後の紐づけ
 
@@ -85,9 +91,7 @@ curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
 
 **GitHub CLI経由:**
 
-```bash
-gh pr create --title "feat: 機能説明 fixes #123" --body "実装内容の説明"
-```
+詳細な CLI 例は「GitHub CLI」セクションを参照。
 
 ### プルリクエスト要件
 
@@ -170,7 +174,7 @@ devLogger.info('debug_info', 'デバッグ情報', { data: 'value' });
 - バグ修正: `fix: 修正内容 fixes #123`
 - リファクタリング: `refactor: 変更内容 fixes #123`
 
-### GitHub CLIの使用
+### GitHub CLI
 
 - GitHub CLI（`gh`コマンド）の使用を許可
 - プルリクエスト作成、issue管理、レビュー等で活用

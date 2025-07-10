@@ -4,7 +4,9 @@
 
 [GitHub MCP Server](https://github.com/github/github-mcp-server)は、GitHub の公式 MCP サーバーで、リポジトリ、issue、プルリクエストなどを管理できます。
 
-**注意**: GitHub CLI（`gh`コマンド）の使用も許可されています。MCPが利用できない場合は、GitHub CLIを使用してください。
+**注意**: GitHub CLI（`gh`コマンド）の使用も許可されています。MCP が利用できない場合は GitHub CLI
+を使用してください。
+初回のみ `gh auth login` で Personal Access Token を登録してください。
 
 ### 主な機能
 

@@ -136,9 +136,8 @@
 
 # GitHub Operations Rules:
 
-# - 利用可能な場合はGitHub MCPをGitHub操作に使用すること
-
-# - GitHub CLI（ghコマンド）の使用を許可すること
+# - GitHub MCP を優先し、利用不可の場合のフェールオーバーとして
+#   GitHub CLI（ghコマンド）を使用してもよい
 
 # - 必要に応じてGitHub操作に直接GitHub API呼び出しやcurlコマンドを使用すること
 
