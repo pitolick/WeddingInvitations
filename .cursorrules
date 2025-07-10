@@ -138,6 +138,8 @@
 
 # - 利用可能な場合はGitHub MCPをGitHub操作に使用すること
 
+# - GitHub CLI（ghコマンド）の使用を許可すること
+
 # - 必要に応じてGitHub操作に直接GitHub API呼び出しやcurlコマンドを使用すること
 
 # - 利用可能な場合はGitHub MCPでissueの作成、更新、管理を行うこと
@@ -146,7 +148,7 @@
 
 # - MCP使用時はdocs/chat-prompts/github-mcp-commands.mdのGitHub MCPセットアップガイドに従うこと
 
-# - GitHub情報の取得には利用可能な方法（MCP、API、Webインターフェース等）を使用すること
+# - GitHub情報の取得には利用可能な方法（MCP、API、Webインターフェース、GitHub CLI等）を使用すること
 
 # Issue Management Rules:
 
