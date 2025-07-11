@@ -4,6 +4,7 @@
  * @since 1.0.0
  */
 
+'use client';
 import React from 'react';
 import { motion } from 'motion/react';
 
