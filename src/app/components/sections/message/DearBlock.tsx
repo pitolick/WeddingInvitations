@@ -20,10 +20,7 @@ import { cookies } from 'next/headers';
  * @example
  * <DearBlock invitationId="test" draftKey="xxxx" />
  */
-async function DearBlock({
-  invitationId,
-  draftKey,
-}: DearBlockProps) {
+async function DearBlock({ invitationId, draftKey }: DearBlockProps) {
   const { isEnabled } = await draftMode();
   const cookieStore = await cookies();
   const effectiveDraftKey = isEnabled
@@ -67,7 +64,7 @@ async function DearBlock({
       </div>
     </>
   );
-};
+}
 
 export default DearBlock;
 export type { DearBlockProps };

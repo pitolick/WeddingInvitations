@@ -75,7 +75,6 @@ export async function getDearBlockData(
   draftKey?: string
 ): Promise<DearBlockData | null> {
   try {
-    console.log('getDearBlockData', invitationId, draftKey);
     const guestContent = await getGuestByInvitationId(invitationId, draftKey);
 
     if (!guestContent) {
