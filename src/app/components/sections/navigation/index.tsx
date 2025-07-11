@@ -51,18 +51,8 @@ const Navigation = () => {
             aria-label={`${item.ja}セクションへ移動`}
           >
             <Sun size={50} className='text-yellow-500' />
-            <p
-              className='font-berkshire text-white text-xl'
-              style={{ fontFamily: 'Berkshire Swash, cursive' }}
-            >
-              {item.en}
-            </p>
-            <p
-              className='font-noto font-bold text-white text-sm'
-              style={{ fontFamily: 'Noto Sans JP, sans-serif' }}
-            >
-              {item.ja}
-            </p>
+            <p className='font-berkshire text-white text-xl'>{item.en}</p>
+            <p className='font-noto font-bold text-white text-sm'>{item.ja}</p>
           </a>
         ))}
       </div>

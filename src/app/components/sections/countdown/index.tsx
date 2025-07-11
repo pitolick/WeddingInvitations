@@ -10,19 +10,6 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Google Fontsの読み込み
-if (typeof window !== 'undefined') {
-  const id = 'google-fonts-countdown';
-  if (!document.getElementById(id)) {
-    const link = document.createElement('link');
-    link.id = id;
-    link.rel = 'stylesheet';
-    link.href =
-      'https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Noto+Sans+JP:wght@400;700&display=swap';
-    document.head.appendChild(link);
-  }
-}
-
 interface CountdownTime {
   days: number;
   hours: number;
@@ -116,10 +103,7 @@ const Countdown: React.FC = () => {
       {/* コンテナ */}
       <div className='relative z-10 flex flex-col items-center gap-8 w-full container'>
         {/* タイトル */}
-        <h2
-          className='text-white text-5xl font-normal text-center select-none'
-          style={{ fontFamily: '"Berkshire Swash", cursive' }}
-        >
+        <h2 className='text-white text-5xl font-normal text-center select-none font-berkshire'>
           Countdown
         </h2>
 
@@ -136,16 +120,12 @@ const Countdown: React.FC = () => {
                   initial='initial'
                   animate='animate'
                   exit='exit'
-                  className='text-white text-8xl font-bold text-center select-none'
-                  style={{ fontFamily: '"Noto Sans JP", sans-serif' }}
+                  className='text-white text-8xl font-bold text-center select-none font-noto'
                 >
                   {countdown.days.toString().padStart(3, '0')}
                 </motion.span>
               </AnimatePresence>
-              <span
-                className='text-white text-xl md:text-2xl font-normal text-center select-none'
-                style={{ fontFamily: '"Berkshire Swash", cursive' }}
-              >
+              <span className='text-white text-xl md:text-2xl font-normal text-center select-none font-berkshire'>
                 {LABELS.days}
               </span>
             </div>
@@ -155,16 +135,10 @@ const Countdown: React.FC = () => {
               {/* 時間 */}
               <div className='flex flex-col items-center'>
                 <div className='flex flex-col md:flex-row justify-center items-center md:items-end gap-1 w-[73px] md:w-auto'>
-                  <span
-                    className='text-white text-4xl md:text-6xl font-bold text-center select-none'
-                    style={{ fontFamily: '"Noto Sans JP", sans-serif' }}
-                  >
+                  <span className='text-white text-4xl md:text-6xl font-bold text-center select-none'>
                     {countdown.hours.toString().padStart(2, '0')}
                   </span>
-                  <span
-                    className='text-white text-sm md:text-2xl font-normal text-center select-none'
-                    style={{ fontFamily: '"Berkshire Swash", cursive' }}
-                  >
+                  <span className='text-white text-sm md:text-2xl font-normal text-center select-none font-berkshire'>
                     <span className='block md:hidden'>
                       {LABELS.hours.mobile}
                     </span>
@@ -178,16 +152,10 @@ const Countdown: React.FC = () => {
               {/* 分 */}
               <div className='flex flex-col items-center'>
                 <div className='flex flex-col md:flex-row justify-center items-center md:items-end gap-1 w-[73px] md:w-auto'>
-                  <span
-                    className='text-white text-4xl md:text-6xl font-bold text-center select-none'
-                    style={{ fontFamily: '"Noto Sans JP", sans-serif' }}
-                  >
+                  <span className='text-white text-4xl md:text-6xl font-bold text-center select-none'>
                     {countdown.minutes.toString().padStart(2, '0')}
                   </span>
-                  <span
-                    className='text-white text-sm md:text-2xl font-normal text-center select-none'
-                    style={{ fontFamily: '"Berkshire Swash", cursive' }}
-                  >
+                  <span className='text-white text-sm md:text-2xl font-normal text-center select-none font-berkshire'>
                     <span className='block md:hidden'>
                       {LABELS.minutes.mobile}
                     </span>
@@ -201,16 +169,10 @@ const Countdown: React.FC = () => {
               {/* 秒 */}
               <div className='flex flex-col items-center'>
                 <div className='flex flex-col md:flex-row justify-center items-center md:items-end gap-1 w-[73px] md:w-auto'>
-                  <span
-                    className='text-white text-4xl md:text-6xl font-bold text-center select-none'
-                    style={{ fontFamily: '"Noto Sans JP", sans-serif' }}
-                  >
+                  <span className='text-white text-4xl md:text-6xl font-bold text-center select-none'>
                     {countdown.seconds.toString().padStart(2, '0')}
                   </span>
-                  <span
-                    className='text-white text-sm md:text-2xl font-normal text-center select-none'
-                    style={{ fontFamily: '"Berkshire Swash", cursive' }}
-                  >
+                  <span className='text-white text-sm md:text-2xl font-normal text-center select-none font-berkshire'>
                     <span className='block md:hidden'>
                       {LABELS.seconds.mobile}
                     </span>
@@ -225,16 +187,10 @@ const Countdown: React.FC = () => {
 
           {/* 日付表示 */}
           <div className='flex flex-row justify-center items-center gap-1'>
-            <span
-              className='text-white text-lg md:text-2xl font-normal text-center select-none'
-              style={{ fontFamily: '"Berkshire Swash", cursive' }}
-            >
+            <span className='text-white text-lg md:text-2xl font-normal text-center select-none font-berkshire'>
               To
             </span>
-            <span
-              className='text-white text-lg md:text-2xl font-bold text-center select-none'
-              style={{ fontFamily: '"Noto Sans JP", sans-serif' }}
-            >
+            <span className='text-white text-lg md:text-2xl font-bold text-center select-none'>
               2025.11.08
             </span>
           </div>

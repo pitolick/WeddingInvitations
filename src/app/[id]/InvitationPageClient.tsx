@@ -11,6 +11,7 @@ import MainVisual from '@/app/components/sections/mv';
 import Navigation from '@/app/components/sections/navigation';
 import Countdown from '@/app/components/sections/countdown';
 import { clientDevLogger } from '@/app/lib/logger/client';
+import Host from '../components/sections/host';
 
 /**
  * @description 招待ページClient ComponentのProps
@@ -149,6 +150,9 @@ export default function InvitationPageClient({
 
       {/* ナビゲーションセクション */}
       <Navigation />
+
+      {/* ホストセクション */}
+      <Host />
 
       {/* 招待情報セクション */}
       <InvitationInfoSection invitationId={invitationId} />
