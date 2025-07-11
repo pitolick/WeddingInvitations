@@ -19,7 +19,7 @@ import Message from '../components/sections/message';
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string; draftKey?: string }>;
 }): Promise<Metadata> {
   const { id: invitationId } = await params;
 
@@ -59,9 +59,9 @@ export async function generateMetadata({
 export default async function InvitationPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string; draftKey?: string }>;
 }) {
-  const { id: invitationId } = await params;
+  const { id: invitationId, draftKey } = await params;
 
   return (
     <div className='min-h-screen'>
@@ -78,7 +78,7 @@ export default async function InvitationPage({
       <Host />
 
       {/* メッセージセクション */}
-      <Message invitationId={invitationId} />
+      <Message invitationId={invitationId} draftKey={draftKey} />
 
       {/* 招待情報セクション */}
       {/* <InvitationInfoSection invitationId={invitationId} /> */}

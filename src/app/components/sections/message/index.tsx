@@ -17,7 +17,7 @@ import DearBlock from './DearBlock';
  * @example
  * <Message invitationId="test" />
  */
-const Message: React.FC<MessageProps> = ({ invitationId }) => {
+const Message: React.FC<MessageProps> = ({ invitationId, draftKey }) => {
   return (
     <section
       id='message'
@@ -60,7 +60,7 @@ const Message: React.FC<MessageProps> = ({ invitationId }) => {
           {/* Dearブロック */}
           <div className='relative z-10 w-full'>
             <FadeIn delay={0.8} duration={0.8} direction='up'>
-              <DearBlock invitationId={invitationId} />
+              <DearBlock invitationId={invitationId} draftKey={draftKey} />
             </FadeIn>
           </div>
 

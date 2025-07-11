@@ -37,20 +37,23 @@ export async function getMicroCMSClient() {
 }
 
 /**
- * @description 招待者情報を取得
+ * @description 招待者情報を取得（プレビューモード対応）
  * @param invitationId - 招待ID
+ * @param draftKey - microCMSプレビューモード用ドラフトキー（任意）
  * @returns Promise<GuestContent | null>
  * @example
- * const guest = await getGuestByInvitationId('test');
+ * const guest = await getGuestByInvitationId('test', 'xxxx');
  */
 export async function getGuestByInvitationId(
-  invitationId: string
+  invitationId: string,
+  draftKey?: string
 ): Promise<GuestContent | null> {
   try {
     const client = await getMicroCMSClient();
     const data = await client.get<GuestContent>({
       endpoint: 'guests',
       contentId: invitationId,
+      queries: draftKey ? { draftKey } : undefined,
     });
     return data;
   } catch (error) {
@@ -60,18 +63,20 @@ export async function getGuestByInvitationId(
 }
 
 /**
- * @description 招待者情報をDearBlockData形式で取得
+ * @description 招待者情報をDearBlockData形式で取得（プレビューモード対応）
  * @param invitationId - 招待ID
+ * @param draftKey - microCMSプレビューモード用ドラフトキー（任意）
  * @returns Promise<DearBlockData | null>
  * @example
- * const dearBlockData = await getDearBlockData('test');
+ * const dearBlockData = await getDearBlockData('test', 'xxxx');
  */
 export async function getDearBlockData(
-  invitationId: string
+  invitationId: string,
+  draftKey?: string
 ): Promise<DearBlockData | null> {
   try {
-    console.log('getDearBlockData', invitationId);
-    const guestContent = await getGuestByInvitationId(invitationId);
+    console.log('getDearBlockData', invitationId, draftKey);
+    const guestContent = await getGuestByInvitationId(invitationId, draftKey);
 
     if (!guestContent) {
       console.log('getDearBlockData undefined');

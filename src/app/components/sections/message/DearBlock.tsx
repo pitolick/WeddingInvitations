@@ -9,19 +9,30 @@ import { DearBlockProps } from './Message.types';
 import { getDearBlockData } from '@/app/lib/api';
 import { FadeIn } from '@/app/components/common/animation';
 import Hr from '@/app/components/common/decoration/Hr';
+import { draftMode } from 'next/headers';
+import { cookies } from 'next/headers';
 
 /**
- * @description Dearブロックコンポーネント（Server Component）
- * @param props - コンポーネントのProps
+ * @description Dearブロックコンポーネント（Server Component, microCMSプレビューモード対応）
+ * @param props - コンポーネントのProps（invitationId, draftKey）
+ * draftKeyが未指定の場合はCookieから取得
  * @returns Promise<JSX.Element>
  * @example
- * <DearBlock invitationId="test" />
+ * <DearBlock invitationId="test" draftKey="xxxx" />
  */
-const DearBlock: React.FC<DearBlockProps> = async ({ invitationId }) => {
+const DearBlock: React.FC<DearBlockProps> = async ({
+  invitationId,
+  draftKey,
+}) => {
+  const { isEnabled } = await draftMode();
+  const cookieStore = cookies() as any;
+  const effectiveDraftKey = isEnabled
+    ? draftKey || cookieStore.get('__prv_draftKey')?.value
+    : undefined;
   /**
-   * @description microCMSからデータを取得
+   * @description microCMSからデータを取得（draftKey対応）
    */
-  const dearBlockData = await getDearBlockData(invitationId);
+  const dearBlockData = await getDearBlockData(invitationId, effectiveDraftKey);
 
   // データが取得できない場合
   if (!dearBlockData || !dearBlockData.message) {

@@ -14,6 +14,8 @@ import { DearBlockData } from '@/app/lib/types/microcms';
 export interface DearBlockProps {
   /** 招待者ID */
   invitationId: string;
+  /** microCMSプレビューモード用ドラフトキー（任意） */
+  draftKey?: string;
 }
 
 /**
