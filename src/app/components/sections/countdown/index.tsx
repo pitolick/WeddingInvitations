@@ -120,7 +120,7 @@ const Countdown: React.FC = () => {
                   initial='initial'
                   animate='animate'
                   exit='exit'
-                  className='text-white text-8xl font-bold text-center select-none'
+                  className='text-white text-8xl font-bold text-center select-none font-noto'
                 >
                   {countdown.days.toString().padStart(3, '0')}
                 </motion.span>
