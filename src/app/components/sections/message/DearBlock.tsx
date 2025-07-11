@@ -25,7 +25,7 @@ const DearBlock: React.FC<DearBlockProps> = async ({
   draftKey,
 }) => {
   const { isEnabled } = await draftMode();
-  const cookieStore = cookies() as any;
+  const cookieStore = await cookies();
   const effectiveDraftKey = isEnabled
     ? draftKey || cookieStore.get('__prv_draftKey')?.value
     : undefined;

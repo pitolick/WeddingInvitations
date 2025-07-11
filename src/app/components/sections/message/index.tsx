@@ -7,9 +7,9 @@
 import React from 'react';
 import FadeIn from '@/app/components/common/animation/FadeIn';
 import { MessageProps } from './Message.types';
-import Castle from '@/app/components/common/icon/Castle';
+// import Castle from '@/app/components/common/icon/Castle';
 import DearBlock from './DearBlock';
-
+import Image from 'next/image';
 /**
  * @description メッセージセクションコンポーネント（Server Component）
  * @param props - コンポーネントのProps
@@ -65,10 +65,12 @@ const Message: React.FC<MessageProps> = ({ invitationId, draftKey }) => {
           </div>
 
           {/* 背景Castleイラスト */}
-          <Castle
-            size={320}
+          <Image
+            src='/images/sections/message/castle.webp'
+            alt='message-bg'
+            width={608}
+            height={608}
             className='pointer-events-none select-none absolute right-0 bottom-0 z-0 md:size-[480px] size-[320px] mix-blend-overlay text-black'
-            aria-hidden='true'
           />
         </div>
       </div>
