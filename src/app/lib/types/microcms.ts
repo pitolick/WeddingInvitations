@@ -91,12 +91,12 @@ export function convertToDearBlockData(
     guestName: guestContent.name,
     dear: guestContent.dear || guestContent.name, // dearが未設定の場合は名前を使用
     message: guestContent.message || '', // messageが未設定の場合は空文字を使用
-    inviteTypes: guestContent.invite as InviteType[],
+    inviteTypes: guestContent.invite,
     familyMembers: guestContent.family.map(familyMember => ({
       guestName: familyMember.name,
       dear: familyMember.dear || familyMember.name, // dearが未設定の場合は名前を使用
       message: familyMember.message || '', // messageが未設定の場合は空文字を使用
-      inviteTypes: familyMember.invite as InviteType[],
+      inviteTypes: familyMember.invite,
       familyMembers: [], // ネストした家族情報は必要に応じて実装
     })),
   };
