@@ -67,7 +67,7 @@ const Message: React.FC<MessageProps> = ({ invitationId, draftKey }) => {
           {/* 背景Castleイラスト */}
           <Image
             src='/images/sections/message/castle.webp'
-            alt='message-bg'
+            alt=""
             width={608}
             height={608}
             className='pointer-events-none select-none absolute right-0 bottom-0 z-0 md:size-[480px] size-[320px] mix-blend-overlay text-black'
