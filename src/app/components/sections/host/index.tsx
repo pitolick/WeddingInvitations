@@ -50,6 +50,7 @@ const bride: HostProfile = {
 const Host: React.FC = () => {
   return (
     <section
+      id="host"
       className='relative flex flex-col items-center py-16 w-full bg-repeat bg-center'
       style={{
         backgroundImage: "url('/images/sections/host/host-background.webp')",
