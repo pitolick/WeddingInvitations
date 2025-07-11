@@ -5,10 +5,11 @@
  */
 
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import InvitationPageClient from './InvitationPageClient';
-import { devLogger } from '@/app/lib/logger';
-import { validateInvitationId } from './utils';
+import MainVisual from '@/app/components/sections/mv';
+import Navigation from '@/app/components/sections/navigation';
+import Countdown from '@/app/components/sections/countdown';
+import Host from '../components/sections/host';
+import Message from '../components/sections/message';
 
 /**
  * @description 動的メタデータ生成
@@ -18,19 +19,9 @@ import { validateInvitationId } from './utils';
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string; draftKey?: string }>;
 }): Promise<Metadata> {
   const { id: invitationId } = await params;
-
-  devLogger.info(
-    'InvitationPage',
-    `招待ページのメタデータを生成中: ${invitationId}`,
-    {
-      context: 'InvitationPage',
-      humanNote: '動的メタデータ生成',
-      aiTodo: '招待IDに基づくメタデータの生成',
-    }
-  );
 
   return {
     title: `Wedding Invitation - ${invitationId}`,
@@ -59,36 +50,47 @@ export async function generateMetadata({
 }
 
 /**
- * @description 招待ページのメインページコンポーネント
+ * @description 招待ページのメインページコンポーネント（Server Component）
  * @param props - ページのProps
- * @returns JSX.Element
+ * @returns Promise<JSX.Element>
  * @example
  * <InvitationPage params={{ id: "wedding-123" }} />
  */
 export default async function InvitationPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: string; draftKey?: string }>;
 }) {
-  const { id: invitationId } = await params;
+  const { id: invitationId, draftKey } = await params;
 
-  /**
-   * @description 招待IDの検証
-   */
-  if (!validateInvitationId(invitationId)) {
-    devLogger.error('InvitationPage', `無効な招待ID: ${invitationId}`, {
-      context: 'InvitationPage',
-      humanNote: '招待ID検証エラー',
-      aiTodo: '404ページへのリダイレクト',
-    });
-    notFound();
-  }
+  return (
+    <div className='min-h-screen'>
+      {/* メインビジュアル（MV）セクション */}
+      <MainVisual />
 
-  devLogger.info('InvitationPage', `招待ページを表示中: ${invitationId}`, {
-    context: 'InvitationPage',
-    humanNote: '招待ページ表示',
-    aiTodo: 'Client Componentの表示',
-  });
+      {/* カウントダウンセクション */}
+      <Countdown />
 
-  return <InvitationPageClient invitationId={invitationId} />;
+      {/* ナビゲーションセクション */}
+      <Navigation />
+
+      {/* ホストセクション */}
+      <Host />
+
+      {/* メッセージセクション */}
+      <Message invitationId={invitationId} draftKey={draftKey} />
+
+      {/* 招待情報セクション */}
+      {/* <InvitationInfoSection invitationId={invitationId} /> */}
+
+      {/* イベント詳細セクション */}
+      {/* <EventSection /> */}
+
+      {/* RSVPセクション */}
+      {/* <RsvpSection /> */}
+
+      {/* ギャラリーセクション */}
+      {/* <GallerySection /> */}
+    </div>
+  );
 }

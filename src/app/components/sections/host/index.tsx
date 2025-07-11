@@ -7,7 +7,7 @@
 import React from 'react';
 import { HostProfile } from './HostInfo.types';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { FadeIn } from '@/app/components/common/animation';
 import Sun from '@/app/components/common/icon/Sun';
 
 const groom: HostProfile = {
@@ -86,12 +86,11 @@ const Host: React.FC = () => {
  * <ProfileCard profile={groomProfile} />
  */
 const ProfileCard: React.FC<{ profile: HostProfile }> = ({ profile }) => (
-  <motion.div
+  <FadeIn
     className='flex flex-col items-center px-6 gap-2'
-    initial={{ opacity: 0, y: 40 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.7 }}
-    viewport={{ once: true }}
+    delay={0.2}
+    duration={0.7}
+    direction='up'
   >
     <div className='relative flex justify-center items-center size-fit p-4'>
       <Image
@@ -135,7 +134,7 @@ const ProfileCard: React.FC<{ profile: HostProfile }> = ({ profile }) => (
         {profile.messages}
       </div>
     </div>
-  </motion.div>
+  </FadeIn>
 );
 
 export default Host;
