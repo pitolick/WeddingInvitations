@@ -20,10 +20,10 @@ import { cookies } from 'next/headers';
  * @example
  * <DearBlock invitationId="test" draftKey="xxxx" />
  */
-const DearBlock: React.FC<DearBlockProps> = async ({
+async function DearBlock({
   invitationId,
   draftKey,
-}) => {
+}: DearBlockProps) {
   const { isEnabled } = await draftMode();
   const cookieStore = await cookies();
   const effectiveDraftKey = isEnabled
