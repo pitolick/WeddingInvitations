@@ -77,6 +77,10 @@ const Host: React.FC = () => {
 
 /**
  * @description プロフィールカード（新郎新婦共通）
+ * @param profile - ホストプロフィール情報
+ * @returns JSX.Element
+ * @example
+ * <ProfileCard profile={groomProfile} />
  */
 const ProfileCard: React.FC<{ profile: HostProfile }> = ({ profile }) => (
   <motion.div
