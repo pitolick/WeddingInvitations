@@ -50,7 +50,7 @@ const bride: HostProfile = {
 const Host: React.FC = () => {
   return (
     <section
-      id="host"
+      id='host'
       className='relative flex flex-col items-center py-16 w-full bg-repeat bg-center'
       style={{
         backgroundImage: "url('/images/sections/host/host-background.webp')",
@@ -65,7 +65,10 @@ const Host: React.FC = () => {
           <ProfileCard profile={groom} />
           {/* Center Icon */}
           <div className='my-6 md:my-0 flex justify-center items-center md:h-[300px]'>
-            <Sun className='w-20 h-20 md:w-24 md:h-24 text-yellow-300' data-testid='sun-icon' />
+            <Sun
+              className='w-20 h-20 md:w-24 md:h-24 text-yellow-300'
+              data-testid='sun-icon'
+            />
           </div>
           {/* Bride */}
           <ProfileCard profile={bride} />
