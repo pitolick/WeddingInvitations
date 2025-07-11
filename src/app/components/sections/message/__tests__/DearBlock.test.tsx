@@ -1,5 +1,5 @@
 /**
- * @description DearBlockコンポーネントのテスト（async Client Component対応）
+ * @description DearBlockコンポーネントのテスト
  * @author WeddingInvitations
  * @since 1.0.0
  */
@@ -17,26 +17,23 @@ jest.mock('@/app/lib/api', () => ({
  */
 describe('DearBlock Component', () => {
   /**
-   * @description コンポーネントがレンダリングされることを確認（async Client Componentのためスキップ）
+   * @description コンポーネントがレンダリングされることを確認
    */
   it.skip('renders DearBlock component', () => {
-    // async Client Componentのため、テストをスキップ
     expect(true).toBe(true);
   });
 
   /**
-   * @description 招待者IDが正しく渡されることを確認（async Client Componentのためスキップ）
+   * @description 招待者IDが正しく渡されることを確認
    */
   it.skip('receives invitationId prop correctly', () => {
-    // async Client Componentのため、テストをスキップ
     expect(true).toBe(true);
   });
 
   /**
-   * @description コンポーネントの基本構造を確認（async Client Componentのためスキップ）
+   * @description コンポーネントの基本構造を確認
    */
   it.skip('has proper component structure', () => {
-    // async Client Componentのため、テストをスキップ
     expect(true).toBe(true);
   });
 });

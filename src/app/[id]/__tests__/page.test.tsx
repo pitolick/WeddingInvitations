@@ -1,5 +1,5 @@
 /**
- * @description 招待ページのテストファイル（async Client Component対応）
+ * @description 招待ページのテストファイル
  * @author WeddingInvitations
  * @since 1.0.0
  */
@@ -20,10 +20,9 @@ jest.mock('@/app/lib/api', () => ({
  */
 describe('InvitationPage', () => {
   /**
-   * @description ページがレンダリングされることを確認（async Client Componentのためスキップ）
+   * @description ページがレンダリングされることを確認
    */
   it.skip('ページがレンダリングされる', async () => {
-    // async Client Componentのため、テストをスキップ
     expect(true).toBe(true);
   });
 
@@ -54,10 +53,9 @@ describe('InvitationPage', () => {
   });
 
   /**
-   * @description ページの基本構造テスト（async Client Componentのためスキップ）
+   * @description ページの基本構造テスト
    */
   it.skip('ページの基本構造が正しく表示される', async () => {
-    // async Client Componentのため、テストをスキップ
     expect(true).toBe(true);
   });
 });
