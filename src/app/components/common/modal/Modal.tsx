@@ -87,36 +87,36 @@ const Modal: React.FC<ModalProps> = ({
     md: 'max-w-md',
     lg: 'max-w-lg',
     xl: 'max-w-xl',
-    fullscreen: 'max-w-screen max-h-screen',
+    fullscreen: 'w-screen h-screen',
   };
 
   return (
     <>
-      {/* オーバーレイ */}
-      <div
-        className='fixed inset-0 bg-black/50 z-40'
-        onClick={onClose}
-        aria-hidden='true'
-      />
-
       {/* モーダル */}
       <div
-        className='fixed inset-0 z-50 flex items-center justify-center p-4'
+        className={`fixed inset-0 z-50 flex items-center justify-center p-4`}
         role='dialog'
         aria-modal='true'
         aria-labelledby={title ? `${modalId}-title` : undefined}
         id={modalId}
       >
+        {/* オーバーレイ */}
         <div
-          className={`w-full ${sizeClasses[size]} ${
+          className='fixed inset-0 bg-black/70'
+          onClick={onClose}
+          aria-hidden='true'
+        />
+
+        <div
+          className={`inline-flex ${sizeClasses[size]} ${
             size === 'fullscreen'
-              ? 'bg-transparent shadow-none rounded-none'
+              ? 'bg-transparent shadow-none rounded-none flex items-center justify-center'
               : 'bg-white rounded-lg shadow-xl'
           } transform transition-all duration-300 ease-in-out ${className}`}
           onClick={e => e.stopPropagation()}
         >
-          {/* ヘッダー */}
-          {(title || showCloseButton) && (
+          {/* ヘッダー（fullscreen時は非表示） */}
+          {(title || (showCloseButton && size !== 'fullscreen')) && (
             <div className='flex items-center justify-between p-6 border-b border-gray-200'>
               {title && (
                 <h2
@@ -126,7 +126,7 @@ const Modal: React.FC<ModalProps> = ({
                   {title}
                 </h2>
               )}
-              {showCloseButton && (
+              {showCloseButton && size !== 'fullscreen' && (
                 <button
                   onClick={onClose}
                   className='p-2 text-gray-400 hover:text-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-lavender-500 focus:ring-offset-2 rounded-md'
@@ -151,7 +151,42 @@ const Modal: React.FC<ModalProps> = ({
           )}
 
           {/* コンテンツ */}
-          <div className={size === 'fullscreen' ? '' : 'p-6'}>{children}</div>
+          <div
+            className={
+              size === 'fullscreen'
+                ? 'flex items-center justify-center w-full h-full'
+                : 'p-6'
+            }
+          >
+            {size === 'fullscreen' ? (
+              <div className='relative inline-flex items-center justify-center'>
+                {children}
+                {showCloseButton && (
+                  <button
+                    onClick={onClose}
+                    className='absolute top-0 right-0 m-2 p-2 text-white bg-black/60 hover:bg-black/80 rounded-full focus:outline-none focus:ring-2 focus:ring-lavender-500 focus:ring-offset-2 z-50'
+                    aria-label='モーダルを閉じる'
+                  >
+                    <svg
+                      className='w-7 h-7'
+                      fill='none'
+                      stroke='currentColor'
+                      viewBox='0 0 24 24'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        strokeWidth={2}
+                        d='M6 18L18 6M6 6l12 12'
+                      />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            ) : (
+              children
+            )}
+          </div>
         </div>
       </div>
     </>

@@ -108,7 +108,6 @@ export function ImageModalSample() {
       <h2 className='text-2xl font-semibold text-gray-800 mb-6'>
         画像拡大表示 Modal サンプル（元サイズ制限版）
       </h2>
-
       {/* 画像ギャラリー */}
       <section className='space-y-4'>
         <h3 className='text-xl font-semibold text-gray-700'>
@@ -158,7 +157,7 @@ export function ImageModalSample() {
           ))}
         </div>
       </section>
-
+      あああああ
       {/* 画像拡大表示モーダル */}
       <Modal
         isOpen={!!selectedImage}
@@ -201,7 +200,6 @@ export function ImageModalSample() {
           </div>
         </div>
       </Modal>
-
       {/* 使用方法説明 */}
       <section className='space-y-4'>
         <h3 className='text-xl font-semibold text-gray-700'>
@@ -237,7 +235,6 @@ export function ImageModalSample() {
           </div>
         </div>
       </section>
-
       {/* カスタマイズ例 */}
       <section className='space-y-4'>
         <h3 className='text-xl font-semibold text-gray-700'>カスタマイズ例</h3>
@@ -260,7 +257,6 @@ export function ImageModalSample() {
           </div>
         </div>
       </section>
-
       {/* 技術詳細 */}
       <section className='space-y-4'>
         <h3 className='text-xl font-semibold text-gray-700'>技術詳細</h3>
