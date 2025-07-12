@@ -5,12 +5,15 @@
  */
 
 import type { Metadata } from 'next';
-import MainVisual from '@/app/components/sections/mv';
-import Navigation from '@/app/components/sections/navigation';
-import Countdown from '@/app/components/sections/countdown';
-import Host from '../components/sections/host';
-import Message from '../components/sections/message';
-import Event from '@/app/components/sections/event';
+import {
+  MainVisual,
+  Navigation,
+  Countdown,
+  Host,
+  Message,
+  Gallery,
+  Event,
+} from '../components/sections';
 
 /**
  * @description 動的メタデータ生成
@@ -80,6 +83,9 @@ export default async function InvitationPage({
 
       {/* メッセージセクション */}
       <Message invitationId={invitationId} draftKey={draftKey} />
+
+      {/* ギャラリーセクション */}
+      <Gallery />
 
       {/* イベント詳細セクション */}
       <Event invitationId={invitationId} draftKey={draftKey} />
