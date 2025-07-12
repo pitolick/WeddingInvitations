@@ -154,6 +154,7 @@ WeddingInvitations/
 │   ├── 📁 app/                       # Next.js App Router
 │   │   ├── 📁 [id]/                  # 招待者別ページ（動的ルート）
 │   │   │   ├── page.tsx              # 招待者別ページ
+│   │   │   ├── types.ts              # 招待ページ固有型定義
 │   │   │   └── __tests__/            # テストコード
 │   │   │       └── page.test.tsx     # ページテスト
 │   │   ├── 📁 api/                   # API Routes
@@ -169,38 +170,48 @@ WeddingInvitations/
 │   │   │   ├── 📁 sections/          # セクションコンポーネント
 │   │   │   │   ├── 📁 mv/            # MVセクション
 │   │   │   │   │   ├── index.tsx     # MVコンポーネント
+│   │   │   │   │   ├── types.ts      # MVセクション型定義
 │   │   │   │   │   └── __tests__/    # テストコード
 │   │   │   │   │       └── index.test.tsx # MVテスト
 │   │   │   │   ├── 📁 countdown/     # カウントダウンセクション
 │   │   │   │   │   ├── index.tsx     # カウントダウンコンポーネント
+│   │   │   │   │   ├── types.ts      # カウントダウンセクション型定義
 │   │   │   │   │   └── __tests__/    # テストコード
 │   │   │   │   │       └── index.test.tsx # カウントダウンテスト
 │   │   │   │   ├── 📁 navigation/    # ナビゲーションセクション
 │   │   │   │   │   ├── index.tsx     # ナビゲーションコンポーネント
+│   │   │   │   │   ├── types.ts      # ナビゲーションセクション型定義
 │   │   │   │   │   └── __tests__/    # テストコード
 │   │   │   │   │       └── index.test.tsx # ナビゲーションテスト
 │   │   │   │   ├── 📁 host/          # ホストセクション
 │   │   │   │   │   ├── index.tsx     # ホストコンポーネント
+│   │   │   │   │   ├── HostInfo.types.ts # ホストセクション型定義
 │   │   │   │   │   └── __tests__/    # テストコード
 │   │   │   │   │       └── index.test.tsx # ホストテスト
 │   │   │   │   ├── 📁 message/       # メッセージセクション
 │   │   │   │   │   ├── index.tsx     # メッセージコンポーネント
+│   │   │   │   │   ├── Message.types.ts # メッセージセクション型定義
 │   │   │   │   │   └── __tests__/    # テストコード
 │   │   │   │   │       └── index.test.tsx # メッセージテスト
 │   │   │   │   ├── 📁 gallery/       # ギャラリーセクション
 │   │   │   │   │   ├── index.tsx     # ギャラリーコンポーネント
+│   │   │   │   │   ├── types.ts      # ギャラリーセクション型定義
 │   │   │   │   │   └── __tests__/    # テストコード
 │   │   │   │   │       └── index.test.tsx # ギャラリーテスト
 │   │   │   │   ├── 📁 event/         # イベントセクション
 │   │   │   │   │   ├── index.tsx     # イベントコンポーネント
+│   │   │   │   │   ├── EventItem.tsx # 単一イベント表示コンポーネント
+│   │   │   │   │   ├── types.ts      # イベントセクション型定義
 │   │   │   │   │   └── __tests__/    # テストコード
 │   │   │   │   │       └── index.test.tsx # イベントテスト
 │   │   │   │   ├── 📁 rsvp/          # RSVPセクション
 │   │   │   │   │   ├── index.tsx     # RSVPコンポーネント
+│   │   │   │   │   ├── types.ts      # RSVPセクション型定義
 │   │   │   │   │   └── __tests__/    # テストコード
 │   │   │   │   │       └── index.test.tsx # RSVPテスト
 │   │   │   │   ├── 📁 footer/        # フッターセクション
 │   │   │   │   │   ├── index.tsx     # フッターコンポーネント
+│   │   │   │   │   ├── types.ts      # フッターセクション型定義
 │   │   │   │   │   └── __tests__/    # テストコード
 │   │   │   │   │       └── index.test.tsx # フッターテスト
 │   │   │   │   └── index.ts          # セクション全体のエクスポートバンドル
@@ -272,11 +283,9 @@ WeddingInvitations/
 │   │   │   │   │   └── __tests__/    # テストコード
 │   │   │   │   │       └── index.test.ts # 画像ユーティリティテスト
 │   │   │   │   └── index.ts          # ユーティリティ全体のエクスポートバンドル
-│   │   │   ├── 📁 types/             # 型定義
-│   │   │   │   ├── guest.ts          # 招待者型定義
-│   │   │   │   ├── rsvp.ts           # RSVP型定義
-│   │   │   │   ├── event.ts          # イベント型定義
-│   │   │   │   ├── image.ts          # 画像型定義
+│   │   │   ├── 📁 types/             # グローバル・共通型定義
+│   │   │   │   ├── microcms.ts       # microCMS関連型定義
+│   │   │   │   ├── example-usage.ts  # 型定義使用例
 │   │   │   │   └── index.ts          # 型定義全体のエクスポートバンドル
 │   │   │   ├── 📁 constants/         # 定数
 │   │   │   │   ├── events.ts         # イベント定数
@@ -383,6 +392,54 @@ WeddingInvitations/
 - **Berkshire Swash**: 装飾的なフォント（タイトル用）
 - **Noto Sans JP**: 日本語対応フォント（本文用）
 - **フォント読み込み**: Next.js の最適化されたフォント読み込みを使用
+
+## 型定義ファイル管理規則
+
+### 型定義ファイルの配置場所
+
+#### 1. グローバル・共通型定義
+
+- **場所**: `src/app/lib/types/`
+- **対象**: アプリケーション全体で使用される共通型定義
+- **ファイル例**:
+  - `microcms.ts` - microCMS関連型定義
+  - `example-usage.ts` - 型定義使用例
+  - `index.ts` - エクスポート集約
+
+#### 2. セクション固有型定義
+
+- **場所**: `src/app/components/sections/{section}/types.ts`
+- **対象**: 特定セクションでのみ使用される型定義
+- **ファイル例**:
+  - `src/app/components/sections/event/types.ts` - イベントセクション型定義
+  - `src/app/components/sections/host/HostInfo.types.ts` - ホストセクション型定義
+  - `src/app/components/sections/message/Message.types.ts` - メッセージセクション型定義
+
+#### 3. ページ固有型定義
+
+- **場所**: `src/app/[id]/types.ts`
+- **対象**: 特定ページでのみ使用される型定義
+- **ファイル例**:
+  - `src/app/[id]/types.ts` - 招待ページ固有型定義
+
+#### 4. コンポーネント内型定義
+
+- **場所**: 各コンポーネントファイル内
+- **対象**: そのコンポーネントのみで使用する型定義
+- **推奨**: 最小限に抑制し、可能な限り外部ファイルに分離
+
+### 型定義ファイル命名規則
+
+- **セクション固有**: `types.ts`（統一）
+- **特殊な場合**: `{SectionName}.types.ts`（例: `HostInfo.types.ts`）
+- **グローバル**: 機能別ファイル名（例: `microcms.ts`）
+
+### 型定義管理ベストプラクティス
+
+1. **分離の原則**: セクション固有型定義は該当セクション内に配置
+2. **再利用性**: 複数セクションで使用される型定義はグローバルに配置
+3. **一貫性**: 命名規則とファイル配置を統一
+4. **ドキュメント化**: 全ての型定義にJSDocsコメントを記述
 
 ## 開発ルール
 

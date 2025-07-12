@@ -10,6 +10,7 @@ import Navigation from '@/app/components/sections/navigation';
 import Countdown from '@/app/components/sections/countdown';
 import Host from '../components/sections/host';
 import Message from '../components/sections/message';
+import Event from '@/app/components/sections/event';
 
 /**
  * @description 動的メタデータ生成
@@ -80,11 +81,8 @@ export default async function InvitationPage({
       {/* メッセージセクション */}
       <Message invitationId={invitationId} draftKey={draftKey} />
 
-      {/* 招待情報セクション */}
-      {/* <InvitationInfoSection invitationId={invitationId} /> */}
-
       {/* イベント詳細セクション */}
-      {/* <EventSection /> */}
+      <Event invitationId={invitationId} draftKey={draftKey} />
 
       {/* RSVPセクション */}
       {/* <RsvpSection /> */}
