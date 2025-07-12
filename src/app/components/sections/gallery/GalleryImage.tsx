@@ -10,6 +10,12 @@ import { Modal } from '@/app/components/common/modal';
  * @example
  * <GalleryImage thumbnail="/images/sections/gallery/gallery-1-thumbnail.webp" image="/images/sections/gallery/gallery-1.webp" alt="思い出の写真" size={125} />
  */
+
+/**
+ * @description ギャラリー画像コンポーネントのProps型定義
+ * @interface GalleryImageProps
+ * @since 1.0.0
+ */
 interface GalleryImageProps {
   /** サムネイル画像パス */
   thumbnail: string;
