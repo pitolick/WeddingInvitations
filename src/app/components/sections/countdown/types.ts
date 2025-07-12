@@ -6,6 +6,14 @@
 
 /**
  * @description CountdownコンポーネントのProps型
+ * @example
+ * ```typescript
+ * const countdownProps: CountdownProps = {
+ *   id: 'countdown',
+ *   className: 'text-center',
+ *   targetDate: new Date('2024-12-25T12:00:00')
+ * };
+ * ```
  */
 export interface CountdownProps {
   /** セクションのID */
@@ -18,6 +26,15 @@ export interface CountdownProps {
 
 /**
  * @description カウントダウン時間の型
+ * @example
+ * ```typescript
+ * const countdownTime: CountdownTime = {
+ *   days: 30,
+ *   hours: 12,
+ *   minutes: 45,
+ *   seconds: 30
+ * };
+ * ```
  */
 export interface CountdownTime {
   /** 日数 */

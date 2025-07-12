@@ -6,6 +6,14 @@
 
 /**
  * @description フッターリンクの型定義
+ * @example
+ * ```typescript
+ * const footerLink: FooterLink = {
+ *   label: 'ホーム',
+ *   href: '/',
+ *   external: false
+ * };
+ * ```
  */
 export interface FooterLink {
   /** リンクのラベル */
@@ -18,6 +26,17 @@ export interface FooterLink {
 
 /**
  * @description FooterコンポーネントのProps型
+ * @example
+ * ```typescript
+ * const footerProps: FooterProps = {
+ *   id: 'footer',
+ *   className: 'bg-gray-100',
+ *   links: [
+ *     { label: 'ホーム', href: '/', external: false },
+ *     { label: 'GitHub', href: 'https://github.com', external: true }
+ *   ]
+ * };
+ * ```
  */
 export interface FooterProps {
   /** セクションのID */

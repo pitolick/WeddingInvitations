@@ -6,6 +6,13 @@
 
 /**
  * @description MainVisualコンポーネントのProps型
+ * @example
+ * ```typescript
+ * const mainVisualProps: MainVisualProps = {
+ *   id: 'mv',
+ *   className: 'relative h-screen'
+ * };
+ * ```
  */
 export interface MainVisualProps {
   /** セクションのID */
@@ -16,6 +23,14 @@ export interface MainVisualProps {
 
 /**
  * @description レスポンシブ画像設定の型
+ * @example
+ * ```typescript
+ * const responsiveImageConfig: ResponsiveImageConfig = {
+ *   mobile: '/images/mv-hero-mobile.webp',
+ *   desktop: '/images/mv-hero-desktop.webp',
+ *   alt: 'メインビジュアル画像'
+ * };
+ * ```
  */
 export interface ResponsiveImageConfig {
   /** モバイル用画像パス */

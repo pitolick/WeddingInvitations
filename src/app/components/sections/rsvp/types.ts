@@ -6,6 +6,17 @@
 
 /**
  * @description RSVPフォームデータの型定義
+ * @example
+ * ```typescript
+ * const rsvpData: RSVPFormData = {
+ *   name: '田中太郎',
+ *   email: 'tanaka@example.com',
+ *   attendance: 'attending',
+ *   companions: 2,
+ *   message: '楽しみにしています！',
+ *   dietaryRestrictions: 'ベジタリアン'
+ * };
+ * ```
  */
 export interface RSVPFormData {
   /** 招待者名 */
@@ -24,6 +35,14 @@ export interface RSVPFormData {
 
 /**
  * @description RSVPコンポーネントのProps型
+ * @example
+ * ```typescript
+ * const rsvpProps: RSVPProps = {
+ *   id: 'rsvp',
+ *   className: 'bg-white',
+ *   invitationId: 'invite-123'
+ * };
+ * ```
  */
 export interface RSVPProps {
   /** セクションのID */
@@ -36,6 +55,14 @@ export interface RSVPProps {
 
 /**
  * @description RSVP送信結果の型
+ * @example
+ * ```typescript
+ * const rsvpResponse: RSVPResponse = {
+ *   success: true,
+ *   message: 'RSVPが正常に送信されました',
+ *   error: undefined
+ * };
+ * ```
  */
 export interface RSVPResponse {
   /** 成功フラグ */
