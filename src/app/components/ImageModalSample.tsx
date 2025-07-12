@@ -157,7 +157,7 @@ export function ImageModalSample() {
           ))}
         </div>
       </section>
-      あああああ
+      
       {/* 画像拡大表示モーダル */}
       <Modal
         isOpen={!!selectedImage}
