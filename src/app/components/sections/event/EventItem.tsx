@@ -1,0 +1,81 @@
+import React from 'react';
+import type { EventItem as EventItemType } from './types';
+
+/**
+ * @description 単一イベント（挙式・披露宴・二次会など）表示コンポーネント
+ * @param event - イベント情報
+ * @returns JSX.Element
+ */
+const EventItem: React.FC<{ event: EventItemType }> = ({ event }) => {
+  return (
+    <section className='w-full grid grid-rows-subgrid row-span-5 gap-6'>
+      {/* タイトルブロック */}
+      <div className='w-full bg-lavender-600 py-4 grid grid-cols-1 gap-2'>
+        <span className='font-berkshire text-2xl text-white text-center'>
+          {event.title}
+        </span>
+        <span className='font-noto text-lg text-white text-center'>
+          {event.subtitle}
+        </span>
+      </div>
+
+      {/* 日時セクション */}
+      <div className='grid grid-cols-1 gap-1 justify-items-center'>
+        <span className='font-noto font-bold text-lg text-center'>
+          {event.date}
+        </span>
+        <div className='grid grid-cols-1 justify-items-center'>
+          <span className='font-noto font-bold text-2xl text-center'>
+            {event.time}
+          </span>
+          {event.receptionTime && (
+            <span className='font-noto text-sm text-center'>
+              {event.receptionTime}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* 会場情報テーブル */}
+      <div className='inline-grid grid-cols-1 gap-2 justify-items-center'>
+        <dl className='inline-grid grid-cols-1 gap-2'>
+          {event.venue.map((item, index) => (
+            <div
+              key={index}
+              className='grid grid-cols-[auto_1fr] gap-3 items-start'
+            >
+              <dt className='bg-gray-600 text-white text-xs font-noto rounded px-2 py-1 w-10 text-center'>
+                {item.key}
+              </dt>
+              <dd className='font-noto text-sm break-words'>{item.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
+      {/* メッセージセクション */}
+      <div className='inline-grid grid-cols-1 gap-2 justify-items-center'>
+        <span className='font-berkshire text-lg text-center'>Message</span>
+        <p className='font-noto text-sm text-center whitespace-pre-line'>
+          {event.message}
+        </p>
+      </div>
+
+      {/* Google Map or 画像 */}
+      <div className='grid grid-cols-1 justify-items-center'>
+        <iframe
+          src={event.mapUrl}
+          width='100%'
+          height='300'
+          className='border-0 w-full h-[300px]'
+          allowFullScreen
+          loading='lazy'
+          referrerPolicy='no-referrer-when-downgrade'
+          title='会場の地図'
+        />
+      </div>
+    </section>
+  );
+};
+
+export default EventItem;
