@@ -271,17 +271,21 @@ const Event: React.FC<EventProps> = async ({ invitationId, draftKey }) => {
   // microCMSから招待者情報を取得
   let filteredEvents = allEvents;
 
+  // デフォルトのフィルタリング関数
+  const filterDefaultEvents = (events: EventItemType[]) => {
+    return events.filter(event => {
+      const eventInviteType = EVENT_TYPE_MAPPING[event.type];
+      return eventInviteType === '披露宴' || eventInviteType === '二次会';
+    });
+  };
+
   if (invitationId) {
     try {
       const guestData = await getGuestByInvitationId(invitationId, draftKey);
 
       if (guestData && Array.isArray(guestData.invite)) {
         if (guestData.invite.length === 0) {
-          // inviteが空の場合は披露宴・二次会のみ表示
-          filteredEvents = allEvents.filter(event => {
-            const eventInviteType = EVENT_TYPE_MAPPING[event.type];
-            return eventInviteType === '披露宴' || eventInviteType === '二次会';
-          });
+          filteredEvents = filterDefaultEvents(allEvents);
         } else {
           // inviteに含まれるものだけ表示
           filteredEvents = allEvents.filter(event => {
@@ -297,11 +301,7 @@ const Event: React.FC<EventProps> = async ({ invitationId, draftKey }) => {
         aiTodo: 'エラーハンドリングを改善し、フォールバック処理を実装する',
         error: error instanceof Error ? error.message : String(error),
       });
-      // エラーの場合は披露宴・二次会のみ表示
-      filteredEvents = allEvents.filter(event => {
-        const eventInviteType = EVENT_TYPE_MAPPING[event.type];
-        return eventInviteType === '披露宴' || eventInviteType === '二次会';
-      });
+      filteredEvents = filterDefaultEvents(allEvents);
     }
   }
 
