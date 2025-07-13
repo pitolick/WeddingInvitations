@@ -17,6 +17,14 @@ let tokenExpiresAt: number | null = null;
 
 /**
  * アクセストークンを取得
+ * @description 郵便番号APIのアクセストークンを取得・キャッシュする
+ * @returns Promise<string> アクセストークン
+ * @throws {Error} トークン取得に失敗した場合
+ * @example
+ * ```typescript
+ * const token = await getToken();
+ * // キャッシュされたトークンまたは新規取得したトークンを返す
+ * ```
  */
 async function getToken(): Promise<string> {
   // キャッシュされたトークンが有効な場合は返す
@@ -56,6 +64,15 @@ async function getToken(): Promise<string> {
 
 /**
  * 郵便番号検索API
+ * @description 郵便番号から住所情報を検索するGETエンドポイント
+ * @param request - NextRequestオブジェクト
+ * @returns Promise<NextResponse> 検索結果またはエラーレスポンス
+ * @example
+ * ```typescript
+ * // GET /api/postal-code?postalCode=1234567&page=1&limit=10
+ * const response = await fetch('/api/postal-code?postalCode=1234567');
+ * const data = await response.json();
+ * ```
  */
 export async function GET(request: NextRequest) {
   try {
@@ -104,6 +121,19 @@ export async function GET(request: NextRequest) {
 
 /**
  * 住所検索API
+ * @description 住所から郵便番号を検索するPOSTエンドポイント
+ * @param request - NextRequestオブジェクト
+ * @returns Promise<NextResponse> 検索結果またはエラーレスポンス
+ * @example
+ * ```typescript
+ * // POST /api/postal-code
+ * const response = await fetch('/api/postal-code', {
+ *   method: 'POST',
+ *   headers: { 'Content-Type': 'application/json' },
+ *   body: JSON.stringify({ pref_name: '東京都', city_name: '渋谷区' })
+ * });
+ * const data = await response.json();
+ * ```
  */
 export async function POST(request: NextRequest) {
   try {

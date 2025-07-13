@@ -1,10 +1,20 @@
 import React, { useId } from 'react';
 import Image from 'next/image';
 
+/**
+ * 出席・欠席選択コンポーネントのProps型定義
+ * @description 出席・欠席を選択するためのラジオボタンコンポーネントの設定
+ * @interface AttendanceSelectorProps
+ * @since 1.0.0
+ */
 interface AttendanceSelectorProps {
+  /** 選択された値 */
   value: 'attending' | 'declined' | '';
+  /** 値変更時のコールバック関数 */
   onChange: (value: 'attending' | 'declined') => void;
+  /** 追加のCSSクラス */
   className?: string;
+  /** 必須項目かどうか */
   required?: boolean;
   /**
    * ラジオボタンのname属性（IDも自動生成されます）
@@ -18,6 +28,22 @@ interface AttendanceSelectorProps {
   label?: string;
 }
 
+/**
+ * 出席・欠席選択コンポーネント
+ * @description 画像ベースのUIで出席・欠席を選択するラジオボタンコンポーネント
+ * @param props - コンポーネントのProps
+ * @returns JSX.Element
+ * @example
+ * ```tsx
+ * <AttendanceSelector
+ *   value={attendance}
+ *   onChange={setAttendance}
+ *   label="挙式の出欠"
+ *   required
+ * />
+ * ```
+ * @since 1.0.0
+ */
 const AttendanceSelector: React.FC<AttendanceSelectorProps> = ({
   value,
   onChange,

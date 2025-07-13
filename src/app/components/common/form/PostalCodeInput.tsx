@@ -4,30 +4,49 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Input } from './index';
 import { postalCodeApi } from '@/app/lib/api/postal-code';
 
+/**
+ * 郵便番号入力コンポーネントのProps型定義
+ * @description 郵便番号入力と住所自動補完機能の設定
+ * @interface PostalCodeInputProps
+ * @since 1.0.0
+ */
 interface PostalCodeInputProps {
+  /** ラベルテキスト */
   label?: string;
+  /** プレースホルダーテキスト */
   placeholder?: string;
+  /** 必須項目かどうか */
   required?: boolean;
+  /** 入力値 */
   value?: string;
+  /** 値変更時のコールバック関数 */
   onChange?: (value: string) => void;
+  /** 住所変更時のコールバック関数 */
   onAddressChange?: (address: { prefecture: string; address: string }) => void;
+  /** エラーメッセージ */
   error?: string;
+  /** 追加のCSSクラス */
   className?: string;
+  /** 無効化フラグ */
   disabled?: boolean;
 }
 
 /**
  * 郵便番号入力コンポーネント
- * @description 郵便番号入力時に住所を自動補完する機能付き
- * @param label - ラベルテキスト
- * @param placeholder - プレースホルダーテキスト
- * @param required - 必須フラグ
- * @param value - 入力値
- * @param onChange - 値変更時のコールバック
- * @param onAddressChange - 住所変更時のコールバック
- * @param error - エラーメッセージ
- * @param className - 追加のCSSクラス
- * @param disabled - 無効化フラグ
+ * @description 郵便番号入力時に住所を自動補完する機能付きの入力フィールド
+ * @param props - コンポーネントのProps
+ * @returns JSX.Element
+ * @example
+ * ```tsx
+ * <PostalCodeInput
+ *   label="郵便番号"
+ *   value={postalCode}
+ *   onChange={setPostalCode}
+ *   onAddressChange={handleAddressChange}
+ *   required
+ * />
+ * ```
+ * @since 1.0.0
  */
 const PostalCodeInput: React.FC<PostalCodeInputProps> = ({
   label = '郵便番号',

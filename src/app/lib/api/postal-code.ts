@@ -94,9 +94,17 @@ export interface ApiError {
 export class PostalCodeApiClient {
   /**
    * 郵便番号から住所を検索
+   * @description 指定された郵便番号に対応する住所情報を取得する
    * @param postalCode - 郵便番号（3桁以上）
    * @param page - ページ番号（デフォルト: 1）
    * @param limit - 取得件数（デフォルト: 10、最大: 1000）
+   * @returns Promise<PostalCodeSearchResponse> 住所検索結果
+   * @throws {Error} API呼び出しに失敗した場合
+   * @example
+   * ```typescript
+   * const result = await postalCodeApi.searchByPostalCode('1234567');
+   * console.log(result.addresses[0].pref_name); // "東京都"
+   * ```
    */
   async searchByPostalCode(
     postalCode: string,
@@ -120,7 +128,17 @@ export class PostalCodeApiClient {
 
   /**
    * 住所から郵便番号を検索
+   * @description 指定された住所に対応する郵便番号を検索する
    * @param request - 住所検索リクエスト
+   * @returns Promise<AddressSearchResponse> 郵便番号検索結果
+   * @throws {Error} API呼び出しに失敗した場合
+   * @example
+   * ```typescript
+   * const result = await postalCodeApi.searchByAddress({
+   *   pref_name: '東京都',
+   *   city_name: '渋谷区'
+   * });
+   * ```
    */
   async searchByAddress(
     request: AddressSearchRequest
@@ -143,7 +161,14 @@ export class PostalCodeApiClient {
 
   /**
    * 郵便番号を正規化（ハイフンを除去）
+   * @description 郵便番号からハイフンを除去して正規化する
    * @param postalCode - 入力された郵便番号
+   * @returns string 正規化された郵便番号
+   * @example
+   * ```typescript
+   * const normalized = postalCodeApi.normalizePostalCode('123-4567');
+   * console.log(normalized); // "1234567"
+   * ```
    */
   normalizePostalCode(postalCode: string): string {
     return postalCode.replace(/-/g, '');
@@ -151,7 +176,17 @@ export class PostalCodeApiClient {
 
   /**
    * 郵便番号の形式を検証
+   * @description 郵便番号が7桁の数字形式かどうかを検証する
    * @param postalCode - 検証する郵便番号
+   * @returns boolean 有効な郵便番号形式の場合true
+   * @example
+   * ```typescript
+   * const isValid = postalCodeApi.validatePostalCode('1234567');
+   * console.log(isValid); // true
+   *
+   * const isInvalid = postalCodeApi.validatePostalCode('123-456');
+   * console.log(isInvalid); // false
+   * ```
    */
   validatePostalCode(postalCode: string): boolean {
     const normalized = this.normalizePostalCode(postalCode);

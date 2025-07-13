@@ -34,13 +34,19 @@ interface AllergyTagsInputProps {
 
 /**
  * アレルギー情報入力用のタグ型セレクトコンポーネント
- * @description カテゴリ別の候補リストから選択または自由入力でアレルギー情報を管理
- * @param value - 選択中のアレルギータグ配列
- * @param onChange - タグ変更時のコールバック
- * @param label - ラベルテキスト
- * @param placeholder - プレースホルダーテキスト
- * @param className - 追加のCSSクラス
- * @param disabled - 無効化フラグ
+ * @description カテゴリ別の候補リストから選択または自由入力でアレルギー情報を管理するコンポーネント
+ * @param props - コンポーネントのProps
+ * @returns JSX.Element
+ * @example
+ * ```tsx
+ * <AllergyTagsInput
+ *   value={allergies}
+ *   onChange={setAllergies}
+ *   label="食べ物アレルギー"
+ *   required
+ * />
+ * ```
+ * @since 1.0.0
  */
 const AllergyTagsInput: React.FC<AllergyTagsInputProps> = ({
   value = [],
