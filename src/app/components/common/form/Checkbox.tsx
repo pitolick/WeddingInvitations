@@ -210,7 +210,6 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
         role='group'
         aria-labelledby={label ? `${groupId}-label` : undefined}
         aria-describedby={error ? `${groupId}-error` : undefined}
-        aria-invalid={error ? 'true' : 'false'}
       >
         {options.map((option, index) => {
           const optionId = `${groupId}-${index}`;
