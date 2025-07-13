@@ -24,6 +24,7 @@ const ALLERGY_SUGGESTIONS = {
 interface AllergyTagsInputProps {
   value: string[];
   onChange: (tags: string[]) => void;
+  name?: string;
   label?: string;
   placeholder?: string;
   className?: string;
@@ -44,6 +45,7 @@ interface AllergyTagsInputProps {
 const AllergyTagsInput: React.FC<AllergyTagsInputProps> = ({
   value = [],
   onChange,
+  name,
   label = 'アレルギー情報',
   placeholder = '選択または入力してください',
   className = '',
@@ -128,43 +130,46 @@ const AllergyTagsInput: React.FC<AllergyTagsInputProps> = ({
 
       {/* タグ入力エリア */}
       <div className='relative'>
-        <div className='min-h-[44px] border border-gray-300 rounded-lg bg-white px-3 py-2 focus-within:ring-2 focus-within:ring-pink-500 focus-within:border-pink-500'>
+        <div className='min-h-[44px] border border-gray-300 rounded-lg bg-white px-3 py-3 space-y-2 focus-within:ring-2 focus-within:ring-pink-500 focus-within:border-pink-500'>
           {/* 選択済みタグ */}
-          <div className='flex flex-wrap gap-2 mb-2'>
-            {value.map((tag, index) => (
-              <span
-                key={index}
-                className='inline-flex items-center gap-1 px-2 py-1 text-sm bg-pink-100 text-pink-800 rounded-md'
-              >
-                {tag}
-                <button
-                  type='button'
-                  onClick={() => removeTag(tag)}
-                  disabled={disabled}
-                  className='text-pink-600 hover:text-pink-800 disabled:opacity-50'
+          {value.length > 0 && (
+            <div className='flex flex-wrap gap-2'>
+              {value.map((tag, index) => (
+                <span
+                  key={index}
+                  className='inline-flex items-center gap-1 px-2 py-1 text-sm bg-pink-100 text-pink-800 rounded-md'
                 >
-                  <svg
-                    className='h-3 w-3'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    stroke='currentColor'
+                  {tag}
+                  <button
+                    type='button'
+                    onClick={() => removeTag(tag)}
+                    disabled={disabled}
+                    className='text-pink-600 hover:text-pink-800 disabled:opacity-50'
                   >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M6 18L18 6M6 6l12 12'
-                    />
-                  </svg>
-                </button>
-              </span>
-            ))}
-          </div>
+                    <svg
+                      className='h-3 w-3'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      stroke='currentColor'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        strokeWidth={2}
+                        d='M6 18L18 6M6 6l12 12'
+                      />
+                    </svg>
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
 
           {/* 入力欄 */}
           <input
             ref={inputRef}
             type='text'
+            name={name}
             value={inputValue}
             onChange={e => setInputValue(e.target.value)}
             onKeyDown={handleInputKeyDown}
@@ -215,8 +220,9 @@ const AllergyTagsInput: React.FC<AllergyTagsInputProps> = ({
 
       {/* ヘルプテキスト */}
       <p className='mt-1 text-xs text-gray-500'>
-        候補から選択するか、自由に入力してください。Enter または ,
-        でタグを追加できます。
+        候補から選択するか自由に入力してください
+        <br />
+        Enter または , でタグを追加できます
       </p>
     </div>
   );

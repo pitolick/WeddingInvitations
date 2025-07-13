@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 import Image from 'next/image';
 
 interface AttendanceSelectorProps {
@@ -26,9 +26,13 @@ const AttendanceSelector: React.FC<AttendanceSelectorProps> = ({
   name = 'attendance',
   label = '出席・欠席の選択',
 }) => {
-  // nameからIDを自動生成
-  const attendingId = `${name}-attending`;
-  const declinedId = `${name}-declined`;
+  // useIdフックを使用して安定したIDを生成
+  const uniqueId = useId();
+
+  // nameからIDを自動生成（useIdで安定化）
+  const attendingId = `${name}-attending-${uniqueId}`;
+  const declinedId = `${name}-declined-${uniqueId}`;
+
   // 動的ラベル設定
   const isSelected = value === 'attending' || value === 'declined';
   const attendingLabel = isSelected ? '出席' : '御出席';
@@ -38,7 +42,7 @@ const AttendanceSelector: React.FC<AttendanceSelectorProps> = ({
     <div className={`${className} space-y-2`}>
       {/* 見出しラベル */}
       {label && (
-        <p className='block font-noto text-sm font-medium text-gray-700 text-start'>
+        <p className='block font-noto text-sm font-medium text-gray-700 text-start border-b border-gray-300 pb-2'>
           {label}
           {required && <span className='text-pink-500 ml-1'>*</span>}
         </p>

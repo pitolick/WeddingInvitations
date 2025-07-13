@@ -19,6 +19,8 @@ interface InputProps
   label?: string;
   /** エラーメッセージ */
   error?: string;
+  /** ヘルプテキスト */
+  helpText?: string;
   /** 変更ハンドラー */
   onChange?: (value: string) => void;
   /** 追加のCSSクラス */
@@ -44,6 +46,7 @@ const Input: React.FC<InputProps> = ({
   value,
   label,
   error,
+  helpText,
   onChange,
   className = '',
   id,
@@ -95,10 +98,17 @@ const Input: React.FC<InputProps> = ({
         onBlur={onBlur}
         name={name}
         className={`${baseClasses} ${errorClasses}`}
-        aria-describedby={error ? `${inputId}-error` : undefined}
+        aria-describedby={
+          error ? `${inputId}-error` : helpText ? `${inputId}-help` : undefined
+        }
         aria-invalid={error ? 'true' : 'false'}
         {...rest}
       />
+      {helpText && !error && (
+        <p id={`${inputId}-help`} className='font-noto text-sm text-gray-500'>
+          {helpText}
+        </p>
+      )}
       {error && (
         <p
           id={`${inputId}-error`}

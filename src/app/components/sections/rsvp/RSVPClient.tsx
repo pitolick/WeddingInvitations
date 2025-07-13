@@ -1,10 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { Fragment } from 'react';
+import { useForm, useFieldArray, Controller } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Input, Select, Radio, TextArea } from '@/app/components/common/form';
 import Button from '@/app/components/common/button';
 import AttendanceSelector from './AttendanceSelector';
 import AllergyTagsInput from './AllergyTagsInput';
+import Hr from '@/app/components/common/decoration/Hr';
 
 // 都道府県リスト
 const PREFECTURES = [
@@ -58,332 +62,456 @@ const PREFECTURES = [
   { value: '沖縄県', label: '沖縄県' },
 ];
 
-// 出席者情報の型定義
-interface Attendee {
-  id: string;
-  name: string;
-  furigana: string;
-  birthday: string;
-  hotelUse: string;
-  taxiUse: string;
-  parkingUse: string;
-  allergies: string[];
-  dislikedFoods: string;
-  ceremony: 'attending' | 'declined' | '';
-  reception: 'attending' | 'declined' | '';
-  afterParty: 'attending' | 'declined' | '';
-}
+// zodスキーマ定義
+const attendeeSchema = z.object({
+  name: z.string().min(1, 'ご芳名は必須です'),
+  furigana: z.string().min(1, 'ふりがなは必須です'),
+  birthday: z.string().min(1, '誕生日は必須です'),
+  hotelUse: z.string().min(1, 'ホテル利用を選択してください'),
+  taxiUse: z.string().min(1, 'タクシー利用を選択してください'),
+  parkingUse: z.string().min(1, '駐車場利用を選択してください'),
+  allergies: z.array(z.string()),
+  dislikedFoods: z.string().optional(),
+  ceremony: z.string().min(1, '挙式の出欠を選択してください'),
+  reception: z.string().min(1, '披露宴の出欠を選択してください'),
+  afterParty: z.string().min(1, '二次会の出欠を選択してください'),
+});
+
+const rsvpSchema = z.object({
+  contactInfo: z.object({
+    postalCode: z
+      .string()
+      .min(1, '郵便番号は必須です')
+      .regex(
+        /^\d{3}-?\d{4}$/,
+        '郵便番号は7桁の数字で入力してください（例：123-4567）'
+      )
+      .transform(val => val.replace('-', '')), // ハイフンを除去して保存
+    prefecture: z.string().min(1, '都道府県は必須です'),
+    address: z.string().min(1, 'ご住所は必須です'),
+    phone: z
+      .string()
+      .min(1, '電話番号は必須です')
+      .regex(/^[\d-]+$/, '電話番号は数字とハイフンのみで入力してください')
+      .min(10, '電話番号は10桁以上で入力してください')
+      .max(15, '電話番号は15桁以下で入力してください')
+      .transform(val => val.replace(/-/g, '')), // ハイフンを除去して保存
+    email: z.string().email('メールアドレスの形式が正しくありません'),
+  }),
+  attendees: z.array(attendeeSchema).min(1),
+  message: z.string().optional(),
+});
+
+type RSVPFormType = z.infer<typeof rsvpSchema>;
+
+const defaultAttendee = () => ({
+  name: '',
+  furigana: '',
+  birthday: '',
+  hotelUse: '',
+  taxiUse: '',
+  parkingUse: '',
+  allergies: [],
+  dislikedFoods: '',
+  ceremony: '',
+  reception: '',
+  afterParty: '',
+});
 
 const RSVPClient: React.FC = () => {
-  // 連絡先情報の状態
-  const [contactInfo, setContactInfo] = useState({
-    postalCode: '',
-    prefecture: '',
-    address: '',
-    phone: '',
-    email: '',
+  const form = useForm<RSVPFormType>({
+    resolver: zodResolver(rsvpSchema),
+    defaultValues: {
+      contactInfo: {
+        postalCode: '',
+        prefecture: '',
+        address: '',
+        phone: '',
+        email: '',
+      },
+      attendees: [defaultAttendee()],
+      message: '',
+    },
+    mode: 'onBlur',
   });
 
-  // 出席者情報の状態
-  const [attendees, setAttendees] = useState<Attendee[]>([
-    {
-      id: '1',
-      name: '',
-      furigana: '',
-      birthday: '',
-      hotelUse: '',
-      taxiUse: '',
-      parkingUse: '',
-      allergies: [],
-      dislikedFoods: '',
-      ceremony: '',
-      reception: '',
-      afterParty: '',
-    },
-  ]);
+  const {
+    fields: attendeeFields,
+    append,
+    remove,
+  } = useFieldArray({
+    control: form.control,
+    name: 'attendees',
+  });
 
-  // メッセージの状態
-  const [message, setMessage] = useState('');
+  const errors = form.formState.errors;
 
-  // お連れ様を追加
-  const addAttendee = () => {
-    const newAttendee: Attendee = {
-      id: Date.now().toString(),
-      name: '',
-      furigana: '',
-      birthday: '',
-      hotelUse: '',
-      taxiUse: '',
-      parkingUse: '',
-      allergies: [],
-      dislikedFoods: '',
-      ceremony: '',
-      reception: '',
-      afterParty: '',
-    };
-    setAttendees([...attendees, newAttendee]);
+  const handleAddAttendee = () => {
+    append(defaultAttendee());
   };
 
-  // お連れ様を削除
-  const removeAttendee = (id: string) => {
-    if (attendees.length > 1) {
-      setAttendees(attendees.filter(attendee => attendee.id !== id));
+  const handleRemoveAttendee = (index: number) => {
+    if (attendeeFields.length > 1) {
+      remove(index);
     }
   };
 
-  // 出席者情報を更新
-  const updateAttendee = (id: string, field: keyof Attendee, value: any) => {
-    setAttendees(
-      attendees.map(attendee =>
-        attendee.id === id ? { ...attendee, [field]: value } : attendee
-      )
-    );
+  const onSubmit = (data: RSVPFormType) => {
+    // フォーム送信前の追加バリデーション
+    const hasInvalidAttendance = data.attendees.some(attendee => {
+      return (
+        !['attending', 'declined'].includes(attendee.ceremony) ||
+        !['attending', 'declined'].includes(attendee.reception) ||
+        !['attending', 'declined'].includes(attendee.afterParty)
+      );
+    });
+
+    if (hasInvalidAttendance) {
+      alert(
+        '全ての出席者について、挙式・披露宴・二次会の出欠を選択してください。'
+      );
+      return;
+    }
+
+    console.log(data);
   };
 
   return (
-    <div>
+    <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8 w-full '>
       {/* 連絡先情報 */}
-      <div className='w-full space-y-6'>
-        <div className='space-y-4'>
-          <h3 className='text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2'>
-            連絡先
-          </h3>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            <Input
-              label='郵便番号'
-              placeholder='1234567'
-              required
-              value={contactInfo.postalCode}
-              onChange={value =>
-                setContactInfo({ ...contactInfo, postalCode: value })
-              }
-            />
-            <Select
-              label='都道府県'
-              required
-              value={contactInfo.prefecture}
-              onChange={value =>
-                setContactInfo({ ...contactInfo, prefecture: value })
-              }
-              options={PREFECTURES}
-            />
-          </div>
-          <Input
-            label='ご住所'
-            placeholder='市区町村番地'
-            required
-            value={contactInfo.address}
-            onChange={value =>
-              setContactInfo({ ...contactInfo, address: value })
-            }
+      <div className='space-y-4'>
+        <h3 className='text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2'>
+          連絡先
+        </h3>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <Controller
+            control={form.control}
+            name='contactInfo.postalCode'
+            render={({ field }) => (
+              <Input
+                label='郵便番号'
+                placeholder='1234567'
+                required
+                value={field.value ?? ''}
+                onChange={field.onChange}
+                error={errors.contactInfo?.postalCode?.message}
+                maxLength={8}
+              />
+            )}
           />
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-            <Input
-              label='電話番号'
-              type='tel'
-              placeholder='09012345678'
-              required
-              value={contactInfo.phone}
-              onChange={value =>
-                setContactInfo({ ...contactInfo, phone: value })
-              }
-            />
-            <Input
-              label='メールアドレス'
-              type='email'
-              placeholder='example@email.com'
-              required
-              value={contactInfo.email}
-              onChange={value =>
-                setContactInfo({ ...contactInfo, email: value })
-              }
-            />
-          </div>
+          <Controller
+            control={form.control}
+            name='contactInfo.prefecture'
+            render={({ field }) => (
+              <Select
+                label='都道府県'
+                required
+                options={PREFECTURES}
+                value={field.value ?? ''}
+                onChange={field.onChange}
+                error={errors.contactInfo?.prefecture?.message}
+              />
+            )}
+          />
         </div>
+        <Controller
+          control={form.control}
+          name='contactInfo.address'
+          render={({ field }) => (
+            <Input
+              label='ご住所'
+              placeholder='市区町村番地'
+              required
+              value={field.value ?? ''}
+              onChange={field.onChange}
+              error={errors.contactInfo?.address?.message}
+            />
+          )}
+        />
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          <Controller
+            control={form.control}
+            name='contactInfo.phone'
+            render={({ field }) => (
+              <Input
+                label='電話番号'
+                type='tel'
+                placeholder='09012345678'
+                required
+                value={field.value ?? ''}
+                onChange={field.onChange}
+                error={errors.contactInfo?.phone?.message}
+                maxLength={15}
+              />
+            )}
+          />
+          <Controller
+            control={form.control}
+            name='contactInfo.email'
+            render={({ field }) => (
+              <Input
+                label='メールアドレス'
+                type='email'
+                placeholder='example@email.com'
+                required
+                value={field.value ?? ''}
+                onChange={field.onChange}
+                error={errors.contactInfo?.email?.message}
+              />
+            )}
+          />
+        </div>
+      </div>
 
-        {/* 出席者情報 */}
-        {attendees.map((attendee, index) => (
-          <div key={attendee.id} className='space-y-4'>
-            <h3 className='flex items-center justify-between text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2'>
-              <span>{index === 0 ? '出席者' : `お連れ様${index}`}</span>
+      {/* 出席者情報 */}
+      {attendeeFields.map((attendee, index) => (
+        <Fragment key={attendee.id}>
+          <Hr />
+          <div className='space-y-4'>
+            <div className='flex items-center justify-between border-b border-gray-200 pb-2'>
+              <h3 className='text-xl font-semibold text-gray-900'>
+                {index === 0 ? '出席者' : `お連れ様 ${index}`}
+              </h3>
               {index > 0 && (
-                <span>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => removeAttendee(attendee.id)}
-                    className='text-red-600 hover:text-red-800'
-                  >
-                    削除
-                  </Button>
-                </span>
+                <Button
+                  type='button'
+                  variant='danger'
+                  size='sm'
+                  onClick={() => handleRemoveAttendee(index)}
+                >
+                  削除
+                </Button>
               )}
-            </h3>
-
+            </div>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-              <Input
-                label='ご芳名'
-                placeholder='山田 太郎'
-                required
-                value={attendee.name}
-                onChange={value => updateAttendee(attendee.id, 'name', value)}
+              <Controller
+                control={form.control}
+                name={`attendees.${index}.name`}
+                render={({ field }) => (
+                  <Input
+                    label='ご芳名'
+                    placeholder='山田 太郎'
+                    required
+                    value={field.value ?? ''}
+                    onChange={field.onChange}
+                    error={errors.attendees?.[index]?.name?.message}
+                  />
+                )}
               />
-              <Input
-                label='ふりがな'
-                placeholder='やまだ たろう'
-                required
-                value={attendee.furigana}
-                onChange={value =>
-                  updateAttendee(attendee.id, 'furigana', value)
-                }
+              <Controller
+                control={form.control}
+                name={`attendees.${index}.furigana`}
+                render={({ field }) => (
+                  <Input
+                    label='ふりがな'
+                    placeholder='やまだ たろう'
+                    required
+                    value={field.value ?? ''}
+                    onChange={field.onChange}
+                    error={errors.attendees?.[index]?.furigana?.message}
+                  />
+                )}
               />
             </div>
-
-            <Input
-              label='誕生日'
-              type='date'
-              required
-              value={attendee.birthday}
-              onChange={value => updateAttendee(attendee.id, 'birthday', value)}
+            <Controller
+              control={form.control}
+              name={`attendees.${index}.birthday`}
+              render={({ field }) => (
+                <Input
+                  label='誕生日'
+                  type='date'
+                  required
+                  value={field.value ?? ''}
+                  onChange={field.onChange}
+                  error={errors.attendees?.[index]?.birthday?.message}
+                />
+              )}
             />
-
             <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-              <Radio
-                label='ホテル利用'
-                required
-                value={attendee.hotelUse}
-                onChange={value =>
-                  updateAttendee(attendee.id, 'hotelUse', value)
-                }
-                options={[
-                  { value: 'なし', label: 'なし' },
-                  {
-                    value: 'あり',
-                    label: index === 0 ? 'あり' : 'あり',
-                    description: index === 0 ? '' : '※代表者と同室含む',
-                  },
-                ]}
-                layout='horizontal'
+              <Controller
+                control={form.control}
+                name={`attendees.${index}.hotelUse`}
+                render={({ field }) => (
+                  <Radio
+                    label='ホテル利用'
+                    required
+                    options={[
+                      { value: 'なし', label: 'なし' },
+                      { value: 'あり', label: 'あり' },
+                    ]}
+                    layout='horizontal'
+                    value={field.value ?? ''}
+                    onChange={field.onChange}
+                    error={errors.attendees?.[index]?.hotelUse?.message}
+                  />
+                )}
               />
-              <Radio
-                label='タクシー利用'
-                required
-                value={attendee.taxiUse}
-                onChange={value =>
-                  updateAttendee(attendee.id, 'taxiUse', value)
-                }
-                options={[
-                  { value: 'なし', label: 'なし' },
-                  { value: 'あり', label: 'あり' },
-                ]}
-                layout='horizontal'
+              <Controller
+                control={form.control}
+                name={`attendees.${index}.taxiUse`}
+                render={({ field }) => (
+                  <Radio
+                    label='タクシー利用'
+                    required
+                    options={[
+                      { value: 'なし', label: 'なし' },
+                      { value: 'あり', label: 'あり' },
+                    ]}
+                    layout='horizontal'
+                    value={field.value ?? ''}
+                    onChange={field.onChange}
+                    error={errors.attendees?.[index]?.taxiUse?.message}
+                  />
+                )}
               />
-              <Radio
-                label='駐車場利用'
-                required
-                value={attendee.parkingUse}
-                onChange={value =>
-                  updateAttendee(attendee.id, 'parkingUse', value)
-                }
-                options={[
-                  { value: 'なし', label: 'なし' },
-                  {
-                    value: 'あり',
-                    label: 'あり',
-                    description: '※検討中含む',
-                  },
-                ]}
-                layout='horizontal'
-                columns={{ mobile: 2 }}
+              <Controller
+                control={form.control}
+                name={`attendees.${index}.parkingUse`}
+                render={({ field }) => (
+                  <Radio
+                    label='駐車場利用'
+                    required
+                    options={[
+                      { value: 'なし', label: 'なし' },
+                      {
+                        value: 'あり',
+                        label: 'あり',
+                        description: '※検討中含む',
+                      },
+                    ]}
+                    layout='horizontal'
+                    value={field.value ?? ''}
+                    onChange={field.onChange}
+                    error={errors.attendees?.[index]?.parkingUse?.message}
+                  />
+                )}
               />
             </div>
-
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-              <AllergyTagsInput
-                value={attendee.allergies}
-                onChange={value =>
-                  updateAttendee(attendee.id, 'allergies', value)
-                }
-                label='食べ物アレルギー'
-                required={false}
+              <Controller
+                control={form.control}
+                name={`attendees.${index}.allergies`}
+                render={({ field }) => (
+                  <AllergyTagsInput
+                    label='食べ物アレルギー'
+                    name={`attendee-${index}-allergies`}
+                    value={field.value ?? []}
+                    onChange={field.onChange}
+                    required={false}
+                  />
+                )}
               />
-              <Input
-                label='苦手な食べ物'
-                placeholder='例：ピーマン、ナス'
-                value={attendee.dislikedFoods}
-                onChange={value =>
-                  updateAttendee(attendee.id, 'dislikedFoods', value)
-                }
+              <Controller
+                control={form.control}
+                name={`attendees.${index}.dislikedFoods`}
+                render={({ field }) => (
+                  <Input
+                    label='苦手な食べ物'
+                    placeholder='例：ピーマン、ナス'
+                    value={field.value ?? ''}
+                    onChange={field.onChange}
+                    error={errors.attendees?.[index]?.dislikedFoods?.message}
+                  />
+                )}
               />
             </div>
-
             <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-              <AttendanceSelector
-                value={attendee.ceremony}
-                onChange={value =>
-                  updateAttendee(attendee.id, 'ceremony', value)
-                }
-                className='text-center'
-                required={true}
-                name={`attendee-${attendee.id}-ceremony`}
+              <Controller
+                control={form.control}
+                name={`attendees.${index}.ceremony`}
+                render={({ field }) => (
+                  <AttendanceSelector
+                    value={field.value as 'attending' | 'declined' | ''}
+                    onChange={value =>
+                      field.onChange(value as 'attending' | 'declined')
+                    }
+                    required={true}
+                    name={`attendee-${index}-ceremony`}
+                    label='挙式 出欠'
+                  />
+                )}
               />
-              <AttendanceSelector
-                value={attendee.reception}
-                onChange={value =>
-                  updateAttendee(attendee.id, 'reception', value)
-                }
-                className='text-center'
-                required={true}
-                name={`attendee-${attendee.id}-reception`}
+              <Controller
+                control={form.control}
+                name={`attendees.${index}.reception`}
+                render={({ field }) => (
+                  <AttendanceSelector
+                    value={field.value as 'attending' | 'declined' | ''}
+                    onChange={value =>
+                      field.onChange(value as 'attending' | 'declined')
+                    }
+                    required={true}
+                    name={`attendee-${index}-reception`}
+                    label='披露宴 出欠'
+                  />
+                )}
               />
-              <AttendanceSelector
-                value={attendee.afterParty}
-                onChange={value =>
-                  updateAttendee(attendee.id, 'afterParty', value)
-                }
-                className='text-center'
-                required={true}
-                name={`attendee-${attendee.id}-afterParty`}
+              <Controller
+                control={form.control}
+                name={`attendees.${index}.afterParty`}
+                render={({ field }) => (
+                  <AttendanceSelector
+                    value={field.value as 'attending' | 'declined' | ''}
+                    onChange={value =>
+                      field.onChange(value as 'attending' | 'declined')
+                    }
+                    required={true}
+                    name={`attendee-${index}-afterParty`}
+                    label='二次会 出欠'
+                  />
+                )}
               />
             </div>
           </div>
-        ))}
+        </Fragment>
+      ))}
 
-        {/* お連れ様追加ボタン */}
-        <div className='w-full text-center'>
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={addAttendee}
-            className='mb-4'
-          >
-            + お連れ様を追加
-          </Button>
-          <p className='text-xs text-gray-500'>
-            ご回答により詳細をお聞きする場合がございます
-          </p>
-        </div>
+      {/* お連れ様追加ボタン */}
+      <div className='flex flex-col items-center justify-center gap-2'>
+        <Button
+          type='button'
+          variant='secondary'
+          size='lg'
+          onClick={handleAddAttendee}
+        >
+          + お連れ様を追加
+        </Button>
 
-        {/* メッセージ */}
-        <div className='w-full space-y-4'>
-          <h3 className='text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2'>
-            メッセージ
-          </h3>
+        <p className='text-xs text-gray-500'>
+          ご回答により詳細をお聞きする場合がございます
+        </p>
+      </div>
+
+      <Hr />
+
+      {/* メッセージ */}
+      <Controller
+        control={form.control}
+        name='message'
+        render={({ field }) => (
           <TextArea
             label='メッセージ（任意）'
             placeholder='ご出席に関する追加情報や新郎新婦に伝えたいメッセージがあればご記入ください'
             rows={4}
-            value={message}
-            onChange={value => setMessage(value)}
+            value={field.value ?? ''}
+            onChange={field.onChange}
+            error={errors.message?.message}
           />
-        </div>
+        )}
+      />
 
-        {/* 送信ボタン */}
-        <Button variant='primary' size='lg' className='w-full mt-6'>
+      {/* 送信ボタン */}
+      <div className='flex justify-center mt-6'>
+        <Button
+          type='submit'
+          variant='primary'
+          size='lg'
+          className='w-full md:max-w-md mx-auto'
+        >
           送信する
         </Button>
       </div>
-    </div>
+    </form>
   );
 };
 
