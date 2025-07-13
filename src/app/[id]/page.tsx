@@ -13,6 +13,7 @@ import {
   Message,
   Gallery,
   Event,
+  RSVP, // 追加
 } from '../components/sections';
 
 /**
@@ -91,7 +92,7 @@ export default async function InvitationPage({
       <Event invitationId={invitationId} draftKey={draftKey} />
 
       {/* RSVPセクション */}
-      {/* <RsvpSection /> */}
+      <RSVP invitationId={invitationId} draftKey={draftKey} />
 
       {/* ギャラリーセクション */}
       {/* <GallerySection /> */}

@@ -5,32 +5,52 @@
  */
 
 import React from 'react';
+import RSVPClient from './RSVPClient';
+import { getGuestByInvitationId } from '@/app/lib/api/microcms';
 
-/**
- * @description RSVPセクションのProps型定義
- * @interface RSVPProps
- * @since 1.0.0
- */
 interface RSVPProps {
-  /** セクションのID */
-  id?: string;
-  /** 追加のCSSクラス */
-  className?: string;
+  invitationId?: string;
+  draftKey?: string;
 }
 
-/**
- * @description RSVPセクションコンポーネント
- * @param props - コンポーネントのProps
- * @returns JSX.Element
- * @example
- * <RSVP id="rsvp" className="section-rsvp" />
- */
-const RSVP: React.FC<RSVPProps> = ({ id = 'rsvp', className = '' }) => {
+const RSVP: React.FC<RSVPProps> = async ({ invitationId, draftKey }) => {
+  // ゲスト情報を取得
+  let guestInfo = null;
+  if (invitationId) {
+    guestInfo = await getGuestByInvitationId(invitationId, draftKey);
+  }
+
   return (
-    <section id={id} className={`rsvp-section ${className}`}>
-      <div className='container mx-auto px-4'>
-        <h2 className='text-3xl font-bold text-center'>RSVPセクション</h2>
-        <p className='text-center mt-4'>出欠確認セクション</p>
+    <section
+      id='rsvp'
+      className='flex justify-center items-start bg-cover bg-center bg-no-repeat py-16 px-5'
+      style={{
+        backgroundImage: "url('/images/sections/rsvp/rsvp-background.webp')",
+      }}
+    >
+      <div className='container space-y-8'>
+        {/* タイトル */}
+        <h2 className='font-berkshire text-4xl text-center'>RSVP</h2>
+
+        <div className='mx-auto bg-white rounded-2xl px-6 md:px-10 py-10 flex flex-col items-center gap-6 md:max-w-3xl'>
+          {/* サブテキスト */}
+          <div className='flex flex-col items-center gap-2'>
+            <p className='text-center'>
+              お手数ではございますが
+              <br className='sm:hidden' />
+              下記お日にち迄に
+              <br />
+              出欠のお返事賜りますよう
+              <br className='sm:hidden' />
+              お願い申し上げます
+            </p>
+            <p className='font-noto font-bold text-2xl text-pink-600'>
+              2025/09/17
+            </p>
+          </div>
+
+          <RSVPClient guestInfo={guestInfo || undefined} />
+        </div>
       </div>
     </section>
   );

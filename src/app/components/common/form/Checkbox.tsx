@@ -179,19 +179,9 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   disabled = false,
   name,
   layout = 'vertical',
-  columns = { mobile: 1, tablet: 2, desktop: 3 },
 }) => {
   const generatedId = useId();
   const groupId = name || `checkbox-group-${generatedId}`;
-
-  // レスポンシブグリッドクラスの生成
-  const getGridClasses = () => {
-    const mobileCols = columns.mobile || 1;
-    const tabletCols = columns.tablet || 2;
-    const desktopCols = columns.desktop || 3;
-
-    return `grid grid-cols-${mobileCols} sm:grid-cols-${tabletCols} lg:grid-cols-${desktopCols} gap-4`;
-  };
 
   const handleOptionChange = (optionValue: string, checked: boolean) => {
     if (!onChange) return;
@@ -215,12 +205,11 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
       )}
       <div
         className={`${
-          layout === 'horizontal' ? getGridClasses() : 'space-y-2'
+          layout === 'horizontal' ? 'flex flex-row gap-4' : 'space-y-2'
         }`}
         role='group'
         aria-labelledby={label ? `${groupId}-label` : undefined}
         aria-describedby={error ? `${groupId}-error` : undefined}
-        aria-invalid={error ? 'true' : 'false'}
       >
         {options.map((option, index) => {
           const optionId = `${groupId}-${index}`;
@@ -258,7 +247,7 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
                 {option.description && (
                   <p
                     id={`${optionId}-description`}
-                    className={`font-noto text-sm mt-1 ${
+                    className={`font-noto text-xs ${
                       isOptionDisabled ? 'text-gray-400' : 'text-gray-500'
                     }`}
                   >
