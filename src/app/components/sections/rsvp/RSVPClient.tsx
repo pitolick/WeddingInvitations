@@ -178,8 +178,6 @@ const RSVPClient: React.FC = () => {
       );
       return;
     }
-
-    console.log(data);
   };
 
   return (
