@@ -4,7 +4,13 @@ import React, { Fragment } from 'react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Input, Select, Radio, TextArea } from '@/app/components/common/form';
+import {
+  Input,
+  Select,
+  Radio,
+  TextArea,
+  PostalCodeInput,
+} from '@/app/components/common/form';
 import Button from '@/app/components/common/button';
 import AttendanceSelector from './AttendanceSelector';
 import AllergyTagsInput from './AllergyTagsInput';
@@ -188,14 +194,18 @@ const RSVPClient: React.FC = () => {
             control={form.control}
             name='contactInfo.postalCode'
             render={({ field }) => (
-              <Input
+              <PostalCodeInput
                 label='郵便番号'
                 placeholder='1234567'
                 required
                 value={field.value ?? ''}
                 onChange={field.onChange}
                 error={errors.contactInfo?.postalCode?.message}
-                maxLength={8}
+                onAddressChange={({ prefecture, address }) => {
+                  // 都道府県と住所を自動入力
+                  form.setValue('contactInfo.prefecture', prefecture);
+                  form.setValue('contactInfo.address', address);
+                }}
               />
             )}
           />

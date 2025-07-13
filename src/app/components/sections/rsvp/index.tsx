@@ -33,7 +33,7 @@ const RSVP: React.FC = () => {
               お願い申し上げます
             </p>
             <p className='font-noto font-bold text-2xl text-pink-600'>
-              2025/09/15
+              2025/09/17
             </p>
           </div>
 
