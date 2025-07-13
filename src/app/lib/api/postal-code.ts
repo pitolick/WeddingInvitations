@@ -92,11 +92,6 @@ export interface ApiError {
  * @description 郵便番号・デジタルアドレスAPIとの通信を管理
  */
 export class PostalCodeApiClient {
-  constructor() {
-    // クライアントサイドでは環境変数にアクセスできないため、
-    // Next.jsのAPI Routesを使用してサーバーサイドでAPIリクエストを実行
-  }
-
   /**
    * 郵便番号から住所を検索
    * @param postalCode - 郵便番号（3桁以上）
