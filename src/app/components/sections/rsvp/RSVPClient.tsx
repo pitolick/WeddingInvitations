@@ -15,6 +15,7 @@ import Button from '@/app/components/common/button';
 import AttendanceSelector from './AttendanceSelector';
 import AllergyTagsInput from './AllergyTagsInput';
 import Hr from '@/app/components/common/decoration/Hr';
+import { GuestContent } from '@/app/lib/types/microcms';
 
 // 都道府県リスト
 const PREFECTURES = [
@@ -110,9 +111,26 @@ const rsvpSchema = z.object({
 
 type RSVPFormType = z.infer<typeof rsvpSchema>;
 
-const defaultAttendee = () => ({
-  name: '',
-  furigana: '',
+/**
+ * @description デフォルトの出席者情報を生成
+ * @param guestInfo - ゲスト情報（オプション）
+ * @returns デフォルトの出席者情報
+ * @since 1.0.0
+ */
+const defaultAttendee = (guestInfo?: {
+  name: string;
+  kana?: string;
+  invite: string[];
+  autofill?: { name: boolean; kana: boolean } | null;
+}) => ({
+  name:
+    guestInfo?.name && guestInfo?.autofill?.name === true
+      ? guestInfo?.name
+      : '',
+  furigana:
+    guestInfo?.kana && guestInfo?.autofill?.kana === true
+      ? guestInfo?.kana
+      : '',
   birthday: '',
   hotelUse: '',
   taxiUse: '',
@@ -124,7 +142,41 @@ const defaultAttendee = () => ({
   afterParty: '',
 });
 
-const RSVPClient: React.FC = () => {
+/**
+ * @description RSVPClientコンポーネントのprops型定義
+ * @interface RSVPClientProps
+ * @since 1.0.0
+ */
+interface RSVPClientProps {
+  /** ゲスト情報 */
+  guestInfo?: GuestContent;
+}
+
+/**
+ * @description RSVPClientコンポーネント
+ * @param props - コンポーネントのprops
+ * @returns RSVPClientコンポーネント
+ * @since 1.0.0
+ */
+const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
+  // ゲスト情報から初期値を生成
+  const initialAttendees = React.useMemo(() => {
+    if (!guestInfo) {
+      return [defaultAttendee()];
+    }
+
+    const attendees = [defaultAttendee(guestInfo)];
+
+    // 家族情報がある場合は追加
+    if (guestInfo.family && guestInfo.family.length > 0) {
+      guestInfo.family.forEach(familyMember => {
+        attendees.push(defaultAttendee(familyMember));
+      });
+    }
+
+    return attendees;
+  }, [guestInfo]);
+
   const form = useForm<RSVPFormType>({
     resolver: zodResolver(rsvpSchema),
     defaultValues: {
@@ -135,7 +187,7 @@ const RSVPClient: React.FC = () => {
         phone: '',
         email: '',
       },
-      attendees: [defaultAttendee()],
+      attendees: initialAttendees,
       message: '',
     },
     mode: 'onBlur',
@@ -164,17 +216,56 @@ const RSVPClient: React.FC = () => {
 
   const onSubmit = (data: RSVPFormType) => {
     // フォーム送信前の追加バリデーション
-    const hasInvalidAttendance = data.attendees.some(attendee => {
-      return (
-        !['attending', 'declined'].includes(attendee.ceremony) ||
-        !['attending', 'declined'].includes(attendee.reception) ||
-        !['attending', 'declined'].includes(attendee.afterParty)
-      );
+    const hasInvalidAttendance = data.attendees.some((attendee, index) => {
+      // メインゲスト（index === 0）または家族メンバー（guestInfo.familyに含まれる）
+      const isMainGuest = index === 0;
+      const isFamilyMember =
+        guestInfo?.family && index > 0 && index <= guestInfo.family.length;
+      const isAdditionalGuest = index > 0 && !isFamilyMember;
+
+      let inviteTypes: string[] = [];
+
+      if (isMainGuest) {
+        // メインゲストの場合
+        inviteTypes = guestInfo?.invite || [];
+      } else if (isFamilyMember) {
+        // 家族メンバーの場合
+        const familyMember = guestInfo?.family?.[index - 1];
+        inviteTypes = familyMember?.invite || [];
+      } else if (isAdditionalGuest) {
+        // 追加されたお連れ様の場合（guestInfo.familyに含まれていない）
+        // メインゲストの招待種別に基づいて表示項目を決定
+        const mainGuestInviteTypes = guestInfo?.invite || [];
+
+        // メインゲストが二次会のみの場合、追加されたお連れ様も二次会のみ表示
+        if (
+          mainGuestInviteTypes.length === 1 &&
+          mainGuestInviteTypes.includes('二次会')
+        ) {
+          inviteTypes = ['二次会'];
+        } else {
+          // それ以外の場合は披露宴と二次会を表示
+          inviteTypes = ['披露宴', '二次会'];
+        }
+      }
+
+      // 招待されている項目のみチェック
+      const hasInvalidCeremony =
+        inviteTypes.includes('挙式') &&
+        !['attending', 'declined'].includes(attendee.ceremony);
+      const hasInvalidReception =
+        inviteTypes.includes('披露宴') &&
+        !['attending', 'declined'].includes(attendee.reception);
+      const hasInvalidAfterParty =
+        inviteTypes.includes('二次会') &&
+        !['attending', 'declined'].includes(attendee.afterParty);
+
+      return hasInvalidCeremony || hasInvalidReception || hasInvalidAfterParty;
     });
 
     if (hasInvalidAttendance) {
       alert(
-        '全ての出席者について、挙式・披露宴・二次会の出欠を選択してください。'
+        '全ての出席者について、招待されているイベントの出欠を選択してください。'
       );
       return;
     }
@@ -295,30 +386,34 @@ const RSVPClient: React.FC = () => {
               <Controller
                 control={form.control}
                 name={`attendees.${index}.name`}
-                render={({ field }) => (
-                  <Input
-                    label='ご芳名'
-                    placeholder='山田 太郎'
-                    required
-                    value={field.value ?? ''}
-                    onChange={field.onChange}
-                    error={errors.attendees?.[index]?.name?.message}
-                  />
-                )}
+                render={({ field }) => {
+                  return (
+                    <Input
+                      label='ご芳名'
+                      placeholder='山田 太郎'
+                      required
+                      value={field.value ?? ''}
+                      onChange={field.onChange}
+                      error={errors.attendees?.[index]?.name?.message}
+                    />
+                  );
+                }}
               />
               <Controller
                 control={form.control}
                 name={`attendees.${index}.furigana`}
-                render={({ field }) => (
-                  <Input
-                    label='ふりがな'
-                    placeholder='やまだ たろう'
-                    required
-                    value={field.value ?? ''}
-                    onChange={field.onChange}
-                    error={errors.attendees?.[index]?.furigana?.message}
-                  />
-                )}
+                render={({ field }) => {
+                  return (
+                    <Input
+                      label='ふりがな'
+                      placeholder='やまだ たろう'
+                      required
+                      value={field.value ?? ''}
+                      onChange={field.onChange}
+                      error={errors.attendees?.[index]?.furigana?.message}
+                    />
+                  );
+                }}
               />
             </div>
             <Controller
@@ -423,52 +518,102 @@ const RSVPClient: React.FC = () => {
                 )}
               />
             </div>
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
-              <Controller
-                control={form.control}
-                name={`attendees.${index}.ceremony`}
-                render={({ field }) => (
-                  <AttendanceSelector
-                    value={field.value as 'attending' | 'declined' | ''}
-                    onChange={value =>
-                      field.onChange(value as 'attending' | 'declined')
-                    }
-                    required={true}
-                    name={`attendee-${index}-ceremony`}
-                    label='挙式 出欠'
-                  />
-                )}
-              />
-              <Controller
-                control={form.control}
-                name={`attendees.${index}.reception`}
-                render={({ field }) => (
-                  <AttendanceSelector
-                    value={field.value as 'attending' | 'declined' | ''}
-                    onChange={value =>
-                      field.onChange(value as 'attending' | 'declined')
-                    }
-                    required={true}
-                    name={`attendee-${index}-reception`}
-                    label='披露宴 出欠'
-                  />
-                )}
-              />
-              <Controller
-                control={form.control}
-                name={`attendees.${index}.afterParty`}
-                render={({ field }) => (
-                  <AttendanceSelector
-                    value={field.value as 'attending' | 'declined' | ''}
-                    onChange={value =>
-                      field.onChange(value as 'attending' | 'declined')
-                    }
-                    required={true}
-                    name={`attendee-${index}-afterParty`}
-                    label='二次会 出欠'
-                  />
-                )}
-              />
+            <div className='flex flex-col md:flex-row justify-center gap-4'>
+              {/* ゲスト情報から招待種別を取得 */}
+              {(() => {
+                // メインゲスト（index === 0）または家族メンバー（guestInfo.familyに含まれる）
+                const isMainGuest = index === 0;
+                const isFamilyMember =
+                  guestInfo?.family &&
+                  index > 0 &&
+                  index <= guestInfo.family.length;
+                const isAdditionalGuest = index > 0 && !isFamilyMember;
+
+                let inviteTypes: string[] = [];
+
+                if (isMainGuest) {
+                  // メインゲストの場合
+                  inviteTypes = guestInfo?.invite || [];
+                } else if (isFamilyMember) {
+                  // 家族メンバーの場合
+                  const familyMember = guestInfo?.family?.[index - 1];
+                  inviteTypes = familyMember?.invite || [];
+                } else if (isAdditionalGuest) {
+                  // 追加されたお連れ様の場合（guestInfo.familyに含まれていない）
+                  // メインゲストの招待種別に基づいて表示項目を決定
+                  const mainGuestInviteTypes = guestInfo?.invite || [];
+
+                  // メインゲストが二次会のみの場合、追加されたお連れ様も二次会のみ表示
+                  if (
+                    mainGuestInviteTypes.length === 1 &&
+                    mainGuestInviteTypes.includes('二次会')
+                  ) {
+                    inviteTypes = ['二次会'];
+                  } else {
+                    // それ以外の場合は披露宴と二次会を表示
+                    inviteTypes = ['披露宴', '二次会'];
+                  }
+                }
+
+                return (
+                  <>
+                    {inviteTypes.includes('挙式') && (
+                      <Controller
+                        control={form.control}
+                        name={`attendees.${index}.ceremony`}
+                        render={({ field }) => (
+                          <AttendanceSelector
+                            className='flex-1'
+                            value={field.value as 'attending' | 'declined' | ''}
+                            onChange={value =>
+                              field.onChange(value as 'attending' | 'declined')
+                            }
+                            required={true}
+                            name={`attendee-${index}-ceremony`}
+                            label='挙式'
+                          />
+                        )}
+                      />
+                    )}
+                    {inviteTypes.includes('披露宴') && (
+                      <Controller
+                        control={form.control}
+                        name={`attendees.${index}.reception`}
+                        render={({ field }) => (
+                          <AttendanceSelector
+                            className='flex-1'
+                            value={field.value as 'attending' | 'declined' | ''}
+                            onChange={value =>
+                              field.onChange(value as 'attending' | 'declined')
+                            }
+                            required={true}
+                            name={`attendee-${index}-reception`}
+                            label='披露宴'
+                          />
+                        )}
+                      />
+                    )}
+                    {inviteTypes.includes('二次会') && (
+                      <Controller
+                        control={form.control}
+                        name={`attendees.${index}.afterParty`}
+                        render={({ field }) => (
+                          <AttendanceSelector
+                            className='flex-1'
+                            value={field.value as 'attending' | 'declined' | ''}
+                            onChange={value =>
+                              field.onChange(value as 'attending' | 'declined')
+                            }
+                            required={true}
+                            name={`attendee-${index}-afterParty`}
+                            label='二次会'
+                          />
+                        )}
+                      />
+                    )}
+                  </>
+                );
+              })()}
             </div>
           </div>
         </Fragment>

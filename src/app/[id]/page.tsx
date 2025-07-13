@@ -92,7 +92,7 @@ export default async function InvitationPage({
       <Event invitationId={invitationId} draftKey={draftKey} />
 
       {/* RSVPセクション */}
-      <RSVP />
+      <RSVP invitationId={invitationId} draftKey={draftKey} />
 
       {/* ギャラリーセクション */}
       {/* <GallerySection /> */}

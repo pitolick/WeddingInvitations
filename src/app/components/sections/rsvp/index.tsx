@@ -6,8 +6,20 @@
 
 import React from 'react';
 import RSVPClient from './RSVPClient';
+import { getGuestByInvitationId } from '@/app/lib/api/microcms';
 
-const RSVP: React.FC = () => {
+interface RSVPProps {
+  invitationId?: string;
+  draftKey?: string;
+}
+
+const RSVP: React.FC<RSVPProps> = async ({ invitationId, draftKey }) => {
+  // ゲスト情報を取得
+  let guestInfo = null;
+  if (invitationId) {
+    guestInfo = await getGuestByInvitationId(invitationId, draftKey);
+  }
+
   return (
     <section
       id='rsvp'
@@ -37,7 +49,7 @@ const RSVP: React.FC = () => {
             </p>
           </div>
 
-          <RSVPClient />
+          <RSVPClient guestInfo={guestInfo || undefined} />
         </div>
       </div>
     </section>
