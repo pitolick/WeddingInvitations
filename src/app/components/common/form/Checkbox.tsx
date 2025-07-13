@@ -207,7 +207,7 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
         className={`${
           layout === 'horizontal' ? 'flex flex-row gap-4' : 'space-y-2'
         }`}
-        role='checkboxgroup'
+        role='group'
         aria-labelledby={label ? `${groupId}-label` : undefined}
         aria-describedby={error ? `${groupId}-error` : undefined}
         aria-invalid={error ? 'true' : 'false'}
