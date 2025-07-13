@@ -83,22 +83,12 @@ const Radio: React.FC<RadioProps> = ({
   disabled = false,
   name,
   layout = 'vertical',
-  columns = { mobile: 1, tablet: 2, desktop: 3 },
 }) => {
   const generatedId = useId();
   const radioGroupId = name || `radio-${generatedId}`;
 
   const baseClasses = 'space-y-3';
   const errorClasses = error ? 'border-pink-500' : '';
-
-  // レスポンシブグリッドクラスの生成
-  const getGridClasses = () => {
-    const mobileCols = columns.mobile || 1;
-    const tabletCols = columns.tablet || 2;
-    const desktopCols = columns.desktop || 3;
-
-    return `grid grid-cols-${mobileCols} sm:grid-cols-${tabletCols} lg:grid-cols-${desktopCols} gap-4`;
-  };
 
   return (
     <div className={`${baseClasses} ${className}`}>
@@ -112,7 +102,7 @@ const Radio: React.FC<RadioProps> = ({
       )}
       <div
         className={`${
-          layout === 'horizontal' ? getGridClasses() : 'space-y-2'
+          layout === 'horizontal' ? 'flex flex-row gap-4' : 'space-y-2'
         } ${errorClasses}`}
         role='radiogroup'
         aria-labelledby={label ? `${radioGroupId}-label` : undefined}
@@ -153,7 +143,7 @@ const Radio: React.FC<RadioProps> = ({
                 {option.description && (
                   <p
                     id={`${optionId}-description`}
-                    className={`font-noto text-sm mt-1 ${
+                    className={`font-noto text-xs ${
                       isOptionDisabled ? 'text-gray-400' : 'text-gray-500'
                     }`}
                   >
