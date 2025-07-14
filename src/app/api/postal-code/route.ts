@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { ipAddress } from '@vercel/functions';
 
 /**
  * 郵便番号APIのプロキシエンドポイント
@@ -33,11 +34,14 @@ async function getToken(): Promise<string> {
   }
 
   try {
+    // 環境変数からIPアドレスを取得、またはデフォルト値を使用
+    const clientIP = process.env.VERCEL_IP || '127.0.0.1';
+
     const response = await fetch(`${API_BASE_URL}/api/v1/j/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-forwarded-for': '127.0.0.1',
+        'x-forwarded-for': clientIP,
       },
       body: JSON.stringify({
         grant_type: 'client_credentials',
@@ -58,7 +62,9 @@ async function getToken(): Promise<string> {
     return cachedToken;
   } catch (error) {
     console.error('Failed to get token:', error);
-    throw new Error('トークンの取得に失敗しました');
+    const clientIP = process.env.VERCEL_IP || '127.0.0.1';
+    const errorMessage = `トークンの取得に失敗しました (IP: ${clientIP})`;
+    throw new Error(errorMessage);
   }
 }
 
@@ -89,6 +95,7 @@ export async function GET(request: NextRequest) {
     }
 
     const token = await getToken();
+    const clientIP = ipAddress(request) || '127.0.0.1';
     const url = new URL(`${API_BASE_URL}/api/v1/searchcode/${postalCode}`);
     url.searchParams.set('page', page);
     url.searchParams.set('limit', limit);
@@ -96,14 +103,18 @@ export async function GET(request: NextRequest) {
     const response = await fetch(url.toString(), {
       headers: {
         Authorization: `Bearer ${token}`,
-        'x-forwarded-for': '127.0.0.1',
+        'x-forwarded-for': clientIP,
       },
     });
 
     if (!response.ok) {
       const errorData = await response.json();
       return NextResponse.json(
-        { error: `郵便番号検索エラー: ${errorData.message}` },
+        {
+          error: `郵便番号検索エラー: ${errorData.message}`,
+          clientIP: clientIP,
+          timestamp: new Date().toISOString(),
+        },
         { status: response.status }
       );
     }
@@ -112,8 +123,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(data);
   } catch (error) {
     console.error('Postal code search error:', error);
+    const clientIP = ipAddress(request) || '127.0.0.1';
     return NextResponse.json(
-      { error: '郵便番号検索に失敗しました' },
+      {
+        error: '郵便番号検索に失敗しました',
+        clientIP: clientIP,
+        timestamp: new Date().toISOString(),
+      },
       { status: 500 }
     );
   }
@@ -139,13 +155,14 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const token = await getToken();
+    const clientIP = ipAddress(request) || '127.0.0.1';
 
     const response = await fetch(`${API_BASE_URL}/api/v1/addresszip`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
-        'x-forwarded-for': '127.0.0.1',
+        'x-forwarded-for': clientIP,
       },
       body: JSON.stringify(body),
     });
@@ -153,7 +170,11 @@ export async function POST(request: NextRequest) {
     if (!response.ok) {
       const errorData = await response.json();
       return NextResponse.json(
-        { error: `住所検索エラー: ${errorData.message}` },
+        {
+          error: `住所検索エラー: ${errorData.message}`,
+          clientIP: clientIP,
+          timestamp: new Date().toISOString(),
+        },
         { status: response.status }
       );
     }
@@ -162,8 +183,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(data);
   } catch (error) {
     console.error('Address search error:', error);
+    const clientIP = ipAddress(request) || '127.0.0.1';
     return NextResponse.json(
-      { error: '住所検索に失敗しました' },
+      {
+        error: '住所検索に失敗しました',
+        clientIP: clientIP,
+        timestamp: new Date().toISOString(),
+      },
       { status: 500 }
     );
   }
