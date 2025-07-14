@@ -44,7 +44,7 @@ const FadeIn: React.FC<FadeInProps> = ({
   direction = 'up',
   distance = 20,
 }) => {
-  const [MotionComponent, setMotionComponent] = useState<React.ComponentType<any> | null>(null);
+  const [MotionComponent, setMotionComponent] = useState<any>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
