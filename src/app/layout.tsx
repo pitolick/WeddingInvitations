@@ -50,6 +50,7 @@ const rockSalt = Rock_Salt({
 export const metadata: Metadata = {
   title: '結婚式招待状',
   description: '美しい結婚式招待状のWebサイト',
+  robots: 'noindex',
 };
 
 export default function RootLayout({

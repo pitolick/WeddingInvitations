@@ -33,6 +33,7 @@ export async function generateMetadata({
   return {
     title: `Wedding Invitation - ${invitationId}`,
     description: `ディズニーテーマの特別な結婚式招待状です。招待ID: ${invitationId}`,
+    robots: 'noindex',
     keywords: [
       'wedding',
       'invitation',
