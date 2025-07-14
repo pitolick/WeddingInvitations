@@ -16,6 +16,7 @@ import {
   RSVP, // 追加
   Footer, // 追加
 } from '../components/sections';
+import { getMicroCMSClient } from '@/app/lib/api/microcms';
 
 /**
  * @description 動的メタデータ生成
@@ -99,4 +100,16 @@ export default async function InvitationPage({
       <Footer />
     </div>
   );
+}
+
+// 静的パスを生成
+export async function generateStaticParams() {
+  const client = await getMicroCMSClient();
+  const data = await client.getAllContentIds({
+    endpoint: 'guests',
+  });
+
+  return data.map(contentId => ({
+    id: contentId,
+  }));
 }
