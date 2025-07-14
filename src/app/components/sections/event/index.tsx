@@ -92,20 +92,6 @@ const Event: React.FC<EventProps> = async ({ invitationId, draftKey }) => {
       }
     });
 
-    const message = (
-      <>
-        {data.message.lines.map((line, index) => (
-          <React.Fragment key={index}>
-            {line}
-            {data.message.mobileBreaks.includes(index) && (
-              <br className='block md:hidden' />
-            )}
-            {index < data.message.lines.length - 1 && <br />}
-          </React.Fragment>
-        ))}
-      </>
-    );
-
     return {
       type: data.type,
       title: data.title,
@@ -114,7 +100,7 @@ const Event: React.FC<EventProps> = async ({ invitationId, draftKey }) => {
       time: data.time,
       receptionTime: data.receptionTime,
       venue,
-      message,
+      message: data.message,
       mapUrl: data.mapUrl,
     };
   };
