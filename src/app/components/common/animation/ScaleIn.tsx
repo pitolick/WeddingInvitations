@@ -4,8 +4,9 @@
  * @since 1.0.0
  */
 
-import React from 'react';
-import { motion } from 'motion/react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 
 /**
  * @description スケールインアニメーションコンポーネントのProps型定義
@@ -47,8 +48,31 @@ const ScaleIn: React.FC<ScaleInProps> = ({
   finalScale = 1,
   ease = 'easeOut' as const,
 }) => {
+  const [MotionComponent, setMotionComponent] = useState<any>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const loadMotion = async () => {
+      try {
+        const { motion } = await import('motion/react');
+        setMotionComponent(() => motion.div);
+        setIsLoaded(true);
+      } catch (error) {
+        console.error('Failed to load motion library:', error);
+        setIsLoaded(true);
+      }
+    };
+
+    loadMotion();
+  }, []);
+
+  // motionライブラリが読み込まれていない場合は、通常のdivを返す
+  if (!isLoaded || !MotionComponent) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
-    <motion.div
+    <MotionComponent
       initial={{ scale: initialScale, opacity: 0 }}
       animate={{ scale: finalScale, opacity: 1 }}
       transition={{
@@ -59,7 +83,7 @@ const ScaleIn: React.FC<ScaleInProps> = ({
       className={className}
     >
       {children}
-    </motion.div>
+    </MotionComponent>
   );
 };
 

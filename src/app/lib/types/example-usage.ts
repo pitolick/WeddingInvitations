@@ -5,21 +5,12 @@
  */
 
 import {
-  Guest,
-  Event,
-  ApiResponse,
-  RSVPFormData,
-  ImageConfig,
-  AnimationConfig,
-  NavigationItem,
-  CountdownConfig,
-  GalleryItem,
-  MessageItem,
-  HostInfo,
-  ErrorInfo,
-  ValidationResult,
-  PerformanceMetrics,
-} from './index';
+  GuestContent,
+  DearBlockData,
+  InviteType,
+  AutofillConfig,
+  convertToDearBlockData,
+} from './microcms';
 
 import {
   APP_CONFIG,
@@ -49,206 +40,76 @@ import {
  */
 export class TypeDefinitionExample {
   /**
-   * @description Guest型の使用例
-   * @returns Guestオブジェクト
+   * @description GuestContent型の使用例
+   * @returns GuestContentオブジェクト
    */
-  static createGuestExample(): Guest {
+  static createGuestContentExample(): GuestContent {
     return {
       id: 'guest-1',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      publishedAt: new Date().toISOString(),
       name: 'テスト太郎',
-      email: 'test@example.com',
-      companions: [
-        {
-          id: 'companion-1',
-          name: 'お連れ様太郎',
-          age: 30,
-          relationship: '友人',
-        },
-      ],
-      rsvpStatus: RSVP_STATUS.PENDING,
-      message: '参加します',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-  }
-
-  /**
-   * @description Event型の使用例
-   * @returns Eventオブジェクト
-   */
-  static createEventExample(): Event {
-    return {
-      id: 'event-1',
-      name: '結婚式',
-      date: EVENT_INFO.WEDDING_DATE,
-      venue: EVENT_INFO.VENUE,
-      address: EVENT_INFO.ADDRESS,
-      mapUrl: EVENT_INFO.MAP_URL,
-      description: 'ディズニーテーマの結婚式',
-    };
-  }
-
-  /**
-   * @description ApiResponse型の使用例
-   * @returns ApiResponseオブジェクト
-   */
-  static createApiResponseExample(): ApiResponse<Guest> {
-    return {
-      success: true,
-      data: this.createGuestExample(),
-      statusCode: 200,
-    };
-  }
-
-  /**
-   * @description RSVPFormData型の使用例
-   * @returns RSVPFormDataオブジェクト
-   */
-  static createRSVPFormDataExample(): RSVPFormData {
-    return {
-      guestId: 'guest-1',
-      status: RSVP_STATUS.ATTENDING,
-      companionCount: 2,
-      message: '参加します',
-      dietaryRestrictions: FORM_CONFIG.DIETARY_OPTIONS[1], // ベジタリアン
-    };
-  }
-
-  /**
-   * @description ImageConfig型の使用例
-   * @returns ImageConfigオブジェクト
-   */
-  static createImageConfigExample(): ImageConfig {
-    return {
-      src: `${IMAGE_PATHS.SECTIONS}/mv-hero.jpg`,
-      alt: 'メインビジュアル画像',
-      width: 1200,
-      height: 800,
-      responsive: {
-        mobile: { width: 400, height: 300 },
-        tablet: { width: 800, height: 600 },
-        desktop: { width: 1200, height: 800 },
+      kana: 'テストタロウ',
+      dear: 'テスト太郎様',
+      message: 'おめでとうございます！' as TrustedHTML,
+      invite: ['挙式', '披露宴'] as InviteType[],
+      autofill: {
+        fieldId: 'guest-1',
+        name: true,
+        kana: true,
       },
+      family: [],
+    } as GuestContent;
+  }
+
+  /**
+   * @description DearBlockData型の使用例
+   * @returns DearBlockDataオブジェクト
+   */
+  static createDearBlockDataExample(): DearBlockData {
+    return {
+      guestName: 'テスト太郎',
+      kana: 'テストタロウ',
+      dear: 'テスト太郎様',
+      message: 'おめでとうございます！' as TrustedHTML,
+      inviteTypes: ['挙式', '披露宴'] as InviteType[],
+      autofill: {
+        fieldId: 'guest-1',
+        name: true,
+        kana: true,
+      },
+      familyMembers: [],
     };
   }
 
   /**
-   * @description AnimationConfig型の使用例
-   * @returns AnimationConfigオブジェクト
+   * @description InviteType型の使用例
+   * @returns InviteType配列
    */
-  static createAnimationConfigExample(): AnimationConfig {
+  static createInviteTypeExample(): InviteType[] {
+    return ['挙式', '披露宴', '二次会'];
+  }
+
+  /**
+   * @description AutofillConfig型の使用例
+   * @returns AutofillConfigオブジェクト
+   */
+  static createAutofillConfigExample(): AutofillConfig {
     return {
-      duration: ANIMATION_CONFIG.DURATION,
-      easing: ANIMATION_CONFIG.EASING,
-      delay: ANIMATION_CONFIG.DELAY,
-      direction: 'up',
+      fieldId: 'guest-1',
+      name: true,
+      kana: true,
     };
   }
 
   /**
-   * @description NavigationItem型の使用例
-   * @returns NavigationItemオブジェクト
+   * @description convertToDearBlockData関数の使用例
+   * @returns DearBlockDataオブジェクト
    */
-  static createNavigationItemExample(): NavigationItem {
-    return {
-      id: SECTION_IDS.MV,
-      name: 'トップ',
-      href: `#${SECTION_IDS.MV}`,
-      icon: 'home',
-      isActive: true,
-    };
-  }
-
-  /**
-   * @description CountdownConfig型の使用例
-   * @returns CountdownConfigオブジェクト
-   */
-  static createCountdownConfigExample(): CountdownConfig {
-    return {
-      targetDate: COUNTDOWN_CONFIG.TARGET_DATE,
-      format: COUNTDOWN_CONFIG.FORMAT as CountdownConfig['format'],
-      interval: COUNTDOWN_CONFIG.UPDATE_INTERVAL,
-    };
-  }
-
-  /**
-   * @description GalleryItem型の使用例
-   * @returns GalleryItemオブジェクト
-   */
-  static createGalleryItemExample(): GalleryItem {
-    return {
-      id: 'gallery-1',
-      image: this.createImageConfigExample(),
-      title: '結婚式の写真',
-      description: '素晴らしい結婚式の写真です',
-      category: '式場',
-    };
-  }
-
-  /**
-   * @description MessageItem型の使用例
-   * @returns MessageItemオブジェクト
-   */
-  static createMessageItemExample(): MessageItem {
-    return {
-      id: 'message-1',
-      sender: 'ゲスト太郎',
-      content: 'おめでとうございます！素晴らしい結婚式でした。',
-      timestamp: new Date(),
-      avatar: '/images/avatars/guest.jpg',
-    };
-  }
-
-  /**
-   * @description HostInfo型の使用例
-   * @returns HostInfoオブジェクト
-   */
-  static createHostInfoExample(): HostInfo {
-    return {
-      groomName: HOST_CONFIG.GROOM.name,
-      brideName: HOST_CONFIG.BRIDE.name,
-      groomImage: HOST_CONFIG.GROOM.image,
-      brideImage: HOST_CONFIG.BRIDE.image,
-      introduction: '新郎新婦の紹介文です',
-    };
-  }
-
-  /**
-   * @description ErrorInfo型の使用例
-   * @returns ErrorInfoオブジェクト
-   */
-  static createErrorInfoExample(): ErrorInfo {
-    return {
-      code: 'NETWORK_ERROR',
-      message: ERROR_MESSAGES.NETWORK_ERROR,
-      details: '詳細なエラー情報',
-      timestamp: new Date(),
-    };
-  }
-
-  /**
-   * @description ValidationResult型の使用例
-   * @returns ValidationResultオブジェクト
-   */
-  static createValidationResultExample(): ValidationResult {
-    return {
-      isValid: true,
-      errors: [],
-      warnings: ['軽微な警告'],
-    };
-  }
-
-  /**
-   * @description PerformanceMetrics型の使用例
-   * @returns PerformanceMetricsオブジェクト
-   */
-  static createPerformanceMetricsExample(): PerformanceMetrics {
-    return {
-      loadTime: 1500,
-      renderTime: 300,
-      memoryUsage: 50,
-      networkRequests: 10,
-    };
+  static createConvertedDataExample(): DearBlockData {
+    const guestContent = this.createGuestContentExample();
+    return convertToDearBlockData(guestContent);
   }
 
   /**
