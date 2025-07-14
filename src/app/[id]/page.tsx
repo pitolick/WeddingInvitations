@@ -5,6 +5,7 @@
  */
 
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import {
   MainVisual,
   Navigation,
@@ -70,6 +71,18 @@ export default async function InvitationPage({
   params: Promise<{ id: string; draftKey?: string }>;
 }) {
   const { id: invitationId, draftKey } = await params;
+
+  // microCMSからゲスト情報を取得して存在確認
+  try {
+    const client = await getMicroCMSClient();
+    await client.get({
+      endpoint: 'guests',
+      contentId: invitationId,
+    });
+  } catch {
+    // ゲストが存在しない場合は404エラーを返す
+    notFound();
+  }
 
   return (
     <div className='min-h-screen'>
