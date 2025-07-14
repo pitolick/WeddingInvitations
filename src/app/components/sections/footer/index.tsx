@@ -5,34 +5,34 @@
  */
 
 import React from 'react';
+import Link from 'next/link';
 
 /**
- * @description フッターセクションのProps型定義
- * @interface FooterProps
- * @since 1.0.0
- */
-interface FooterProps {
-  /** セクションのID */
-  id?: string;
-  /** 追加のCSSクラス */
-  className?: string;
-}
-
-/**
- * @description フッターセクションコンポーネント
- * @param props - コンポーネントのProps
+ * @description フッターセクション（propsなし・Tailwind CSSのみでデザイン再現）
  * @returns JSX.Element
- * @example
- * <Footer id="footer" className="section-footer" />
+ * @example <Footer />
  */
-const Footer: React.FC<FooterProps> = ({ id = 'footer', className = '' }) => {
+const Footer: React.FC = () => {
   return (
-    <section id={id} className={`footer-section ${className}`}>
-      <div className='container mx-auto px-4'>
-        <h2 className='text-3xl font-bold text-center'>フッターセクション</h2>
-        <p className='text-center mt-4'>フッターセクション</p>
+    <footer className='flex flex-col items-center justify-center w-full bg-white'>
+      <div className='flex flex-col items-center justify-center py-8 gap-2'>
+        <span className='text-4xl font-bold text-center font-rock text-gray-900'>
+          Thank You !
+        </span>
       </div>
-    </section>
+      <div className='flex flex-col items-center justify-center w-full bg-lavender-600 py-1'>
+        <span className='text-xs text-center  text-white'>
+          © 2025{' '}
+          <Link
+            href='https://www.pitolick.com/'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            ぴいてっく
+          </Link>
+        </span>
+      </div>
+    </footer>
   );
 };
 
