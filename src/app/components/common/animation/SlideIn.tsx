@@ -4,8 +4,9 @@
  * @since 1.0.0
  */
 
-import React from 'react';
-import { motion } from 'motion/react';
+'use client';
+
+import React, { useEffect, useState } from 'react';
 
 /**
  * @description スライドインアニメーションコンポーネントのProps型定義
@@ -47,6 +48,24 @@ const SlideIn: React.FC<SlideInProps> = ({
   distance = 50,
   ease = 'easeOut' as const,
 }) => {
+  const [MotionComponent, setMotionComponent] = useState<any>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const loadMotion = async () => {
+      try {
+        const { motion } = await import('motion/react');
+        setMotionComponent(() => motion.div);
+        setIsLoaded(true);
+      } catch (error) {
+        console.error('Failed to load motion library:', error);
+        setIsLoaded(true);
+      }
+    };
+
+    loadMotion();
+  }, []);
+
   const getInitialPosition = () => {
     switch (direction) {
       case 'up':
@@ -66,8 +85,13 @@ const SlideIn: React.FC<SlideInProps> = ({
     return { x: 0, y: 0, opacity: 1 };
   };
 
+  // motionライブラリが読み込まれていない場合は、通常のdivを返す
+  if (!isLoaded || !MotionComponent) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
-    <motion.div
+    <MotionComponent
       initial={getInitialPosition()}
       animate={getAnimatePosition()}
       transition={{
@@ -78,7 +102,7 @@ const SlideIn: React.FC<SlideInProps> = ({
       className={className}
     >
       {children}
-    </motion.div>
+    </MotionComponent>
   );
 };
 

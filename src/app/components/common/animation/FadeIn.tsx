@@ -5,8 +5,7 @@
  */
 
 'use client';
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useEffect, useState } from 'react';
 
 /**
  * @description フェードインアニメーションコンポーネントのProps型定義
@@ -45,6 +44,24 @@ const FadeIn: React.FC<FadeInProps> = ({
   direction = 'up',
   distance = 20,
 }) => {
+  const [MotionComponent, setMotionComponent] = useState<any>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const loadMotion = async () => {
+      try {
+        const { motion } = await import('motion/react');
+        setMotionComponent(() => motion.div);
+        setIsLoaded(true);
+      } catch (error) {
+        console.error('Failed to load motion library:', error);
+        setIsLoaded(true);
+      }
+    };
+
+    loadMotion();
+  }, []);
+
   const getInitialPosition = () => {
     switch (direction) {
       case 'up':
@@ -73,8 +90,13 @@ const FadeIn: React.FC<FadeInProps> = ({
     }
   };
 
+  // motionライブラリが読み込まれていない場合は、通常のdivを返す
+  if (!isLoaded || !MotionComponent) {
+    return <div className={className}>{children}</div>;
+  }
+
   return (
-    <motion.div
+    <MotionComponent
       initial={getInitialPosition()}
       animate={getAnimatePosition()}
       transition={{
@@ -85,7 +107,7 @@ const FadeIn: React.FC<FadeInProps> = ({
       className={className}
     >
       {children}
-    </motion.div>
+    </MotionComponent>
   );
 };
 
