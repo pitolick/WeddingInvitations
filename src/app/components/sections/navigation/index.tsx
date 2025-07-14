@@ -39,6 +39,7 @@ const NAV_ITEMS = [
 const Navigation = () => {
   return (
     <nav
+      id='navigation'
       className='w-full bg-lavender-600 py-4'
       data-testid='navigation-section'
     >

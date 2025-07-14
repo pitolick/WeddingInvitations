@@ -17,6 +17,7 @@ import {
   RSVP, // 追加
   Footer, // 追加
 } from '../components/sections';
+import { BackToTopButton } from '../components/common/button';
 import { getMicroCMSClient } from '@/app/lib/api/microcms';
 
 /**
@@ -29,11 +30,35 @@ export async function generateMetadata({
 }: {
   params: Promise<{ id: string; draftKey?: string }>;
 }): Promise<Metadata> {
-  const { id: invitationId } = await params;
+  const { id: invitationId, draftKey } = await params;
+
+  // microCMSからゲスト情報を取得
+  let dear = '';
+  let title = '栗原 誠・森下 紗伎 結婚式のご案内';
+  const description =
+    '人生の門出に際し、栗原 誠と森下 紗伎の結婚式にご招待申し上げます。Web招待状で詳細をご確認の上、ご返信をお願いいたします。';
+
+  try {
+    const client = await getMicroCMSClient();
+    const guestData = await client.get({
+      endpoint: 'guests',
+      contentId: invitationId,
+      ...(draftKey && { draftKey }),
+    });
+
+    // dearフィールドが存在する場合は取得
+    if (guestData.dear) {
+      dear = guestData.dear;
+      title = `Dear ${dear} | ${title}`;
+    }
+  } catch (error) {
+    // エラーが発生した場合はデフォルト値を維持
+    console.error('メタデータ生成時にゲスト情報の取得に失敗しました:', error);
+  }
 
   return {
-    title: `Wedding Invitation - ${invitationId}`,
-    description: `ディズニーテーマの特別な結婚式招待状です。招待ID: ${invitationId}`,
+    title,
+    description,
     robots: 'noindex',
     keywords: [
       'wedding',
@@ -45,15 +70,15 @@ export async function generateMetadata({
     ],
     authors: [{ name: 'WeddingInvitations' }],
     openGraph: {
-      title: `Wedding Invitation - ${invitationId}`,
-      description: `ディズニーテーマの特別な結婚式招待状です。招待ID: ${invitationId}`,
+      title,
+      description,
       type: 'website',
       locale: 'ja_JP',
     },
     twitter: {
       card: 'summary_large_image',
-      title: `Wedding Invitation - ${invitationId}`,
-      description: `ディズニーテーマの特別な結婚式招待状です。招待ID: ${invitationId}`,
+      title,
+      description,
     },
   };
 }
@@ -112,6 +137,9 @@ export default async function InvitationPage({
 
       {/* フッターセクション */}
       <Footer />
+
+      {/* ナビゲーションに戻るボタン */}
+      <BackToTopButton />
     </div>
   );
 }

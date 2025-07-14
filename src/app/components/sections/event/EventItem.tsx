@@ -54,11 +54,13 @@ const EventItem: React.FC<{ event: EventItemType }> = ({ event }) => {
       </div>
 
       {/* メッセージセクション */}
-      <div className='inline-grid grid-cols-1 gap-2 justify-items-center'>
-        <span className='font-berkshire text-lg text-center'>Message</span>
-        <p className='font-noto text-sm text-center whitespace-pre-line'>
-          {event.message}
-        </p>
+      <div className='relative flex flex-col items-center justify-stretch w-full max-w-full p-6 md:p-8 gap-12 bg-white/40 rounded-2xl overflow-hidden'>
+        <div className='inline-grid grid-cols-1 gap-2 justify-items-center flex-1'>
+          <span className='font-berkshire text-lg text-center'>Message</span>
+          <div className='font-noto text-sm text-center whitespace-pre-line'>
+            {event.message}
+          </div>
+        </div>
       </div>
 
       {/* Google Map or 画像 */}

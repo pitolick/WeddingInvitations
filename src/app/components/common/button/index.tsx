@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import BackToTopButton from './BackToTopButton';
 
 /**
  * @description ボタンコンポーネントのProps型定義
@@ -78,3 +79,4 @@ const Button: React.FC<ButtonProps> = ({
 };
 
 export default Button;
+export { BackToTopButton };
