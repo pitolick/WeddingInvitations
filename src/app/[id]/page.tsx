@@ -17,6 +17,7 @@ import {
   RSVP, // 追加
   Footer, // 追加
 } from '../components/sections';
+import { BackToTopButton } from '../components/common/button';
 import { getMicroCMSClient } from '@/app/lib/api/microcms';
 
 /**
@@ -112,6 +113,9 @@ export default async function InvitationPage({
 
       {/* フッターセクション */}
       <Footer />
+
+      {/* ナビゲーションに戻るボタン */}
+      <BackToTopButton />
     </div>
   );
 }

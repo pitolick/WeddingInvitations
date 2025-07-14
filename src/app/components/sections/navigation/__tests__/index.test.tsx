@@ -132,7 +132,8 @@ describe('Navigation', () => {
   it('各ナビゲーション項目が正しいレイアウトクラスを持つ', () => {
     render(<Navigation />);
 
-    const links = screen.getAllByRole('link');
+    const navigationSection = screen.getByTestId('navigation-section');
+    const links = navigationSection.querySelectorAll('a');
     links.forEach(link => {
       expect(link).toHaveClass('flex');
       expect(link).toHaveClass('flex-col');
@@ -148,7 +149,8 @@ describe('Navigation', () => {
   it('ホバー効果が適用される', () => {
     render(<Navigation />);
 
-    const links = screen.getAllByRole('link');
+    const navigationSection = screen.getByTestId('navigation-section');
+    const links = navigationSection.querySelectorAll('a');
     links.forEach(link => {
       expect(link).toHaveClass(
         'hover:opacity-80',
@@ -176,7 +178,7 @@ describe('Navigation', () => {
     expect(container).toBeInTheDocument();
 
     // 各ナビゲーション項目のモバイルレイアウト
-    const links = screen.getAllByRole('link');
+    const links = section.querySelectorAll('a');
     links.forEach(link => {
       // モバイルでは縦並びレイアウト
       expect(link).toHaveClass('flex', 'flex-col', 'items-center');
