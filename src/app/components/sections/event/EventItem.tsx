@@ -1,5 +1,6 @@
 import React from 'react';
 import type { EventItem as EventItemType } from './types';
+import GoogleCalendarButton from '@/app/components/common/button/GoogleCalendarButton';
 
 /**
  * @description 単一イベント（挙式・披露宴・二次会など）表示コンポーネント
@@ -8,7 +9,7 @@ import type { EventItem as EventItemType } from './types';
  */
 const EventItem: React.FC<{ event: EventItemType }> = ({ event }) => {
   return (
-    <section className='w-full grid grid-rows-subgrid row-span-5 gap-6'>
+    <section className='w-full grid grid-rows-subgrid row-span-6 gap-6'>
       {/* タイトルブロック */}
       <div className='w-full bg-lavender-600 py-4 grid grid-cols-1 gap-2'>
         <span className='font-berkshire text-2xl text-white text-center'>
@@ -51,6 +52,11 @@ const EventItem: React.FC<{ event: EventItemType }> = ({ event }) => {
             </div>
           ))}
         </dl>
+      </div>
+
+      {/* Googleカレンダーボタン */}
+      <div className='flex justify-center'>
+        <GoogleCalendarButton googleCalendar={event.googleCalendar} />
       </div>
 
       {/* メッセージセクション */}
