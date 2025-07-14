@@ -20,13 +20,14 @@ const Footer: React.FC = () => {
           Thank You !
         </span>
       </div>
-      <div className='flex flex-col items-center justify-center w-full bg-lavender-600 py-1'>
-        <span className='text-xs text-center  text-white'>
+      <div className='flex flex-col items-center justify-center w-full bg-lavender-600 py-3'>
+        <span className='text-sm text-center  text-white'>
           © 2025{' '}
           <Link
             href='https://www.pitolick.com/'
             target='_blank'
             rel='noopener noreferrer'
+            className='underline'
           >
             ぴいてっく
           </Link>

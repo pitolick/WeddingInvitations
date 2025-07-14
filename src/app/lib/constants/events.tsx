@@ -110,7 +110,7 @@ export const DEFAULT_EVENTS_DATA: EventData[] = [
     subtitle: '披露宴',
     date: '2025.11.08 Sat',
     time: '16:30 - 19:00',
-    receptionTime: '受付時間 / 15:30',
+    receptionTime: '受付時間 / 15:30 - 16:00',
     venue: [
       {
         key: '会場',
