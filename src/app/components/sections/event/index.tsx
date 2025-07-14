@@ -102,6 +102,7 @@ const Event: React.FC<EventProps> = async ({ invitationId, draftKey }) => {
       venue,
       message: data.message,
       mapUrl: data.mapUrl,
+      googleCalendar: data.googleCalendar,
     };
   };
 

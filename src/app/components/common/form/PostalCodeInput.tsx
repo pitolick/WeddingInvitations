@@ -33,7 +33,7 @@ interface PostalCodeInputProps {
 
 /**
  * 郵便番号入力コンポーネント
- * @description 郵便番号入力時に住所を自動補完する機能付きの入力フィールド
+ * @description 郵便番号入力時に住所を自動補完する機能付きの入力フィールド（zipcloud対応）
  * @param props - コンポーネントのProps
  * @returns JSX.Element
  * @example
@@ -90,11 +90,7 @@ const PostalCodeInput: React.FC<PostalCodeInputProps> = ({
       setSearchError(null);
 
       try {
-        const response = await postalCodeApi.searchByPostalCode(
-          postalCode,
-          1,
-          1
-        );
+        const response = await postalCodeApi.searchByPostalCode(postalCode);
 
         if (response.addresses.length > 0) {
           const address = response.addresses[0];

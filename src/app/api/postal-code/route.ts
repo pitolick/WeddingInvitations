@@ -1,71 +1,33 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ipAddress } from '@vercel/functions';
+import { ZipcloudResponse } from '@/app/lib/api/postal-code';
 
 /**
- * 郵便番号APIのプロキシエンドポイント
+ * 郵便番号APIのプロキシエンドポイント（zipcloud使用）
  * @description クライアントサイドからのCORS問題を回避するため、サーバーサイドでAPIリクエストを実行
  */
 
-// 環境変数から設定を取得
-const API_BASE_URL =
-  process.env.POSTAL_CODE_API_BASE_URL || 'https://api.da.pf.japanpost.jp';
-const CLIENT_ID = process.env.POSTAL_CODE_API_CLIENT_ID || '';
-const SECRET_KEY = process.env.POSTAL_CODE_API_SECRET_KEY || '';
-
-// トークンキャッシュ
-let cachedToken: string | null = null;
-let tokenExpiresAt: number | null = null;
+// zipcloud APIのベースURL
+const ZIPCLOUD_API_URL = 'https://zipcloud.ibsnet.co.jp/api/search';
 
 /**
- * アクセストークンを取得
- * @description 郵便番号APIのアクセストークンを取得・キャッシュする
- * @returns Promise<string> アクセストークン
- * @throws {Error} トークン取得に失敗した場合
- * @example
- * ```typescript
- * const token = await getToken();
- * // キャッシュされたトークンまたは新規取得したトークンを返す
- * ```
+ * 郵便番号を正規化
+ * @description 郵便番号からハイフンを除去して正規化する
+ * @param postalCode - 入力された郵便番号
+ * @returns string 正規化された郵便番号
  */
-async function getToken(): Promise<string> {
-  // キャッシュされたトークンが有効な場合は返す
-  if (cachedToken && tokenExpiresAt && Date.now() < tokenExpiresAt) {
-    return cachedToken;
-  }
+function normalizePostalCode(postalCode: string): string {
+  return postalCode.replace(/-/g, '');
+}
 
-  try {
-    // 環境変数からIPアドレスを取得、またはデフォルト値を使用
-    const clientIP = process.env.VERCEL_IP || '127.0.0.1';
-
-    const response = await fetch(`${API_BASE_URL}/api/v1/j/token`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-forwarded-for': clientIP,
-      },
-      body: JSON.stringify({
-        grant_type: 'client_credentials',
-        client_id: CLIENT_ID,
-        secret_key: SECRET_KEY,
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`Token request failed: ${response.status}`);
-    }
-
-    const data = await response.json();
-    cachedToken = data.token as string;
-    // 有効期限を設定（5分前倒しで設定）
-    tokenExpiresAt = Date.now() + ((data.expires_in as number) - 300) * 1000;
-
-    return cachedToken;
-  } catch (error) {
-    console.error('Failed to get token:', error);
-    const clientIP = process.env.VERCEL_IP || '127.0.0.1';
-    const errorMessage = `トークンの取得に失敗しました (IP: ${clientIP})`;
-    throw new Error(errorMessage);
-  }
+/**
+ * 郵便番号の形式を検証
+ * @description 郵便番号が7桁の数字形式かどうかを検証する
+ * @param postalCode - 検証する郵便番号
+ * @returns boolean 有効な郵便番号形式の場合true
+ */
+function validatePostalCode(postalCode: string): boolean {
+  const normalized = normalizePostalCode(postalCode);
+  return /^\d{7}$/.test(normalized);
 }
 
 /**
@@ -75,7 +37,7 @@ async function getToken(): Promise<string> {
  * @returns Promise<NextResponse> 検索結果またはエラーレスポンス
  * @example
  * ```typescript
- * // GET /api/postal-code?postalCode=1234567&page=1&limit=10
+ * // GET /api/postal-code?postalCode=1234567
  * const response = await fetch('/api/postal-code?postalCode=1234567');
  * const data = await response.json();
  * ```
@@ -84,8 +46,6 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const postalCode = searchParams.get('postalCode');
-    const page = searchParams.get('page') || '1';
-    const limit = searchParams.get('limit') || '10';
 
     if (!postalCode) {
       return NextResponse.json(
@@ -94,40 +54,100 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const token = await getToken();
-    const clientIP = ipAddress(request) || '127.0.0.1';
-    const url = new URL(`${API_BASE_URL}/api/v1/searchcode/${postalCode}`);
-    url.searchParams.set('page', page);
-    url.searchParams.set('limit', limit);
+    // 郵便番号の形式を検証
+    if (!validatePostalCode(postalCode)) {
+      return NextResponse.json(
+        { error: '郵便番号は7桁の数字で入力してください' },
+        { status: 400 }
+      );
+    }
+
+    const normalizedPostalCode = normalizePostalCode(postalCode);
+    const url = new URL(ZIPCLOUD_API_URL);
+    url.searchParams.set('zipcode', normalizedPostalCode);
 
     const response = await fetch(url.toString(), {
+      method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`,
-        'x-forwarded-for': clientIP,
+        'Content-Type': 'application/json',
       },
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
       return NextResponse.json(
         {
-          error: `郵便番号検索エラー: ${errorData.message}`,
-          clientIP: clientIP,
-          timestamp: new Date().toISOString(),
+          error: '郵便番号検索APIへのリクエストに失敗しました',
+          status: response.status,
         },
-        { status: response.status }
+        { status: 500 }
       );
     }
 
-    const data = await response.json();
-    return NextResponse.json(data);
+    const data: ZipcloudResponse = await response.json();
+
+    // zipcloud APIのステータスをチェック
+    if (data.status !== 200) {
+      return NextResponse.json(
+        {
+          error: data.message || '住所が見つかりませんでした',
+          status: data.status,
+        },
+        { status: 404 }
+      );
+    }
+
+    // 結果がない場合
+    if (!data.results || data.results.length === 0) {
+      return NextResponse.json(
+        {
+          error: '該当する住所が見つかりませんでした',
+          status: 404,
+        },
+        { status: 404 }
+      );
+    }
+
+    // 結果を整形して返す
+    const result = data.results[0];
+    const formattedResult = {
+      addresses: [
+        {
+          zip_code: parseInt(result.zipcode),
+          pref_code: result.prefcode,
+          pref_name: result.address1,
+          pref_kana: result.kana1,
+          city_name: result.address2,
+          city_kana: result.kana2,
+          town_name: result.address3,
+          town_kana: result.kana3,
+          address: `${result.address1}${result.address2}${result.address3}`,
+          // 以下のフィールドはzipcloudにはないため、nullまたは空文字で設定
+          dgacode: null,
+          pref_roma: null,
+          city_code: 0,
+          city_roma: null,
+          town_roma: null,
+          biz_name: null,
+          biz_kana: null,
+          biz_roma: null,
+          block_name: null,
+          other_name: null,
+          longitude: null,
+          latitude: null,
+        },
+      ],
+      searchtype: 'postal_code',
+      limit: 1,
+      count: 1,
+      page: 1,
+    };
+
+    return NextResponse.json(formattedResult);
   } catch (error) {
     console.error('Postal code search error:', error);
-    const clientIP = ipAddress(request) || '127.0.0.1';
     return NextResponse.json(
       {
         error: '郵便番号検索に失敗しました',
-        clientIP: clientIP,
         timestamp: new Date().toISOString(),
       },
       { status: 500 }
@@ -136,61 +156,16 @@ export async function GET(request: NextRequest) {
 }
 
 /**
- * 住所検索API
+ * 住所検索API（zipcloudでは対応していないため、エラーを返す）
  * @description 住所から郵便番号を検索するPOSTエンドポイント
- * @param request - NextRequestオブジェクト
- * @returns Promise<NextResponse> 検索結果またはエラーレスポンス
- * @example
- * ```typescript
- * // POST /api/postal-code
- * const response = await fetch('/api/postal-code', {
- *   method: 'POST',
- *   headers: { 'Content-Type': 'application/json' },
- *   body: JSON.stringify({ pref_name: '東京都', city_name: '渋谷区' })
- * });
- * const data = await response.json();
- * ```
+ * @returns Promise<NextResponse> エラーレスポンス
  */
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const token = await getToken();
-    const clientIP = ipAddress(request) || '127.0.0.1';
-
-    const response = await fetch(`${API_BASE_URL}/api/v1/addresszip`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-        'x-forwarded-for': clientIP,
-      },
-      body: JSON.stringify(body),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      return NextResponse.json(
-        {
-          error: `住所検索エラー: ${errorData.message}`,
-          clientIP: clientIP,
-          timestamp: new Date().toISOString(),
-        },
-        { status: response.status }
-      );
-    }
-
-    const data = await response.json();
-    return NextResponse.json(data);
-  } catch (error) {
-    console.error('Address search error:', error);
-    const clientIP = ipAddress(request) || '127.0.0.1';
-    return NextResponse.json(
-      {
-        error: '住所検索に失敗しました',
-        clientIP: clientIP,
-        timestamp: new Date().toISOString(),
-      },
-      { status: 500 }
-    );
-  }
+export async function POST() {
+  return NextResponse.json(
+    {
+      error: '住所からの郵便番号検索は現在サポートされていません',
+      message: 'zipcloud APIでは住所からの郵便番号検索機能が提供されていません',
+    },
+    { status: 501 }
+  );
 }

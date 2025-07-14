@@ -3,6 +3,7 @@
  * @author WeddingInvitations
  * @since 1.0.0
  */
+import { GoogleCalendarEvent } from '@/app/lib/utils/calendar';
 
 /**
  * @description イベント種別
@@ -34,6 +35,8 @@ export interface EventItem {
   message: React.ReactNode;
   /** 地図URL */
   mapUrl: string;
+  /** Googleカレンダー情報 */
+  googleCalendar?: GoogleCalendarEvent;
 }
 
 /**
