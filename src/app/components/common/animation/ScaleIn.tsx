@@ -48,7 +48,7 @@ const ScaleIn: React.FC<ScaleInProps> = ({
   finalScale = 1,
   ease = 'easeOut' as const,
 }) => {
-  const [MotionComponent, setMotionComponent] = useState<any>(null);
+  const [MotionComponent, setMotionComponent] = useState<React.ComponentType<any> | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
