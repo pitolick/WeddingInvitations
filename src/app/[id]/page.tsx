@@ -103,6 +103,13 @@ export default async function InvitationPage({
 }
 
 // 静的パスを生成
+/**
+ * @description MicroCMSから全てのゲストIDを取得して静的パスを生成
+ * @returns Promise<{ id: string }[]> 静的パス生成用のパラメータ配列
+ * @example
+ * // Next.jsが自動的に呼び出す
+ * const params = await generateStaticParams();
+ */
 export async function generateStaticParams() {
   const client = await getMicroCMSClient();
   const data = await client.getAllContentIds({
