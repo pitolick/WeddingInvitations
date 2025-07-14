@@ -48,7 +48,7 @@ const SlideIn: React.FC<SlideInProps> = ({
   distance = 50,
   ease = 'easeOut' as const,
 }) => {
-  const [MotionComponent, setMotionComponent] = useState<any>(null);
+  const [MotionComponent, setMotionComponent] = useState<React.ComponentType<any> | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
