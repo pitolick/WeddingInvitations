@@ -71,6 +71,7 @@ const PREFECTURES = [
 
 // zodスキーマ定義
 const attendeeSchema = z.object({
+  attendeeId: z.string().optional(), // 出席者番号（microCMS IDまたは空文字）
   name: z.string().min(1, 'ご芳名は必須です'),
   furigana: z.string().min(1, 'ふりがなは必須です'),
   birthday: z.string().min(1, '誕生日は必須です'),
@@ -79,12 +80,14 @@ const attendeeSchema = z.object({
   parkingUse: z.string().min(1, '駐車場利用を選択してください'),
   allergies: z.array(z.string()),
   dislikedFoods: z.string().optional(),
-  ceremony: z.string().min(1, '挙式の出欠を選択してください'),
-  reception: z.string().min(1, '披露宴の出欠を選択してください'),
-  afterParty: z.string().min(1, '二次会の出欠を選択してください'),
+  ceremony: z.string().optional(), // 挙式の出欠（招待されている場合のみ）
+  reception: z.string().optional(), // 披露宴の出欠（招待されている場合のみ）
+  afterParty: z.string().optional(), // 二次会の出欠（招待されている場合のみ）
 });
 
 const rsvpSchema = z.object({
+  guestId: z.string().min(1, '招待者IDは必須です'),
+  name: z.string().min(1, '招待者名は必須です'),
   contactInfo: z.object({
     postalCode: z
       .string()
@@ -103,7 +106,7 @@ const rsvpSchema = z.object({
       .min(10, '電話番号は10桁以上で入力してください')
       .max(15, '電話番号は15桁以下で入力してください')
       .transform(val => val.replace(/-/g, '')), // ハイフンを除去して保存
-    email: z.string().email('メールアドレスの形式が正しくありません'),
+    email: z.email('メールアドレスの形式が正しくありません'),
   }),
   attendees: z.array(attendeeSchema).min(1),
   message: z.string().optional(),
@@ -118,11 +121,13 @@ type RSVPFormType = z.infer<typeof rsvpSchema>;
  * @since 1.0.0
  */
 const defaultAttendee = (guestInfo?: {
+  id?: string;
   name: string;
   kana?: string;
   invite: string[];
   autofill?: { name: boolean; kana: boolean } | null;
 }) => ({
+  attendeeId: (guestInfo as any)?.id || '',
   name:
     guestInfo?.name && guestInfo?.autofill?.name === true
       ? guestInfo?.name
@@ -137,9 +142,9 @@ const defaultAttendee = (guestInfo?: {
   parkingUse: '',
   allergies: [],
   dislikedFoods: '',
-  ceremony: '',
-  reception: '',
-  afterParty: '',
+  ceremony: undefined, // オプショナルフィールド
+  reception: undefined, // オプショナルフィールド
+  afterParty: undefined, // オプショナルフィールド
 });
 
 /**
@@ -180,6 +185,8 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
   const form = useForm<RSVPFormType>({
     resolver: zodResolver(rsvpSchema),
     defaultValues: {
+      guestId: (guestInfo as any)?.id || '',
+      name: guestInfo?.name || '',
       contactInfo: {
         postalCode: '',
         prefecture: '',
@@ -214,65 +221,157 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
     }
   };
 
-  const onSubmit = (data: RSVPFormType) => {
-    // フォーム送信前の追加バリデーション
-    const hasInvalidAttendance = data.attendees.some((attendee, index) => {
-      // メインゲスト（index === 0）または家族メンバー（guestInfo.familyに含まれる）
-      const isMainGuest = index === 0;
-      const isFamilyMember =
-        guestInfo?.family && index > 0 && index <= guestInfo.family.length;
-      const isAdditionalGuest = index > 0 && !isFamilyMember;
+  const onSubmit = async (data: RSVPFormType) => {
+    console.log('フォーム送信開始:', data);
+    console.log('フォームエラー:', form.formState.errors);
 
-      let inviteTypes: string[] = [];
+    try {
+      // フォーム送信前の追加バリデーション
+      const hasInvalidAttendance = data.attendees.some((attendee, index) => {
+        // メインゲスト（index === 0）または家族メンバー（guestInfo.familyに含まれる）
+        const isMainGuest = index === 0;
+        const isFamilyMember =
+          guestInfo?.family && index > 0 && index <= guestInfo.family.length;
+        const isAdditionalGuest = index > 0 && !isFamilyMember;
 
-      if (isMainGuest) {
-        // メインゲストの場合
-        inviteTypes = guestInfo?.invite || [];
-      } else if (isFamilyMember) {
-        // 家族メンバーの場合
-        const familyMember = guestInfo?.family?.[index - 1];
-        inviteTypes = familyMember?.invite || [];
-      } else if (isAdditionalGuest) {
-        // 追加されたお連れ様の場合（guestInfo.familyに含まれていない）
-        // メインゲストの招待種別に基づいて表示項目を決定
-        const mainGuestInviteTypes = guestInfo?.invite || [];
+        let inviteTypes: string[] = [];
 
-        // メインゲストが二次会のみの場合、追加されたお連れ様も二次会のみ表示
-        if (
-          mainGuestInviteTypes.length === 1 &&
-          mainGuestInviteTypes.includes('二次会')
-        ) {
-          inviteTypes = ['二次会'];
-        } else {
-          // それ以外の場合は披露宴と二次会を表示
-          inviteTypes = ['披露宴', '二次会'];
+        if (isMainGuest) {
+          // メインゲストの場合
+          inviteTypes = guestInfo?.invite || [];
+        } else if (isFamilyMember) {
+          // 家族メンバーの場合
+          const familyMember = guestInfo?.family?.[index - 1];
+          inviteTypes = familyMember?.invite || [];
+        } else if (isAdditionalGuest) {
+          // 追加されたお連れ様の場合（guestInfo.familyに含まれていない）
+          // メインゲストの招待種別に基づいて表示項目を決定
+          const mainGuestInviteTypes = guestInfo?.invite || [];
+
+          // メインゲストが二次会のみの場合、追加されたお連れ様も二次会のみ表示
+          if (
+            mainGuestInviteTypes.length === 1 &&
+            mainGuestInviteTypes.includes('二次会')
+          ) {
+            inviteTypes = ['二次会'];
+          } else {
+            // それ以外の場合は披露宴と二次会を表示
+            inviteTypes = ['披露宴', '二次会'];
+          }
         }
+
+        // 招待されている項目のみチェック
+        const hasInvalidCeremony =
+          inviteTypes.includes('挙式') &&
+          (!attendee.ceremony ||
+            !['attending', 'declined'].includes(attendee.ceremony));
+        const hasInvalidReception =
+          inviteTypes.includes('披露宴') &&
+          (!attendee.reception ||
+            !['attending', 'declined'].includes(attendee.reception));
+        const hasInvalidAfterParty =
+          inviteTypes.includes('二次会') &&
+          (!attendee.afterParty ||
+            !['attending', 'declined'].includes(attendee.afterParty));
+
+        return (
+          hasInvalidCeremony || hasInvalidReception || hasInvalidAfterParty
+        );
+      });
+
+      if (hasInvalidAttendance) {
+        alert(
+          '全ての出席者について、招待されているイベントの出欠を選択してください。'
+        );
+        return;
       }
 
-      // 招待されている項目のみチェック
-      const hasInvalidCeremony =
-        inviteTypes.includes('挙式') &&
-        !['attending', 'declined'].includes(attendee.ceremony);
-      const hasInvalidReception =
-        inviteTypes.includes('披露宴') &&
-        !['attending', 'declined'].includes(attendee.reception);
-      const hasInvalidAfterParty =
-        inviteTypes.includes('二次会') &&
-        !['attending', 'declined'].includes(attendee.afterParty);
+      // 送信データの準備
+      const submitData = {
+        guestId: data.guestId,
+        name: data.name,
+        contactInfo: data.contactInfo,
+        attendees: data.attendees.map((attendee, index) => {
+          // メインゲスト（index === 0）または家族メンバー（guestInfo.familyに含まれる）
+          const isMainGuest = index === 0;
+          const isFamilyMember =
+            guestInfo?.family && index > 0 && index <= guestInfo.family.length;
+          const isAdditionalGuest = index > 0 && !isFamilyMember;
 
-      return hasInvalidCeremony || hasInvalidReception || hasInvalidAfterParty;
-    });
+          let inviteTypes: string[] = [];
 
-    if (hasInvalidAttendance) {
-      alert(
-        '全ての出席者について、招待されているイベントの出欠を選択してください。'
-      );
-      return;
+          if (isMainGuest) {
+            // メインゲストの場合
+            inviteTypes = guestInfo?.invite || [];
+          } else if (isFamilyMember) {
+            // 家族メンバーの場合
+            const familyMember = guestInfo?.family?.[index - 1];
+            inviteTypes = familyMember?.invite || [];
+          } else if (isAdditionalGuest) {
+            // 追加されたお連れ様の場合（guestInfo.familyに含まれていない）
+            // メインゲストの招待種別に基づいて表示項目を決定
+            const mainGuestInviteTypes = guestInfo?.invite || [];
+
+            // メインゲストが二次会のみの場合、追加されたお連れ様も二次会のみ表示
+            if (
+              mainGuestInviteTypes.length === 1 &&
+              mainGuestInviteTypes.includes('二次会')
+            ) {
+              inviteTypes = ['二次会'];
+            } else {
+              // それ以外の場合は披露宴と二次会を表示
+              inviteTypes = ['披露宴', '二次会'];
+            }
+          }
+
+          // 招待されていないイベントのフィールドを除外
+          const filteredAttendee: any = { ...attendee };
+
+          if (!inviteTypes.includes('挙式')) {
+            delete filteredAttendee.ceremony;
+          }
+          if (!inviteTypes.includes('披露宴')) {
+            delete filteredAttendee.reception;
+          }
+          if (!inviteTypes.includes('二次会')) {
+            delete filteredAttendee.afterParty;
+          }
+
+          return filteredAttendee;
+        }),
+        message: data.message || '',
+      };
+
+      console.log('送信データ:', submitData);
+
+      // TODO: 実際のAPI送信処理を実装
+      // const response = await fetch('/api/rsvp', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(submitData),
+      // });
+
+      // if (!response.ok) {
+      //   throw new Error('送信に失敗しました');
+      // }
+
+      // 送信成功時の処理
+      alert('ご回答を送信いたしました。ありがとうございます。');
+      console.log('送信完了');
+    } catch (error) {
+      console.error('送信エラー:', error);
+      alert('送信中にエラーが発生しました。もう一度お試しください。');
     }
   };
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8 w-full '>
+      {/* 隠しフィールド */}
+      <input type='hidden' {...form.register('guestId')} />
+      <input type='hidden' {...form.register('name')} />
+
       {/* 連絡先情報 */}
       <div className='space-y-4'>
         <h3 className='text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2'>
@@ -367,20 +466,36 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
         <Fragment key={attendee.id}>
           <Hr />
           <div className='space-y-4'>
+            {/* 出席者の隠しフィールド */}
+            <input
+              type='hidden'
+              {...form.register(`attendees.${index}.attendeeId`)}
+            />
+
             <div className='flex items-center justify-between border-b border-gray-200 pb-2'>
               <h3 className='text-xl font-semibold text-gray-900'>
                 {index === 0 ? '出席者' : `お連れ様 ${index}`}
               </h3>
-              {index > 0 && (
-                <Button
-                  type='button'
-                  variant='danger'
-                  size='sm'
-                  onClick={() => handleRemoveAttendee(index)}
-                >
-                  削除
-                </Button>
-              )}
+              {(() => {
+                // 家族メンバー（guestInfo.familyに含まれる）かどうかを判定
+                const isFamilyMember =
+                  guestInfo?.family &&
+                  index > 0 &&
+                  index <= guestInfo.family.length;
+                const isAdditionalGuest = index > 0 && !isFamilyMember;
+
+                // 追加されたお連れ様（家族メンバー以外）のみ削除ボタンを表示
+                return isAdditionalGuest ? (
+                  <Button
+                    type='button'
+                    variant='danger'
+                    size='sm'
+                    onClick={() => handleRemoveAttendee(index)}
+                  >
+                    削除
+                  </Button>
+                ) : null;
+              })()}
             </div>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
               <Controller
