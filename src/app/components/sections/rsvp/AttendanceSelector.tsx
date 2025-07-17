@@ -102,10 +102,15 @@ const AttendanceSelector: React.FC<AttendanceSelectorProps> = ({
           htmlFor={attendingId}
           className={`focus:outline-none flex flex-col items-center justify-center transition-all duration-200 cursor-pointer w-16 py-3 relative`}
         >
-          {value === 'attending' && (
+          {/* 出席選択時の画像表示 */}
+          {isSelected && (
             <div className='absolute size-20 flex justify-center items-center'>
               <Image
-                src='/images/sections/rsvp/rsvp-attendance.webp'
+                src={
+                  value === 'attending'
+                    ? '/images/sections/rsvp/rsvp-attendance.webp'
+                    : '/images/sections/rsvp/rsvp-absence.webp'
+                }
                 alt={attendingLabel}
                 width={80}
                 height={80}
@@ -122,10 +127,15 @@ const AttendanceSelector: React.FC<AttendanceSelectorProps> = ({
           htmlFor={declinedId}
           className={`focus:outline-none flex flex-col items-center justify-center transition-all duration-200 cursor-pointer w-16 relative`}
         >
-          {value === 'declined' && (
+          {/* 欠席選択時の画像表示 */}
+          {isSelected && (
             <div className='absolute size-20 flex justify-center items-center'>
               <Image
-                src='/images/sections/rsvp/rsvp-absence.webp'
+                src={
+                  value === 'declined'
+                    ? '/images/sections/rsvp/rsvp-attendance.webp'
+                    : '/images/sections/rsvp/rsvp-absence.webp'
+                }
                 alt={declinedLabel}
                 width={80}
                 height={80}
