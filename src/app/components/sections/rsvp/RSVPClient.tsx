@@ -222,9 +222,6 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
   };
 
   const onSubmit = async (data: RSVPFormType) => {
-    console.log('フォーム送信開始:', data);
-    console.log('フォームエラー:', form.formState.errors);
-
     try {
       // フォーム送信前の追加バリデーション
       const hasInvalidAttendance = data.attendees.some((attendee, index) => {
@@ -342,24 +339,31 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
         message: data.message || '',
       };
 
-      console.log('送信データ:', submitData);
-
-      // TODO: 実際のAPI送信処理を実装
-      // const response = await fetch('/api/rsvp', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(submitData),
-      // });
-
-      // if (!response.ok) {
-      //   throw new Error('送信に失敗しました');
+      // Google Apps Scriptエンドポイントへの送信
+      // const scriptUrl = process.env.NEXT_PUBLIC_GOOGLE_APPS_SCRIPT_URL;
+      // if (!scriptUrl) {
+      //   throw new Error('Google Apps Script URLが設定されていません');
       // }
+
+      const response = await fetch('/api/rsvp', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submitData),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API送信エラー:', response.status, errorText);
+        alert('送信に失敗しました。サーバーエラーが発生しました。');
+        throw new Error(`送信に失敗しました (${response.status})`);
+      }
+
+      await response.json();
 
       // 送信成功時の処理
       alert('ご回答を送信いたしました。ありがとうございます。');
-      console.log('送信完了');
     } catch (error) {
       console.error('送信エラー:', error);
       alert('送信中にエラーが発生しました。もう一度お試しください。');

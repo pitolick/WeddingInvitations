@@ -158,7 +158,7 @@ function saveToSpreadsheet(data) {
     // メインデータを保存
     const mainData = [
       data.guestId || '',
-      data.guestName || '',
+      data.name || '',
       timestamp,
       data.contactInfo.postalCode || '',
       data.contactInfo.prefecture || '',
@@ -188,26 +188,9 @@ function saveToSpreadsheet(data) {
 
     // 各出席者のデータを保存
     data.attendees.forEach((attendee, index) => {
-      // 出席者番号の決定
-      let attendeeNumber = '';
-      if (index === 0) {
-        // メインゲストの場合、招待者IDを使用
-        attendeeNumber = data.guestId || '';
-      } else if (
-        data.guestInfo?.family &&
-        index <= data.guestInfo.family.length
-      ) {
-        // 家族メンバーの場合、家族メンバーのIDを使用
-        const familyMember = data.guestInfo.family[index - 1];
-        attendeeNumber = familyMember?.id || '';
-      } else {
-        // 追加されたお連れ様の場合、空文字
-        attendeeNumber = '';
-      }
-
       const attendeeData = [
         data.guestId || '',
-        attendeeNumber,
+        attendee.attendeeId || '',
         attendee.name || '',
         attendee.furigana || '',
         attendee.birthday || '',
