@@ -66,7 +66,7 @@ function doGet(e) {
     JSON.stringify({
       success: true,
       message: 'RSVP API is running',
-      timestamp: new Date().toISOString(),
+      timestamp: formatDate(new Date()),
     })
   ).setMimeType(ContentService.MimeType.JSON);
 }
@@ -140,7 +140,7 @@ function validateData(data) {
 function saveToSpreadsheet(data) {
   try {
     const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-    const timestamp = new Date().toISOString();
+    const timestamp = formatDate(new Date());
 
     // RSVP_Responses シートにメインデータを保存
     const responsesSheet = getOrCreateSheet(spreadsheet, 'RSVP_Responses', [
@@ -206,9 +206,6 @@ function saveToSpreadsheet(data) {
       attendeesSheet.appendRow(attendeeData);
     });
 
-    // 集計を更新
-    updateSummary(spreadsheet);
-
     return { success: true };
   } catch (error) {
     console.error('Error saving to spreadsheet:', error);
@@ -238,82 +235,15 @@ function getOrCreateSheet(spreadsheet, sheetName, headers) {
 }
 
 /**
- * 集計シートを更新する
- * @param {Spreadsheet} spreadsheet - スプレッドシート
+ * 日付を YYYY/MM/DD 形式にフォーマットする
+ * @param {Date} date - フォーマットする日付
+ * @returns {string} フォーマットされた日付文字列
  */
-function updateSummary(spreadsheet) {
-  try {
-    const attendeesSheet = spreadsheet.getSheetByName('RSVP_Attendees');
-    if (!attendeesSheet) return;
-
-    const summarySheet = getOrCreateSheet(spreadsheet, 'RSVP_Summary', [
-      'イベント種別',
-      '参加予定者数',
-      '不参加者数',
-      '未回答者数',
-      '更新日時',
-    ]);
-
-    // 既存の集計データをクリア（ヘッダー以外）
-    const lastRow = summarySheet.getLastRow();
-    if (lastRow > 1) {
-      summarySheet.getRange(2, 1, lastRow - 1, 5).clear();
-    }
-
-    // 出席者データを取得
-    const attendeeData = attendeesSheet.getDataRange().getValues();
-    const headers = attendeeData[0];
-    const dataRows = attendeeData.slice(1);
-
-    // 列インデックスを取得
-    const ceremonyIndex = headers.indexOf('挙式出欠');
-    const receptionIndex = headers.indexOf('披露宴出欠');
-    const afterPartyIndex = headers.indexOf('二次会出欠');
-
-    // 各イベントの集計
-    const events = [
-      { name: '挙式', index: ceremonyIndex },
-      { name: '披露宴', index: receptionIndex },
-      { name: '二次会', index: afterPartyIndex },
-    ];
-
-    const summaryData = [];
-    const timestamp = new Date().toISOString();
-
-    events.forEach(event => {
-      if (event.index !== -1) {
-        let attending = 0;
-        let declined = 0;
-        let noResponse = 0;
-
-        dataRows.forEach(row => {
-          const response = row[event.index];
-          if (response === 'attending') {
-            attending++;
-          } else if (response === 'declined') {
-            declined++;
-          } else {
-            noResponse++;
-          }
-        });
-
-        summaryData.push([
-          event.name,
-          attending,
-          declined,
-          noResponse,
-          timestamp,
-        ]);
-      }
-    });
-
-    // 集計データを保存
-    if (summaryData.length > 0) {
-      summarySheet.getRange(2, 1, summaryData.length, 5).setValues(summaryData);
-    }
-  } catch (error) {
-    console.error('Error updating summary:', error);
-  }
+function formatDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}/${month}/${day}`;
 }
 
 /**
@@ -352,15 +282,6 @@ function setupSpreadsheet() {
       '挙式出欠',
       '披露宴出欠',
       '二次会出欠',
-    ]);
-
-    // RSVP_Summary シートを作成
-    const summarySheet = getOrCreateSheet(spreadsheet, 'RSVP_Summary', [
-      'イベント種別',
-      '参加予定者数',
-      '不参加者数',
-      '未回答者数',
-      '更新日時',
     ]);
 
     console.log('Spreadsheet setup completed successfully');
