@@ -53,6 +53,8 @@ export interface GuestBase {
  * @since 1.0.0
  */
 export interface GuestContent extends MicroCMSObjectContent, GuestBase {
+  /** microCMSのコンテンツID */
+  id: string;
   /** 家族情報（参照コンテンツ） */
   family: GuestContentReference[];
 }
@@ -65,6 +67,8 @@ export interface GuestContent extends MicroCMSObjectContent, GuestBase {
 export interface GuestContentReference
   extends MicroCMSObjectContent,
     GuestBase {
+  /** microCMSのコンテンツID */
+  id: string;
   /** 家族情報（参照コンテンツ） */
   family: GuestContentReference[];
 }
