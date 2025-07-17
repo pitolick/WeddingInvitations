@@ -115,19 +115,37 @@ const rsvpSchema = z.object({
 type RSVPFormType = z.infer<typeof rsvpSchema>;
 
 /**
+ * @description 出席者情報の型定義（フィルタリング用）
+ * @type AttendeeType
+ * @since 1.0.0
+ */
+type AttendeeType = z.infer<typeof attendeeSchema>;
+
+/**
+ * @description フィルタリングされた出席者情報の型定義
+ * @type FilteredAttendeeType
+ * @since 1.0.0
+ */
+type FilteredAttendeeType = Partial<AttendeeType> & {
+  attendeeId?: string;
+  name: string;
+  furigana: string;
+  birthday: string;
+  hotelUse: string;
+  taxiUse: string;
+  parkingUse: string;
+  allergies: string[];
+  dislikedFoods?: string;
+};
+
+/**
  * @description デフォルトの出席者情報を生成
  * @param guestInfo - ゲスト情報（オプション）
  * @returns デフォルトの出席者情報
  * @since 1.0.0
  */
-const defaultAttendee = (guestInfo?: {
-  id?: string;
-  name: string;
-  kana?: string;
-  invite: string[];
-  autofill?: { name: boolean; kana: boolean } | null;
-}) => ({
-  attendeeId: (guestInfo as any)?.id || '',
+const defaultAttendee = (guestInfo?: GuestContent) => ({
+  attendeeId: guestInfo?.id || '',
   name:
     guestInfo?.name && guestInfo?.autofill?.name === true
       ? guestInfo?.name
@@ -172,7 +190,7 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
 
   // 初期化時にlocalStorageから送信済みフラグを確認
   useEffect(() => {
-    const guestId = (guestInfo as any)?.id || '';
+    const guestId = guestInfo?.id || '';
     if (guestId) {
       const submittedKey = `rsvp_submitted_${guestId}`;
       const isSubmitted = localStorage.getItem(submittedKey) === 'true';
@@ -190,7 +208,7 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
 
     // 家族情報がある場合は追加
     if (guestInfo.family && guestInfo.family.length > 0) {
-      guestInfo.family.forEach(familyMember => {
+      guestInfo.family.forEach((familyMember: GuestContent) => {
         attendees.push(defaultAttendee(familyMember));
       });
     }
@@ -201,7 +219,7 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
   const form = useForm<RSVPFormType>({
     resolver: zodResolver(rsvpSchema),
     defaultValues: {
-      guestId: (guestInfo as any)?.id || '',
+      guestId: guestInfo?.id || '',
       name: guestInfo?.name || '',
       contactInfo: {
         postalCode: '',
@@ -247,7 +265,7 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
     setHasSubmitted(false);
 
     // localStorageから送信済みフラグを削除
-    const guestId = (guestInfo as any)?.id || '';
+    const guestId = guestInfo?.id || '';
     if (guestId) {
       const submittedKey = `rsvp_submitted_${guestId}`;
       localStorage.removeItem(submittedKey);
@@ -360,7 +378,7 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
           }
 
           // 招待されていないイベントのフィールドを除外
-          const filteredAttendee: any = { ...attendee };
+          const filteredAttendee: FilteredAttendeeType = { ...attendee };
 
           if (!inviteTypes.includes('挙式')) {
             delete filteredAttendee.ceremony;
