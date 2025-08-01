@@ -1,5 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ZipcloudResponse } from '@/app/lib/api/postal-code';
+import {
+  createApiError,
+  createSuccessResponse,
+  createErrorResponse,
+  generateRequestId,
+} from '@/app/lib/errors/api';
+import { ErrorSeverity } from '@/app/lib/types/errors';
 
 /**
  * 郵便番号APIのプロキシエンドポイント（zipcloud使用）
@@ -43,23 +50,45 @@ function validatePostalCode(postalCode: string): boolean {
  * ```
  */
 export async function GET(request: NextRequest) {
+  const requestId = generateRequestId();
+  const endpoint = '/api/postal-code';
+
   try {
     const { searchParams } = new URL(request.url);
     const postalCode = searchParams.get('postalCode');
 
     if (!postalCode) {
-      return NextResponse.json(
-        { error: '郵便番号が指定されていません' },
-        { status: 400 }
-      );
+      const apiError = createApiError({
+        message: '郵便番号が指定されていません',
+        statusCode: 400,
+        endpoint,
+        requestId,
+        severity: ErrorSeverity.MEDIUM,
+        userMessage: '郵便番号を入力してください',
+        code: 'MISSING_POSTAL_CODE',
+      });
+
+      return NextResponse.json(createErrorResponse(apiError, requestId), {
+        status: 400,
+      });
     }
 
     // 郵便番号の形式を検証
     if (!validatePostalCode(postalCode)) {
-      return NextResponse.json(
-        { error: '郵便番号は7桁の数字で入力してください' },
-        { status: 400 }
-      );
+      const apiError = createApiError({
+        message: '郵便番号は7桁の数字で入力してください',
+        statusCode: 400,
+        endpoint,
+        requestId,
+        severity: ErrorSeverity.MEDIUM,
+        userMessage: '郵便番号は7桁の数字で入力してください',
+        code: 'INVALID_POSTAL_CODE_FORMAT',
+        details: { inputPostalCode: postalCode },
+      });
+
+      return NextResponse.json(createErrorResponse(apiError, requestId), {
+        status: 400,
+      });
     }
 
     const normalizedPostalCode = normalizePostalCode(postalCode);
@@ -74,37 +103,61 @@ export async function GET(request: NextRequest) {
     });
 
     if (!response.ok) {
-      return NextResponse.json(
-        {
-          error: '郵便番号検索APIへのリクエストに失敗しました',
-          status: response.status,
-        },
-        { status: 500 }
-      );
+      const apiError = createApiError({
+        message: '郵便番号検索APIへのリクエストに失敗しました',
+        statusCode: 500,
+        endpoint,
+        requestId,
+        severity: ErrorSeverity.HIGH,
+        userMessage:
+          '郵便番号検索サービスが一時的に利用できません。しばらく時間をおいてから再度お試しください。',
+        code: 'ZIPCLOUD_API_ERROR',
+        details: { responseStatus: response.status },
+      });
+
+      return NextResponse.json(createErrorResponse(apiError, requestId), {
+        status: 500,
+      });
     }
 
     const data: ZipcloudResponse = await response.json();
 
     // zipcloud APIのステータスをチェック
     if (data.status !== 200) {
-      return NextResponse.json(
-        {
-          error: data.message || '住所が見つかりませんでした',
-          status: data.status,
-        },
-        { status: 404 }
-      );
+      const apiError = createApiError({
+        message: data.message || '住所が見つかりませんでした',
+        statusCode: 404,
+        endpoint,
+        requestId,
+        severity: ErrorSeverity.MEDIUM,
+        userMessage:
+          '該当する住所が見つかりませんでした。郵便番号をご確認ください。',
+        code: 'ADDRESS_NOT_FOUND',
+        responseData: data,
+      });
+
+      return NextResponse.json(createErrorResponse(apiError, requestId), {
+        status: 404,
+      });
     }
 
     // 結果がない場合
     if (!data.results || data.results.length === 0) {
-      return NextResponse.json(
-        {
-          error: '該当する住所が見つかりませんでした',
-          status: 404,
-        },
-        { status: 404 }
-      );
+      const apiError = createApiError({
+        message: '該当する住所が見つかりませんでした',
+        statusCode: 404,
+        endpoint,
+        requestId,
+        severity: ErrorSeverity.MEDIUM,
+        userMessage:
+          '該当する住所が見つかりませんでした。郵便番号をご確認ください。',
+        code: 'NO_RESULTS_FOUND',
+        responseData: data,
+      });
+
+      return NextResponse.json(createErrorResponse(apiError, requestId), {
+        status: 404,
+      });
     }
 
     // 結果を整形して返す
@@ -142,16 +195,27 @@ export async function GET(request: NextRequest) {
       page: 1,
     };
 
-    return NextResponse.json(formattedResult);
-  } catch (error) {
-    console.error('Postal code search error:', error);
     return NextResponse.json(
-      {
-        error: '郵便番号検索に失敗しました',
-        timestamp: new Date().toISOString(),
-      },
-      { status: 500 }
+      createSuccessResponse(formattedResult, requestId),
+      { status: 200 }
     );
+  } catch (error) {
+    const apiError = createApiError({
+      message:
+        error instanceof Error ? error.message : '郵便番号検索に失敗しました',
+      statusCode: 500,
+      endpoint,
+      requestId,
+      severity: ErrorSeverity.HIGH,
+      userMessage:
+        '郵便番号検索中にエラーが発生しました。しばらく時間をおいてから再度お試しください。',
+      code: 'POSTAL_CODE_SEARCH_ERROR',
+      details: { originalError: error },
+    });
+
+    return NextResponse.json(createErrorResponse(apiError, requestId), {
+      status: 500,
+    });
   }
 }
 
