@@ -30,3 +30,6 @@ export * from './image';
 
 // 装飾コンポーネント
 export * from './decoration';
+
+// フィードバックコンポーネント
+export * from './feedback';

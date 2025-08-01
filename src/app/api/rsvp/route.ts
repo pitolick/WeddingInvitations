@@ -5,6 +5,13 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import {
+  createApiError,
+  createSuccessResponse,
+  createErrorResponse,
+  generateRequestId,
+} from '@/app/lib/errors/api';
+import { ErrorSeverity } from '@/app/lib/types/errors';
 
 /**
  * @description RSVPデータをGoogle Apps Scriptに送信するPOSTハンドラー
@@ -22,20 +29,50 @@ import { NextRequest, NextResponse } from 'next/server';
  * });
  */
 export async function POST(req: NextRequest) {
+  const requestId = generateRequestId();
+  const endpoint = '/api/rsvp';
+
   try {
     // Google Apps Script URLの取得
     const scriptUrl = process.env.GOOGLE_APPS_SCRIPT_URL;
 
     // 環境変数の検証
     if (!scriptUrl) {
-      return NextResponse.json(
-        { error: 'Google Apps Script URLが設定されていません' },
-        { status: 500 }
-      );
+      const apiError = createApiError({
+        message: 'Google Apps Script URLが設定されていません',
+        statusCode: 500,
+        endpoint,
+        requestId,
+        severity: ErrorSeverity.HIGH,
+        userMessage: 'システム設定エラーが発生しました',
+        code: 'MISSING_ENV_VAR',
+      });
+
+      return NextResponse.json(createErrorResponse(apiError, requestId), {
+        status: 500,
+      });
     }
 
     // リクエストボディの解析
-    const body = await req.json();
+    let body;
+    try {
+      body = await req.json();
+    } catch {
+      const apiError = createApiError({
+        message: 'リクエストボディの解析に失敗しました',
+        statusCode: 400,
+        endpoint,
+        requestId,
+        severity: ErrorSeverity.MEDIUM,
+        userMessage: '送信データの形式が正しくありません',
+        code: 'INVALID_REQUEST_BODY',
+        details: { parseError: 'JSON parse error' },
+      });
+
+      return NextResponse.json(createErrorResponse(apiError, requestId), {
+        status: 400,
+      });
+    }
 
     // Google Apps Scriptへのデータ送信
     const response = await fetch(scriptUrl, {
@@ -58,16 +95,46 @@ export async function POST(req: NextRequest) {
 
     // エラーレスポンスの処理
     if (!response.ok) {
-      return NextResponse.json({ error: data }, { status: response.status });
+      const apiError = createApiError({
+        message: `Google Apps Script API呼び出しに失敗しました (${response.status})`,
+        statusCode: response.status,
+        endpoint,
+        requestId,
+        severity: ErrorSeverity.HIGH,
+        userMessage:
+          'データの送信に失敗しました。しばらく時間をおいてから再度お試しください。',
+        code: 'GOOGLE_APPS_SCRIPT_ERROR',
+        responseData: data,
+      });
+
+      return NextResponse.json(createErrorResponse(apiError, requestId), {
+        status: response.status,
+      });
     }
 
     // 成功レスポンスの返却
-    return NextResponse.json(data);
-  } catch (error: any) {
+    return NextResponse.json(createSuccessResponse(data, requestId), {
+      status: 200,
+    });
+  } catch (error) {
     // 予期しないエラーの処理
-    return NextResponse.json(
-      { error: error.message || 'サーバーエラー' },
-      { status: 500 }
-    );
+    const apiError = createApiError({
+      message:
+        error instanceof Error
+          ? error.message
+          : '予期しないエラーが発生しました',
+      statusCode: 500,
+      endpoint,
+      requestId,
+      severity: ErrorSeverity.CRITICAL,
+      userMessage:
+        'システムエラーが発生しました。しばらく時間をおいてから再度お試しください。',
+      code: 'UNEXPECTED_ERROR',
+      details: { originalError: error },
+    });
+
+    return NextResponse.json(createErrorResponse(apiError, requestId), {
+      status: 500,
+    });
   }
 }
