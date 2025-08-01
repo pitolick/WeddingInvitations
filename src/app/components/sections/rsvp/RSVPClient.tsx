@@ -77,7 +77,7 @@ const attendeeSchema = z.object({
   birthday: z.string().min(1, '誕生日は必須です'),
   hotelUse: z.string().min(1, 'ホテル利用を選択してください'),
   taxiUse: z.string().min(1, 'タクシー利用を選択してください'),
-  parkingUse: z.string().min(1, '駐車場利用を選択してください'),
+  daikoUse: z.string().min(1, '代行利用を選択してください'),
   allergies: z.array(z.string()),
   dislikedFoods: z.string().optional(),
   ceremony: z.string().optional(), // 挙式の出欠（招待されている場合のみ）
@@ -133,7 +133,7 @@ type FilteredAttendeeType = Partial<AttendeeType> & {
   birthday: string;
   hotelUse: string;
   taxiUse: string;
-  parkingUse: string;
+  daikoUse: string;
   allergies: string[];
   dislikedFoods?: string;
 };
@@ -157,7 +157,7 @@ const defaultAttendee = (guestInfo?: GuestContent) => ({
   birthday: '',
   hotelUse: '',
   taxiUse: '',
-  parkingUse: '',
+  daikoUse: '',
   allergies: [],
   dislikedFoods: '',
   ceremony: undefined, // オプショナルフィールド
@@ -710,10 +710,10 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
                 />
                 <Controller
                   control={form.control}
-                  name={`attendees.${index}.parkingUse`}
+                  name={`attendees.${index}.daikoUse`}
                   render={({ field }) => (
                     <Radio
-                      label='駐車場利用'
+                      label='代行利用'
                       required
                       options={[
                         { value: 'なし', label: 'なし' },
@@ -726,7 +726,7 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
                       layout='horizontal'
                       value={field.value ?? ''}
                       onChange={field.onChange}
-                      error={errors.attendees?.[index]?.parkingUse?.message}
+                      error={errors.attendees?.[index]?.daikoUse?.message}
                     />
                   )}
                 />

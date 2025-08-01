@@ -5,32 +5,81 @@
  */
 
 /**
+ * @description 連絡先情報の型定義
+ */
+export interface ContactInfo {
+  /** 郵便番号 */
+  postalCode: string;
+  /** 都道府県 */
+  prefecture: string;
+  /** 住所 */
+  address: string;
+  /** 電話番号 */
+  phone: string;
+  /** メールアドレス */
+  email: string;
+}
+
+/**
+ * @description 出席者情報の型定義
+ */
+export interface Attendee {
+  /** 出席者番号（microCMS IDまたは空文字） */
+  attendeeId?: string;
+  /** 出席者名 */
+  name: string;
+  /** ふりがな */
+  furigana: string;
+  /** 誕生日 */
+  birthday: string;
+  /** ホテル利用 */
+  hotelUse: string;
+  /** タクシー利用 */
+  taxiUse: string;
+  /** 代行利用 */
+  daikoUse: string;
+  /** アレルギー情報 */
+  allergies: string[];
+  /** 苦手な食べ物 */
+  dislikedFoods?: string;
+  /** 挙式出欠 */
+  ceremony?: string;
+  /** 披露宴出欠 */
+  reception?: string;
+  /** 二次会出欠 */
+  afterParty?: string;
+}
+
+/**
  * @description RSVPフォームデータの型定義
  * @example
  * ```typescript
  * const rsvpData: RSVPFormData = {
+ *   guestId: 'guest-123',
  *   name: '田中太郎',
- *   email: 'tanaka@example.com',
- *   attendance: 'attending',
- *   companions: 2,
- *   message: '楽しみにしています！',
- *   dietaryRestrictions: 'ベジタリアン'
+ *   contactInfo: {
+ *     postalCode: '1234567',
+ *     prefecture: '東京都',
+ *     address: '渋谷区...',
+ *     phone: '09012345678',
+ *     email: 'tanaka@example.com'
+ *   },
+ *   attendees: [...],
+ *   message: '楽しみにしています！'
  * };
  * ```
  */
 export interface RSVPFormData {
+  /** 招待者ID */
+  guestId: string;
   /** 招待者名 */
   name: string;
-  /** メールアドレス */
-  email: string;
-  /** 参加予定人数 */
-  attendance: 'attending' | 'declined';
-  /** 同伴者数 */
-  companions?: number;
+  /** 連絡先情報 */
+  contactInfo: ContactInfo;
+  /** 出席者情報 */
+  attendees: Attendee[];
   /** メッセージ */
   message?: string;
-  /** 食事制限 */
-  dietaryRestrictions?: string;
 }
 
 /**

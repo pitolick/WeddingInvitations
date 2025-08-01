@@ -115,7 +115,7 @@ function validateData(data) {
     'birthday',
     'hotelUse',
     'taxiUse',
-    'parkingUse',
+    'daikoUse',
   ];
   for (let i = 0; i < data.attendees.length; i++) {
     const attendee = data.attendees[i];
@@ -178,7 +178,7 @@ function saveToSpreadsheet(data) {
       '誕生日',
       'ホテル利用',
       'タクシー利用',
-      '駐車場利用',
+      '代行利用',
       'アレルギー',
       '苦手な食べ物',
       '挙式出欠',
@@ -196,7 +196,7 @@ function saveToSpreadsheet(data) {
         attendee.birthday || '',
         attendee.hotelUse || '',
         attendee.taxiUse || '',
-        attendee.parkingUse || '',
+        attendee.daikoUse || '',
         JSON.stringify(attendee.allergies || []),
         attendee.dislikedFoods || '',
         attendee.ceremony || '',
@@ -276,7 +276,7 @@ function setupSpreadsheet() {
       '誕生日',
       'ホテル利用',
       'タクシー利用',
-      '駐車場利用',
+      '代行利用',
       'アレルギー',
       '苦手な食べ物',
       '挙式出欠',

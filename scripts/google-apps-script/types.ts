@@ -33,8 +33,8 @@ export interface Attendee {
   hotelUse: string;
   /** タクシー利用 */
   taxiUse: string;
-  /** 駐車場利用 */
-  parkingUse: string;
+  /** 代行利用 */
+  daikoUse: string;
   /** アレルギー情報 */
   allergies: string[];
   /** 苦手な食べ物 */
@@ -121,8 +121,8 @@ export interface RSVPAttendeeRow {
   hotelUse: string;
   /** タクシー利用 */
   taxiUse: string;
-  /** 駐車場利用 */
-  parkingUse: string;
+  /** 代行利用 */
+  daikoUse: string;
   /** アレルギー情報 (JSON文字列) */
   allergies: string;
   /** 苦手な食べ物 */
