@@ -96,7 +96,7 @@ export const DEFAULT_EVENTS_DATA: EventData[] = [
         <br />
         お車で来てくださる方は
         <br />
-        会場前に00台停められる
+        会場前に80台停められる
         <br className='block lg:hidden' />
         駐車場がありますので
         <br />
@@ -168,7 +168,7 @@ export const DEFAULT_EVENTS_DATA: EventData[] = [
         <br />
         お車でお越しの場合は
         <br />
-        会場前に00台収容可能な駐車場が
+        会場前に80台収容可能な駐車場が
         <br />
         ございますのでご利用ください
       </p>
