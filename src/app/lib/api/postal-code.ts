@@ -27,6 +27,13 @@ export interface PostalCodeSearchResponse {
   page: number;
 }
 
+// createSuccessResponseでラップされたレスポンスの型定義
+export interface WrappedPostalCodeResponse {
+  data: PostalCodeSearchResponse;
+  success: boolean;
+  requestId: string;
+}
+
 // 住所情報の型定義（アプリケーション用）
 export interface PostalCodeAddress {
   zip_code: number;
@@ -80,7 +87,7 @@ export class PostalCodeApiClient {
    */
   async searchByPostalCode(
     postalCode: string
-  ): Promise<PostalCodeSearchResponse> {
+  ): Promise<PostalCodeSearchResponse | WrappedPostalCodeResponse> {
     const url = new URL('/api/postal-code', window.location.origin);
     url.searchParams.set('postalCode', postalCode);
 
@@ -91,7 +98,14 @@ export class PostalCodeApiClient {
       throw new Error(`郵便番号検索エラー: ${errorData.error}`);
     }
 
-    return response.json();
+    const result = await response.json();
+
+    // createSuccessResponseでラップされている場合の処理
+    if (result.data) {
+      return result.data;
+    }
+
+    return result;
   }
 
   /**
