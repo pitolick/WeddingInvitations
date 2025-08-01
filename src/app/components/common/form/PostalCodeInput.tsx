@@ -93,9 +93,14 @@ const PostalCodeInput: React.FC<PostalCodeInputProps> = ({
         const response = await postalCodeApi.searchByPostalCode(postalCode);
 
         // APIレスポンスの構造を確認（createSuccessResponseでラップされている場合）
-        const data = response.data || response;
+        const data = 'data' in response ? response.data : response;
 
-        if (data && data.addresses && data.addresses.length > 0) {
+        if (
+          data &&
+          'addresses' in data &&
+          data.addresses &&
+          data.addresses.length > 0
+        ) {
           const address = data.addresses[0];
           const fullAddress = `${address.pref_name}${address.city_name}${address.town_name}`;
 
