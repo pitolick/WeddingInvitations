@@ -91,7 +91,14 @@ export class PostalCodeApiClient {
       throw new Error(`郵便番号検索エラー: ${errorData.error}`);
     }
 
-    return response.json();
+    const result = await response.json();
+
+    // createSuccessResponseでラップされている場合の処理
+    if (result.data) {
+      return result.data;
+    }
+
+    return result;
   }
 
   /**

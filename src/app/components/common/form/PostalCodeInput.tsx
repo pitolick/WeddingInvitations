@@ -92,14 +92,19 @@ const PostalCodeInput: React.FC<PostalCodeInputProps> = ({
       try {
         const response = await postalCodeApi.searchByPostalCode(postalCode);
 
-        if (response.addresses.length > 0) {
-          const address = response.addresses[0];
+        // APIレスポンスの構造を確認（createSuccessResponseでラップされている場合）
+        const data = response.data || response;
+
+        if (data && data.addresses && data.addresses.length > 0) {
+          const address = data.addresses[0];
           const fullAddress = `${address.pref_name}${address.city_name}${address.town_name}`;
 
           onAddressChange?.({
             prefecture: address.pref_name,
             address: fullAddress,
           });
+        } else {
+          setSearchError('該当する住所が見つかりませんでした');
         }
       } catch (error) {
         console.error('郵便番号検索エラー:', error);
