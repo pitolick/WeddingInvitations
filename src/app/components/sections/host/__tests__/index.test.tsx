@@ -23,11 +23,21 @@ describe('Hostセクション', () => {
     expect(screen.getByAltText('森下 紗伎')).toBeInTheDocument();
   });
 
-  it('プロフィールメッセージが4行表示される', () => {
+  it('プロフィールメッセージが新しい形式で表示される', () => {
     render(<Host />);
-    expect(
-      screen.getAllByText('メッセージ＆プロフィール等').length
-    ).toBeGreaterThanOrEqual(4);
+    // 新郎のメッセージ
+    expect(screen.getByText('#ブルズアイ')).toBeInTheDocument();
+    expect(screen.getByText('#ティモン')).toBeInTheDocument();
+    expect(screen.getByText('#トイ・ストーリー')).toBeInTheDocument();
+    expect(screen.getByText('#リーチ')).toBeInTheDocument();
+    expect(screen.getByText('#ハッピーライド')).toBeInTheDocument();
+
+    // 新婦のメッセージ
+    expect(screen.getByText('#ラプンツェル')).toBeInTheDocument();
+    expect(screen.getByText('#ニック')).toBeInTheDocument();
+    expect(screen.getByText('#リメンバー・ミー')).toBeInTheDocument();
+    expect(screen.getByText('#ハモカラ')).toBeInTheDocument();
+    expect(screen.getByText('#マメラグシアター')).toBeInTheDocument();
   });
 
   it('中央にSunアイコンが表示される', () => {
