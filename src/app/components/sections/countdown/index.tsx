@@ -107,7 +107,7 @@ const Countdown: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
           className='w-full'
         >
           <h2 className='text-white text-5xl font-normal text-center select-none font-berkshire'>
@@ -120,7 +120,7 @@ const Countdown: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 1.0, delay: 0.3 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
           className='w-full'
         >
           <div className='flex flex-col items-center gap-2 md:gap-4'>
@@ -218,7 +218,7 @@ const Countdown: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.8, delay: 0.5 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
             className='w-full'
           >
             <div className='text-center mt-10'>

@@ -43,7 +43,7 @@ export const MessageContent: React.FC<MessageProps> = ({
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
           className='w-full'
         >
           <div className='text-base md:text-base  text-center text-gray-900 md:text-black whitespace-pre-line'>
@@ -70,7 +70,7 @@ export const MessageContent: React.FC<MessageProps> = ({
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-50px' }}
-        transition={{ duration: 0.8, delay: 0.8 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
         className='relative z-10 w-full'
       >
         <DearBlock invitationId={invitationId} draftKey={draftKey} />

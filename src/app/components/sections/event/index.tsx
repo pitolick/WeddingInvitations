@@ -135,6 +135,9 @@ const Event: React.FC<EventProps> = async ({ invitationId, draftKey }) => {
             return guestData.invite.includes(eventInviteType);
           });
         }
+      } else {
+        // guestDataがない場合はデフォルトイベントを表示
+        filteredEvents = filterDefaultEvents(allEvents);
       }
     } catch (error) {
       devLogger.error('microCMS API error', '招待者情報の取得に失敗しました', {
@@ -145,6 +148,9 @@ const Event: React.FC<EventProps> = async ({ invitationId, draftKey }) => {
       });
       filteredEvents = filterDefaultEvents(allEvents);
     }
+  } else {
+    // invitationIdがない場合はデフォルトイベントを表示
+    filteredEvents = filterDefaultEvents(allEvents);
   }
 
   // イベント数に基づいてgrid-colsを動的に設定
