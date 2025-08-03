@@ -4,10 +4,12 @@
  * @since 1.0.0
  */
 
+'use client';
+
 import React from 'react';
 import { HostProfile } from './HostInfo.types';
 import Image from 'next/image';
-import { FadeIn } from '@/app/components/common/animation';
+import { motion } from 'motion/react';
 import Sun from '@/app/components/common/icon/Sun';
 
 const groom: HostProfile = {
@@ -86,11 +88,12 @@ const Host: React.FC = () => {
  * <ProfileCard profile={groomProfile} />
  */
 const ProfileCard: React.FC<{ profile: HostProfile }> = ({ profile }) => (
-  <FadeIn
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: '-50px' }}
+    transition={{ duration: 0.7, delay: 0.2 }}
     className='flex flex-col items-center px-6 gap-2'
-    delay={0.2}
-    duration={0.7}
-    direction='up'
   >
     <div className='relative flex justify-center items-center size-fit p-4'>
       <Image
@@ -134,7 +137,7 @@ const ProfileCard: React.FC<{ profile: HostProfile }> = ({ profile }) => (
         {profile.messages}
       </div>
     </div>
-  </FadeIn>
+  </motion.div>
 );
 
 export default Host;

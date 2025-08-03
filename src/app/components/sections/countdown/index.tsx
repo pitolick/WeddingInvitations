@@ -8,7 +8,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface CountdownTime {
   days: number;
@@ -103,106 +103,130 @@ const Countdown: React.FC = () => {
       {/* コンテナ */}
       <div className='relative z-10 flex flex-col items-center gap-8 w-full container'>
         {/* タイトル */}
-        <h2 className='text-white text-5xl font-normal text-center select-none font-berkshire'>
-          Countdown
-        </h2>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 0.8 }}
+          className='w-full'
+        >
+          <h2 className='text-white text-5xl font-normal text-center select-none font-berkshire'>
+            Countdown
+          </h2>
+        </motion.div>
 
         {/* コンテンツ */}
-        <div className='flex flex-col items-center gap-2 md:gap-4'>
-          {/* 日数と時分秒 */}
-          <div className='flex flex-col md:flex-row justify-center items-center md:items-end gap-2 md:gap-4'>
-            {/* 日数 */}
-            <div className='flex flex-row justify-center items-end'>
-              <AnimatePresence mode='wait' initial={false}>
-                <motion.span
-                  key={countdown.days}
-                  variants={numberVariants}
-                  initial='initial'
-                  animate='animate'
-                  exit='exit'
-                  className='text-white text-8xl font-bold text-center select-none font-noto'
-                >
-                  {countdown.days.toString()}
-                </motion.span>
-              </AnimatePresence>
-              <span className='text-white text-xl md:text-2xl font-normal text-center select-none font-berkshire'>
-                {LABELS.days}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-50px' }}
+          transition={{ duration: 1.0, delay: 0.3 }}
+          className='w-full'
+        >
+          <div className='flex flex-col items-center gap-2 md:gap-4'>
+            {/* 日数と時分秒 */}
+            <div className='flex flex-col md:flex-row justify-center items-center md:items-end gap-2 md:gap-4'>
+              {/* 日数 */}
+              <div className='flex flex-row justify-center items-end'>
+                <AnimatePresence mode='wait' initial={false}>
+                  <motion.span
+                    key={countdown.days}
+                    variants={numberVariants}
+                    initial='initial'
+                    animate='animate'
+                    exit='exit'
+                    className='text-white text-8xl font-bold text-center select-none font-noto'
+                  >
+                    {countdown.days.toString()}
+                  </motion.span>
+                </AnimatePresence>
+                <span className='text-white text-xl md:text-2xl font-normal text-center select-none font-berkshire'>
+                  {LABELS.days}
+                </span>
+              </div>
+
+              {/* 時分秒 */}
+              <div className='flex flex-row justify-center items-center md:items-end gap-2'>
+                {/* 時間 */}
+                <div className='flex flex-col items-center'>
+                  <div className='flex flex-col md:flex-row justify-center items-center md:items-end gap-1 w-[73px] md:w-auto'>
+                    <span className='text-white text-4xl md:text-6xl font-bold text-center select-none'>
+                      {countdown.hours.toString().padStart(2, '0')}
+                    </span>
+                    <span className='text-white text-sm md:text-2xl font-normal text-center select-none font-berkshire'>
+                      <span className='block md:hidden'>
+                        {LABELS.hours.mobile}
+                      </span>
+                      <span className='hidden md:block'>
+                        {LABELS.hours.desktop}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
+                {/* 分 */}
+                <div className='flex flex-col items-center'>
+                  <div className='flex flex-col md:flex-row justify-center items-center md:items-end gap-1 w-[73px] md:w-auto'>
+                    <span className='text-white text-4xl md:text-6xl font-bold text-center select-none'>
+                      {countdown.minutes.toString().padStart(2, '0')}
+                    </span>
+                    <span className='text-white text-sm md:text-2xl font-normal text-center select-none font-berkshire'>
+                      <span className='block md:hidden'>
+                        {LABELS.minutes.mobile}
+                      </span>
+                      <span className='hidden md:block'>
+                        {LABELS.minutes.desktop}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+
+                {/* 秒 */}
+                <div className='flex flex-col items-center'>
+                  <div className='flex flex-col md:flex-row justify-center items-center md:items-end gap-1 w-[73px] md:w-auto'>
+                    <span className='text-white text-4xl md:text-6xl font-bold text-center select-none'>
+                      {countdown.seconds.toString().padStart(2, '0')}
+                    </span>
+                    <span className='text-white text-sm md:text-2xl font-normal text-center select-none font-berkshire'>
+                      <span className='block md:hidden'>
+                        {LABELS.seconds.mobile}
+                      </span>
+                      <span className='hidden md:block'>
+                        {LABELS.seconds.desktop}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 日付表示 */}
+            <div className='flex flex-row justify-center items-center gap-1'>
+              <span className='text-white text-lg md:text-2xl font-normal text-center select-none font-berkshire'>
+                To
+              </span>
+              <span className='text-white text-lg md:text-2xl font-bold text-center select-none'>
+                2025.11.08
               </span>
             </div>
-
-            {/* 時分秒 */}
-            <div className='flex flex-row justify-center items-center md:items-end gap-2'>
-              {/* 時間 */}
-              <div className='flex flex-col items-center'>
-                <div className='flex flex-col md:flex-row justify-center items-center md:items-end gap-1 w-[73px] md:w-auto'>
-                  <span className='text-white text-4xl md:text-6xl font-bold text-center select-none'>
-                    {countdown.hours.toString().padStart(2, '0')}
-                  </span>
-                  <span className='text-white text-sm md:text-2xl font-normal text-center select-none font-berkshire'>
-                    <span className='block md:hidden'>
-                      {LABELS.hours.mobile}
-                    </span>
-                    <span className='hidden md:block'>
-                      {LABELS.hours.desktop}
-                    </span>
-                  </span>
-                </div>
-              </div>
-
-              {/* 分 */}
-              <div className='flex flex-col items-center'>
-                <div className='flex flex-col md:flex-row justify-center items-center md:items-end gap-1 w-[73px] md:w-auto'>
-                  <span className='text-white text-4xl md:text-6xl font-bold text-center select-none'>
-                    {countdown.minutes.toString().padStart(2, '0')}
-                  </span>
-                  <span className='text-white text-sm md:text-2xl font-normal text-center select-none font-berkshire'>
-                    <span className='block md:hidden'>
-                      {LABELS.minutes.mobile}
-                    </span>
-                    <span className='hidden md:block'>
-                      {LABELS.minutes.desktop}
-                    </span>
-                  </span>
-                </div>
-              </div>
-
-              {/* 秒 */}
-              <div className='flex flex-col items-center'>
-                <div className='flex flex-col md:flex-row justify-center items-center md:items-end gap-1 w-[73px] md:w-auto'>
-                  <span className='text-white text-4xl md:text-6xl font-bold text-center select-none'>
-                    {countdown.seconds.toString().padStart(2, '0')}
-                  </span>
-                  <span className='text-white text-sm md:text-2xl font-normal text-center select-none font-berkshire'>
-                    <span className='block md:hidden'>
-                      {LABELS.seconds.mobile}
-                    </span>
-                    <span className='hidden md:block'>
-                      {LABELS.seconds.desktop}
-                    </span>
-                  </span>
-                </div>
-              </div>
-            </div>
           </div>
-
-          {/* 日付表示 */}
-          <div className='flex flex-row justify-center items-center gap-1'>
-            <span className='text-white text-lg md:text-2xl font-normal text-center select-none font-berkshire'>
-              To
-            </span>
-            <span className='text-white text-lg md:text-2xl font-bold text-center select-none'>
-              2025.11.08
-            </span>
-          </div>
-        </div>
+        </motion.div>
 
         {/* 結婚式当日メッセージ */}
         {isZero && (
-          <div className='text-center mt-10'>
-            <p className='text-2xl md:text-3xl font-bold text-white bg-lavender-600/80 backdrop-blur-sm rounded-2xl px-8 py-4 inline-block shadow-lg'>
-              Wedding Day!
-            </p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-50px' }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className='w-full'
+          >
+            <div className='text-center mt-10'>
+              <p className='text-2xl md:text-3xl font-bold text-white bg-lavender-600/80 backdrop-blur-sm rounded-2xl px-8 py-4 inline-block shadow-lg'>
+                Wedding Day!
+              </p>
+            </div>
+          </motion.div>
         )}
       </div>
     </section>
