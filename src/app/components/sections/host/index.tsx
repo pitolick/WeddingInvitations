@@ -4,23 +4,22 @@
  * @since 1.0.0
  */
 
+'use client';
+
 import React from 'react';
 import { HostProfile } from './HostInfo.types';
 import Image from 'next/image';
-import { FadeIn } from '@/app/components/common/animation';
+import { motion } from 'motion/react';
 import Sun from '@/app/components/common/icon/Sun';
 
 const groom: HostProfile = {
   nameJa: '栗原 誠',
   nameEn: 'Makoto Kurihara',
-  messages: (
-    <>
-      <p>メッセージ＆プロフィール等</p>
-      <p>メッセージ＆プロフィール等</p>
-      <p>メッセージ＆プロフィール等</p>
-      <p>メッセージ＆プロフィール等</p>
-    </>
-  ),
+  messages: [
+    ['ブルズアイ', 'ティモン'],
+    ['トイ・ストーリー'],
+    ['リーチ', 'ハッピーライド'],
+  ],
   image: '/images/sections/host/host-groom.webp',
   frameLeft: '/images/sections/host/host-frame-left.webp',
 };
@@ -28,14 +27,11 @@ const groom: HostProfile = {
 const bride: HostProfile = {
   nameJa: '森下 紗伎',
   nameEn: 'Saki Morishita',
-  messages: (
-    <>
-      <p>メッセージ＆プロフィール等</p>
-      <p>メッセージ＆プロフィール等</p>
-      <p>メッセージ＆プロフィール等</p>
-      <p>メッセージ＆プロフィール等</p>
-    </>
-  ),
+  messages: [
+    ['ラプンツェル', 'ニック'],
+    ['リメンバー・ミー'],
+    ['ハモカラ', 'マメラグシアター'],
+  ],
   image: '/images/sections/host/host-bride.webp',
   frameRight: '/images/sections/host/host-frame-right.webp',
 };
@@ -57,10 +53,10 @@ const Host: React.FC = () => {
       }}
     >
       <div className='flex flex-col items-center w-full container mx-auto gap-8'>
-        <h2 className='font-berkshire text-white text-4xl md:text-5xl leading-none text-center mb-2'>
+        <h2 className='font-berkshire text-white text-4xl md:text-5xl text-center mb-2'>
           Host
         </h2>
-        <div className='flex flex-col md:flex-row justify-center items-center md:items-start gap-8 w-full'>
+        <div className='flex flex-col md:flex-row justify-center items-center md:items-start gap-8 sm:gap-2 lg:gap-8 w-full'>
           {/* Groom */}
           <ProfileCard profile={groom} />
           {/* Center Icon */}
@@ -86,11 +82,12 @@ const Host: React.FC = () => {
  * <ProfileCard profile={groomProfile} />
  */
 const ProfileCard: React.FC<{ profile: HostProfile }> = ({ profile }) => (
-  <FadeIn
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: '-50px' }}
+    transition={{ duration: 0.8, delay: 0.2 }}
     className='flex flex-col items-center px-6 gap-2'
-    delay={0.2}
-    duration={0.7}
-    direction='up'
   >
     <div className='relative flex justify-center items-center size-fit p-4'>
       <Image
@@ -122,19 +119,36 @@ const ProfileCard: React.FC<{ profile: HostProfile }> = ({ profile }) => (
       )}
     </div>
     <div className='flex flex-col items-center gap-1'>
-      <span className='text-white font-bold text-2xl leading-8 font-noto'>
+      <span className='text-white font-bold text-2xl font-noto'>
         {profile.nameJa}
       </span>
-      <span className='text-white text-sm leading-5 font-rock'>
-        {profile.nameEn}
-      </span>
+      <span className='text-white text-sm font-rock'>{profile.nameEn}</span>
     </div>
-    <div className='border-t border-b border-white flex flex-col justify-center items-center py-2 px-2 mt-2 w-full'>
-      <div className='text-white text-base leading-6 font-noto text-center'>
-        {profile.messages}
+    <div className='border-t border-b border-white flex flex-col justify-center items-center py-4 px-2 mt-2 w-full'>
+      <div className='text-white text-base font-noto text-center space-y-1.5'>
+        {profile.messages &&
+          profile.messages.map((message, index) => (
+            <div key={index} className='flex items-center gap-2'>
+              <p className='text-xl'>
+                {index === 0 && '💛'}
+                {index === 1 && '🎥'}
+                {index === 2 && '🏰'}
+              </p>
+              <ul className='flex gap-2'>
+                {message.map(word => (
+                  <li
+                    key={word}
+                    className='bg-pink-600 border border-pink-500 text-white text-sm px-2 py-1 rounded-full'
+                  >
+                    #{word}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
       </div>
     </div>
-  </FadeIn>
+  </motion.div>
 );
 
 export default Host;

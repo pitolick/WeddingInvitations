@@ -4,8 +4,11 @@
  * @since 1.0.0
  */
 
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
+import { motion } from 'motion/react';
 
 /**
  * @description メインビジュアル（MV）セクションコンポーネント
@@ -47,13 +50,20 @@ const MainVisual: React.FC = () => {
         className='absolute inset-0 flex items-center justify-center z-30'
         data-testid='main-visual-content'
       >
-        {/* メインタイトル - FigmaMCPのタイポグラフィ情報に基づく */}
-        <h1
-          className='font-great-vibes text-7xl md:text-9xl font-normal text-white leading-tight text-center drop-shadow-lg animate-[fadeIn_2s_ease-in-out] px-4 md:px-8 lg:px-12'
-          data-testid='main-visual-title'
+        {/* メインタイトル - スクロールベースのアニメーション */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.5, ease: 'easeOut' }}
+          className='w-full'
         >
-          Wedding Celebration
-        </h1>
+          <h1
+            className='font-great-vibes text-7xl md:text-9xl font-normal text-white leading-tight text-center drop-shadow-lg px-4 md:px-8 lg:px-12'
+            data-testid='main-visual-title'
+          >
+            Wedding Celebration
+          </h1>
+        </motion.div>
       </div>
 
       {/* パフォーマンス最適化のためのプリロード */}

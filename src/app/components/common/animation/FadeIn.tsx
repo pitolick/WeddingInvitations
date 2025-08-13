@@ -25,6 +25,33 @@ interface FadeInProps {
   direction?: 'up' | 'down' | 'left' | 'right';
   /** アニメーションの距離 */
   distance?: number;
+  /** 一度表示されたら再度アニメーションするかどうか */
+  triggerOnce?: boolean;
+  /** 即座に表示するかどうか（MVセクションなど用） */
+  immediateDisplay?: boolean;
+  /** viewportのマージン */
+  viewportMargin?: string;
+}
+
+/**
+ * @description Motion for Reactのmotion.divの型定義
+ * @interface MotionDivProps
+ * @since 1.0.0
+ */
+interface MotionDivProps {
+  initial: Record<string, number>;
+  whileInView: Record<string, number>;
+  viewport: {
+    once: boolean;
+    margin: string;
+  };
+  transition: {
+    duration: number;
+    delay: number;
+    ease: string;
+  };
+  className: string;
+  children: React.ReactNode;
 }
 
 /**
@@ -43,18 +70,24 @@ const FadeIn: React.FC<FadeInProps> = ({
   className = '',
   direction = 'up',
   distance = 20,
+  triggerOnce = true,
+  immediateDisplay = false,
+  viewportMargin = '0px',
 }) => {
-  const [MotionComponent, setMotionComponent] = useState<any>(null);
+  const [MotionComponent, setMotionComponent] =
+    useState<React.ComponentType<MotionDivProps> | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const loadMotion = async () => {
       try {
         const { motion } = await import('motion/react');
-        setMotionComponent(() => motion.div);
+        setMotionComponent(
+          () => motion.div as React.ComponentType<MotionDivProps>
+        );
         setIsLoaded(true);
-      } catch (error) {
-        console.error('Failed to load motion library:', error);
+      } catch {
+        // Motion library failed to load, falling back to CSS transitions
         setIsLoaded(true);
       }
     };
@@ -62,7 +95,7 @@ const FadeIn: React.FC<FadeInProps> = ({
     loadMotion();
   }, []);
 
-  const getInitialPosition = () => {
+  const getInitialPosition = (): Record<string, number> => {
     switch (direction) {
       case 'up':
         return { y: distance, opacity: 0 };
@@ -77,7 +110,7 @@ const FadeIn: React.FC<FadeInProps> = ({
     }
   };
 
-  const getAnimatePosition = () => {
+  const getAnimatePosition = (): Record<string, number> => {
     switch (direction) {
       case 'up':
       case 'down':
@@ -90,15 +123,33 @@ const FadeIn: React.FC<FadeInProps> = ({
     }
   };
 
+  // immediateDisplayがtrueの場合は、即座に表示状態にする
+  if (immediateDisplay) {
+    return <div className={className}>{children}</div>;
+  }
+
   // motionライブラリが読み込まれていない場合は、通常のdivを返す
   if (!isLoaded || !MotionComponent) {
-    return <div className={className}>{children}</div>;
+    return (
+      <div
+        className={`transition-all duration-${Math.round(
+          duration * 1000
+        )} ease-out opacity-100 ${className}`}
+        style={{
+          // 初期状態では非表示にして、Motionライブラリの準備が整ってから表示
+          visibility: isLoaded ? 'visible' : 'hidden',
+        }}
+      >
+        {children}
+      </div>
+    );
   }
 
   return (
     <MotionComponent
       initial={getInitialPosition()}
-      animate={getAnimatePosition()}
+      whileInView={getAnimatePosition()}
+      viewport={{ once: triggerOnce, margin: viewportMargin }}
       transition={{
         duration,
         delay,

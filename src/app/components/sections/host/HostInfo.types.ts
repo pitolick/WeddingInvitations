@@ -35,7 +35,7 @@ export interface HostProfile {
   /** 英語名 */
   nameEn: string;
   /** プロフィールメッセージ配列 */
-  messages: React.ReactNode;
+  messages: string[][];
   /** 画像パス */
   image: string;
   /** 花装飾画像パス（左） */

@@ -55,9 +55,9 @@ export async function getGuestByInvitationId(
       contentId: invitationId,
       queries: draftKey ? { draftKey } : undefined,
     });
+
     return data;
-  } catch (error) {
-    console.error('microCMS API error:', error);
+  } catch {
     return null;
   }
 }
@@ -78,13 +78,11 @@ export async function getDearBlockData(
     const guestContent = await getGuestByInvitationId(invitationId, draftKey);
 
     if (!guestContent) {
-      console.log('getDearBlockData undefined');
       return null;
     }
 
     return convertToDearBlockData(guestContent);
-  } catch (error) {
-    console.error('microCMS API error:', error);
+  } catch {
     return null;
   }
 }
@@ -106,8 +104,7 @@ export async function getGuests(
       queries: filters,
     });
     return data.contents;
-  } catch (error) {
-    console.error('microCMS API error:', error);
+  } catch {
     return [];
   }
 }
@@ -131,8 +128,7 @@ export async function getGuestsByInviteType(
       },
     });
     return data.contents;
-  } catch (error) {
-    console.error('microCMS API error:', error);
+  } catch {
     return [];
   }
 }
