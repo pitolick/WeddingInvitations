@@ -83,6 +83,8 @@ const Gallery: React.FC = () => {
   return (
     <section
       id='gallery'
+      role='region'
+      aria-label='ギャラリー'
       className='w-full py-0 sm:py-10 bg-gradient-to-t from-lavender-400 via-lavender-300 to-pink-300'
     >
       <div className='container m-auto'>

@@ -103,8 +103,14 @@ const rsvpSchema = z.object({
       .string()
       .min(1, '電話番号は必須です')
       .regex(/^[\d-]+$/, '電話番号は数字とハイフンのみで入力してください')
-      .min(10, '電話番号は10桁以上で入力してください')
-      .max(15, '電話番号は15桁以下で入力してください')
+      .refine(
+        val => val.replace(/-/g, '').length >= 10,
+        '電話番号は10桁以上で入力してください'
+      )
+      .refine(
+        val => val.replace(/-/g, '').length <= 15,
+        '電話番号は15桁以下で入力してください'
+      )
       .transform(val => val.replace(/-/g, '')), // ハイフンを除去して保存
     email: z.email('メールアドレスの形式が正しくありません'),
   }),
@@ -475,7 +481,7 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
   }
 
   return (
-    <>
+    <div data-testid='rsvp-client'>
       {/* サブテキスト */}
       <div className='flex flex-col items-center gap-2'>
         <p className='text-center'>
@@ -953,7 +959,7 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
           )}
         </div>
       </form>
-    </>
+    </div>
   );
 };
 

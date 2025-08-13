@@ -61,6 +61,7 @@ export const MagicEffect: React.FC<MagicEffectProps> = ({
 
   return (
     <div
+      data-testid='magic-effect'
       className={`absolute pointer-events-none ${sizeClasses[size]}`}
       style={{ left, top, transform: 'translate(-50%, -50%)' }}
     >

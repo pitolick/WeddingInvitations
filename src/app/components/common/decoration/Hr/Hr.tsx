@@ -49,6 +49,7 @@ const Hr: React.FC<HrProps> = ({
 }) => {
   return (
     <div
+      data-testid='hr'
       className={`relative flex items-center ${containerHeight} ${className}`}
       style={width ? { width: `${width}px` } : undefined}
     >

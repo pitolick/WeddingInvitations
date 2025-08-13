@@ -23,6 +23,8 @@ const RSVP: React.FC<RSVPProps> = async ({ invitationId, draftKey }) => {
   return (
     <section
       id='rsvp'
+      role='region'
+      aria-label='RSVP'
       className='flex justify-center items-start bg-cover bg-center bg-no-repeat py-16 px-5'
       style={{
         backgroundImage: "url('/images/sections/rsvp/rsvp-background.webp')",
