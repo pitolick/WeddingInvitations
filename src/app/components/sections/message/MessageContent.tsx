@@ -46,21 +46,48 @@ export const MessageContent: React.FC<MessageProps> = ({
           transition={{ duration: 0.8, delay: 0.3 }}
           className='w-full'
         >
-          <div className='text-base md:text-base  text-center text-gray-900 md:text-black whitespace-pre-line'>
-            <p>皆様いかがお過ごしでしょうか</p>
-            <br />
-            <p>このたび、結婚式を執り行うこととなりました</p>
-            <br />
+          <div className='prose prose-p:my-3 text-base md:text-base  text-center text-gray-900 md:text-black whitespace-pre-line'>
             <p>
-              日頃お世話になっております皆様に
-              <br />
-              私どもの門出をお見守りいただきたく
-              <br />
-              ささやかながら小宴を催したく存じます
+              立冬とは申せ今年はオラフも
+              <br className='block md:hidden' />
+              溶けてしまいそうな晩秋でございます
             </p>
-            <br />
-            <p>ご多用中、誠に恐縮ではございますが</p>
-            <p>ぜひご出席いただきたく、ご案内申し上げます</p>
+            <p>
+              皆様にはお健やかにお過ごしのことと
+              <br className='block md:hidden' />
+              お慶び申し上げます
+            </p>
+            <p>
+              このたび私たちは <span className='line-through'>戴冠式</span>{' '}
+              結婚式 を
+              <br className='block md:hidden' />
+              挙げることとなりました
+            </p>
+            <p>
+              つきましては親しい皆様への
+              <br className='block md:hidden' />
+              ご挨拶をかねて
+              <br />
+              心ばかりのパーティーを
+              <br className='block md:hidden' />
+              催したいと思います
+            </p>
+            <p>
+              おいそがしいところ誠に恐縮ですが
+              <br />
+              ふたりの門出を
+              <br className='block md:hidden' />
+              共に祝っていただけましたら
+              <br />
+              幸いです
+            </p>
+            <p>
+              ぜひ夢と魔法の会場へ
+              <br className='block md:hidden' />
+              ご出席くださいますよう
+              <br className='block md:hidden' />
+              ご案内申し上げます
+            </p>
           </div>
         </motion.div>
       </div>
