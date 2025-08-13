@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { MessageProps } from './Message.types';
 import DearBlock from './DearBlock';
 import Button from '@/app/components/common/button';
+import { MagicEffect } from '@/app/components/common/animation';
 
 /**
  * @description メッセージコンテンツコンポーネント（Client Component）
@@ -24,9 +25,17 @@ export const MessageContent: React.FC<MessageProps> = ({
   draftKey,
 }) => {
   const [isDream, setIsDream] = useState(false);
+  const [showMagicEffect, setShowMagicEffect] = useState(false);
 
   const handleClick = () => {
-    setIsDream(!isDream);
+    // 魔法のエフェクトを表示
+    setShowMagicEffect(true);
+
+    // 少し遅延してから文章を切り替え
+    setTimeout(() => {
+      setIsDream(!isDream);
+      setShowMagicEffect(false);
+    }, 2000);
   };
 
   return (
@@ -54,7 +63,15 @@ export const MessageContent: React.FC<MessageProps> = ({
           className='w-full'
         >
           <div className='flex flex-col items-center gap-4'>
-            <div className='prose prose-p:my-3 text-base md:text-base  text-center text-gray-900 md:text-black whitespace-pre-line'>
+            <div className='prose prose-p:my-3 text-base md:text-base  text-center text-gray-900 md:text-black whitespace-pre-line relative'>
+              {/* 魔法のエフェクト */}
+              <MagicEffect
+                isActive={showMagicEffect}
+                left='50%'
+                top='50%'
+                size='lg'
+              />
+
               <AnimatePresence mode='wait'>
                 <motion.div
                   key={isDream ? 'dream' : 'normal'}
