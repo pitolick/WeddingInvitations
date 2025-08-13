@@ -143,20 +143,30 @@ export const DEFAULT_EVENTS_DATA: EventData[] = [
     ],
     message: (
       <>
+        <p>
+          ディズニーの
+          <span className='font-bold text-base text-lavender-600'>
+            カチューシャ
+          </span>
+          や
+          <span className='font-bold text-base text-lavender-600'>
+            ファンキャップ
+          </span>
+          をお持ちの方は
+          <br />
+          ひとつ持ってくるとより楽しめます♫
+        </p>
         <p>当日は着いてから更衣室で着替えられます</p>
         <p>お荷物は受付前にクロークへ預けられます</p>
         <p>駐車場は80台（全参加者分）収容可能です</p>
         <p>
-          ロストキッズたちへ
-          <br />
+          🦊🐻🐰 <span className='font-bold text-base'>ロストキッズたちへ</span>{' '}
+          🦝🦝🦨
+        </p>
+        <p>
           会場内のキッズスペース・ベビーベッド
           <br />
           おもちゃ・お子様ランチ・ベビーチェアに授乳室もあります
-        </p>
-        <p>
-          ディズニーのカチューシャやファンキャップをお持ちの方は
-          <br />
-          ひとつ持ってくるとより楽しめます♫
         </p>
       </>
     ),
@@ -176,7 +186,7 @@ export const DEFAULT_EVENTS_DATA: EventData[] = [
     title: 'After Party',
     subtitle: '2次会',
     date: '2025.11.08 Sat',
-    time: '20:00 - 23:00（仮）',
+    time: '20:00 - 22:30',
     receptionTime: '受付時間 / 19:30',
     venue: [
       {
@@ -222,7 +232,11 @@ export const DEFAULT_EVENTS_DATA: EventData[] = [
           <br />
           立食ビュッフェをお楽しみください
         </p>
-        <p>新郎新婦とのシャッターチャンスはここ！</p>
+        <p>
+          新郎新婦との
+          <span className='font-bold text-base'>シャッターチャンス</span>
+          はここ！
+        </p>
       </>
     ),
     mapUrl:

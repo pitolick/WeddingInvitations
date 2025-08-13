@@ -86,7 +86,9 @@ export const MessageContent: React.FC<MessageProps> = ({
                       <p>
                         立冬とは申せ今年はオラフも
                         <br className='block md:hidden' />
-                        溶けてしまいそうな晩秋でございます
+                        溶けてしまいそうな
+                        <br className='block md:hidden' />
+                        晩秋でございます⛄️
                       </p>
                       <p>
                         皆様にはお健やかにお過ごしのことと
@@ -95,9 +97,9 @@ export const MessageContent: React.FC<MessageProps> = ({
                       </p>
                       <p>
                         このたび私たちは{' '}
-                        <span className='line-through'>戴冠式</span> 結婚式 を
+                        <span className='line-through'>戴冠式👑</span> 結婚式 を
                         <br className='block md:hidden' />
-                        挙げることとなりました
+                        挙げることとなりました👰🤵
                       </p>
                       <p>
                         つきましては親しい皆様への
@@ -106,7 +108,7 @@ export const MessageContent: React.FC<MessageProps> = ({
                         <br />
                         心ばかりのパーティーを
                         <br className='block md:hidden' />
-                        催したいと思います
+                        催したいと思います🎉
                       </p>
                       <p>
                         おいそがしいところ誠に恐縮ですが
@@ -122,7 +124,7 @@ export const MessageContent: React.FC<MessageProps> = ({
                         <br className='block md:hidden' />
                         ご出席くださいますよう
                         <br className='block md:hidden' />
-                        ご案内申し上げます
+                        ご案内申し上げます✨✨
                       </p>
                     </>
                   ) : (
@@ -140,11 +142,11 @@ export const MessageContent: React.FC<MessageProps> = ({
                       <p>
                         『なんでもない日おめーでーとー！🐰』
                         <br />
-                        『さぁみんなティーパーティを始めよう！🍵』
+                        『さぁみんなティーパーティを始めよう！♠️』
                         <br />
-                        『特別な日をみんなーでお祝いしよう！🎉』
+                        『特別な日をみんなーでお祝いしよう！❄️』
                         <br />
-                        『いつも本当にありがとー！💛』
+                        『いつも本当にありがとー！🫎』
                       </p>
                       <p>
                         『夢と魔法の王国のお祝いが始まるよ！ﾊﾊｯ🐭』
