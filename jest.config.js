@@ -16,7 +16,7 @@ const customJestConfig = {
     '**/__tests__/**/*.(ts|tsx|js)',
     '**/*.(test|spec).(ts|tsx|js)',
     '!**/__tests__/disabled/**/*.(ts|tsx|js)',
-    '!**/api/**/*.(ts|tsx|js)', // API Routeテストを一時的に除外
+    '!**/app/api/**/*.(ts|tsx|js)', // API Routeテストのみ除外
   ],
 
   // モジュール名マッピング
@@ -37,6 +37,7 @@ const customJestConfig = {
     '!src/app/page.tsx',
     '!src/app/lib/constants/index.ts',
     '!src/app/lib/types/index.ts',
+    '!src/app/api/**/*.{ts,tsx}', // API Routeは一時的に除外
   ],
 
   // カバレッジレポート設定

@@ -15,6 +15,17 @@ describe('Checkbox Component', () => {
     name: 'test-checkbox',
   };
 
+  const defaultGroupProps = {
+    values: [],
+    options: [
+      { value: 'option1', label: 'オプション1' },
+      { value: 'option2', label: 'オプション2', description: '説明文' },
+      { value: 'option3', label: 'オプション3', disabled: true },
+    ],
+    onChange: jest.fn(),
+    name: 'test-group',
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -340,5 +351,262 @@ describe('Checkbox Component', () => {
       'text-gray-900',
       'cursor-pointer'
     );
+  });
+
+  /**
+   * @description CheckboxGroupコンポーネントが正しくレンダリングされる
+   */
+  it('renders CheckboxGroup component correctly', () => {
+    render(<Checkbox {...defaultGroupProps} />);
+
+    const checkboxes = screen.getAllByRole('checkbox');
+    expect(checkboxes).toHaveLength(3);
+    expect(screen.getByText('オプション1')).toBeInTheDocument();
+    expect(screen.getByText('オプション2')).toBeInTheDocument();
+    expect(screen.getByText('オプション3')).toBeInTheDocument();
+  });
+
+  /**
+   * @description CheckboxGroupのラベルが正しく表示される
+   */
+  it('displays CheckboxGroup label correctly', () => {
+    render(<Checkbox {...defaultGroupProps} label='グループラベル' />);
+
+    expect(screen.getByText('グループラベル')).toBeInTheDocument();
+    expect(screen.getByText('グループラベル')).toHaveClass(
+      'block',
+      'font-noto',
+      'text-sm',
+      'font-medium',
+      'text-gray-700'
+    );
+  });
+
+  /**
+   * @description CheckboxGroupの必須項目表示が正しい
+   */
+  it('shows CheckboxGroup required field correctly', () => {
+    render(<Checkbox {...defaultGroupProps} label='グループラベル' required />);
+
+    const label = screen.getByText('グループラベル');
+    expect(label).toHaveTextContent('グループラベル*');
+  });
+
+  /**
+   * @description CheckboxGroupのオプション説明が正しく表示される
+   */
+  it('displays option descriptions correctly', () => {
+    render(<Checkbox {...defaultGroupProps} />);
+
+    expect(screen.getByText('説明文')).toBeInTheDocument();
+    expect(screen.getByText('説明文')).toHaveClass(
+      'font-noto',
+      'text-xs',
+      'text-gray-500'
+    );
+  });
+
+  /**
+   * @description CheckboxGroupの無効オプションが正しく処理される
+   */
+  it('handles disabled options correctly', () => {
+    render(<Checkbox {...defaultGroupProps} />);
+
+    const disabledCheckbox = screen.getByDisplayValue('option3');
+    expect(disabledCheckbox).toBeDisabled();
+
+    const disabledLabel = screen.getByText('オプション3');
+    expect(disabledLabel).toHaveClass('text-gray-400', 'cursor-not-allowed');
+  });
+
+  /**
+   * @description CheckboxGroupの選択状態が正しく管理される
+   */
+  it('manages selection state correctly', () => {
+    const handleChange = jest.fn();
+    render(
+      <Checkbox
+        {...defaultGroupProps}
+        values={['option1']}
+        onChange={handleChange}
+      />
+    );
+
+    const option1Checkbox = screen.getByDisplayValue('option1');
+    const option2Checkbox = screen.getByDisplayValue('option2');
+
+    expect(option1Checkbox).toBeChecked();
+    expect(option2Checkbox).not.toBeChecked();
+
+    // オプション2を選択
+    fireEvent.click(option2Checkbox);
+    expect(handleChange).toHaveBeenCalledWith(['option1', 'option2']);
+
+    // オプション1の選択を解除
+    fireEvent.click(option1Checkbox);
+    expect(handleChange).toHaveBeenCalledWith([]);
+  });
+
+  /**
+   * @description CheckboxGroupのグループ全体が無効化される
+   */
+  it('disables entire group when disabled', () => {
+    render(<Checkbox {...defaultGroupProps} disabled />);
+
+    const checkboxes = screen.getAllByRole('checkbox');
+    checkboxes.forEach(checkbox => {
+      expect(checkbox).toBeDisabled();
+    });
+
+    const labels = screen.getAllByText(/オプション/);
+    labels.forEach(label => {
+      expect(label).toHaveClass('text-gray-400', 'cursor-not-allowed');
+    });
+  });
+
+  /**
+   * @description CheckboxGroupの水平レイアウトが正しく適用される
+   */
+  it('applies horizontal layout correctly', () => {
+    render(<Checkbox {...defaultGroupProps} layout='horizontal' />);
+
+    const container = screen.getByRole('group');
+    expect(container).toHaveClass('flex', 'flex-row', 'gap-4');
+  });
+
+  /**
+   * @description CheckboxGroupの垂直レイアウトが正しく適用される
+   */
+  it('applies vertical layout correctly', () => {
+    render(<Checkbox {...defaultGroupProps} layout='vertical' />);
+
+    const container = screen.getByRole('group');
+    expect(container).toHaveClass('space-y-2');
+  });
+
+  /**
+   * @description CheckboxGroupのエラーメッセージが正しく表示される
+   */
+  it('displays CheckboxGroup error message correctly', () => {
+    render(<Checkbox {...defaultGroupProps} error='グループエラー' />);
+
+    const errorMessage = screen.getByText('グループエラー');
+    expect(errorMessage).toBeInTheDocument();
+    expect(errorMessage).toHaveClass('font-noto', 'text-sm', 'text-pink-600');
+    expect(errorMessage).toHaveAttribute('role', 'alert');
+  });
+
+  /**
+   * @description CheckboxGroupのアクセシビリティ属性が正しく設定される
+   */
+  it('has correct CheckboxGroup accessibility attributes', () => {
+    render(
+      <Checkbox {...defaultGroupProps} label='グループラベル' error='エラー' />
+    );
+
+    const group = screen.getByRole('group');
+    expect(group).toHaveAttribute('aria-labelledby');
+    expect(group).toHaveAttribute('aria-describedby');
+
+    // 説明文があるオプションのみaria-describedbyが設定される
+    const option2Checkbox = screen.getByDisplayValue('option2');
+    expect(option2Checkbox).toHaveAttribute('aria-describedby');
+
+    // 説明文がないオプションはaria-describedbyが設定されない
+    const option1Checkbox = screen.getByDisplayValue('option1');
+    expect(option1Checkbox).not.toHaveAttribute('aria-describedby');
+  });
+
+  /**
+   * @description CheckboxGroupのカスタムクラス名が正しく適用される
+   */
+  it('applies custom className to CheckboxGroup correctly', () => {
+    render(<Checkbox {...defaultGroupProps} className='custom-group-class' />);
+
+    // 外側のコンテナを取得（space-y-3とカスタムクラスが適用される要素）
+    const container = screen.getByRole('group').parentElement;
+    expect(container).toHaveClass('space-y-3', 'custom-group-class');
+  });
+
+  /**
+   * @description CheckboxGroupの動的な値変更が正しく反映される
+   */
+  it('reflects dynamic value changes correctly', () => {
+    const { rerender } = render(
+      <Checkbox {...defaultGroupProps} values={[]} onChange={jest.fn()} />
+    );
+
+    // 初期状態
+    let option1Checkbox = screen.getByDisplayValue('option1');
+    expect(option1Checkbox).not.toBeChecked();
+
+    // 値を変更
+    rerender(
+      <Checkbox
+        {...defaultGroupProps}
+        values={['option1']}
+        onChange={jest.fn()}
+      />
+    );
+    option1Checkbox = screen.getByDisplayValue('option1');
+    expect(option1Checkbox).toBeChecked();
+
+    // エラー状態を追加
+    rerender(
+      <Checkbox
+        {...defaultGroupProps}
+        values={['option1']}
+        error='エラー'
+        onChange={jest.fn()}
+      />
+    );
+    expect(screen.getByText('エラー')).toBeInTheDocument();
+  });
+
+  /**
+   * @description CheckboxGroupのオプション追加・削除が正しく処理される
+   */
+  it('handles option addition and removal correctly', () => {
+    const handleChange = jest.fn();
+    render(
+      <Checkbox
+        {...defaultGroupProps}
+        values={['option1']}
+        onChange={handleChange}
+      />
+    );
+
+    // オプション2を追加
+    const option2Checkbox = screen.getByDisplayValue('option2');
+    fireEvent.click(option2Checkbox);
+    expect(handleChange).toHaveBeenCalledWith(['option1', 'option2']);
+
+    // オプション1を削除
+    const option1Checkbox = screen.getByDisplayValue('option1');
+    fireEvent.click(option1Checkbox);
+    expect(handleChange).toHaveBeenCalledWith([]);
+  });
+
+  /**
+   * @description CheckboxGroupの無効オプションの説明文スタイリングが正しい
+   */
+  it('has correct disabled option description styling', () => {
+    render(<Checkbox {...defaultGroupProps} disabled />);
+
+    const description = screen.getByText('説明文');
+    expect(description).toHaveClass('text-gray-400');
+  });
+
+  /**
+   * @description CheckboxGroupのオプション説明のIDが正しく設定される
+   */
+  it('has correct option description IDs', () => {
+    render(<Checkbox {...defaultGroupProps} />);
+
+    const option2Checkbox = screen.getByDisplayValue('option2');
+    const description = screen.getByText('説明文');
+
+    expect(option2Checkbox).toHaveAttribute('aria-describedby');
+    expect(description).toHaveAttribute('id');
   });
 });
