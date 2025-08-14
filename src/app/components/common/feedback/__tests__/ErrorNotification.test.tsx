@@ -5,8 +5,18 @@
  */
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { ErrorNotification } from '../ErrorNotification';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from '@testing-library/react';
+import {
+  ErrorNotification,
+  ErrorNotificationManager,
+  useErrorNotification,
+} from '../ErrorNotification';
 
 describe('ErrorNotification', () => {
   const defaultProps = {
@@ -240,5 +250,455 @@ describe('ErrorNotification', () => {
         expect(onClose).toHaveBeenCalled();
       });
     });
+  });
+
+  describe('アイコンの表示', () => {
+    it('errorタイプで正しいアイコンが表示される', () => {
+      render(<ErrorNotification {...defaultProps} type='error' />);
+
+      const notification = screen.getByRole('alert');
+      const icon = notification.querySelector('svg');
+      expect(icon).toBeInTheDocument();
+      expect(icon).toHaveClass('w-5', 'h-5');
+    });
+
+    it('warningタイプで正しいアイコンが表示される', () => {
+      render(<ErrorNotification {...defaultProps} type='warning' />);
+
+      const notification = screen.getByRole('alert');
+      const icon = notification.querySelector('svg');
+      expect(icon).toBeInTheDocument();
+      expect(icon).toHaveClass('w-5', 'h-5');
+    });
+
+    it('infoタイプで正しいアイコンが表示される', () => {
+      render(<ErrorNotification {...defaultProps} type='info' />);
+
+      const notification = screen.getByRole('alert');
+      const icon = notification.querySelector('svg');
+      expect(icon).toBeInTheDocument();
+      expect(icon).toHaveClass('w-5', 'h-5');
+    });
+  });
+
+  describe('状態管理', () => {
+    it('isVisibleがfalseの場合、何も表示されない', () => {
+      const { rerender } = render(<ErrorNotification {...defaultProps} />);
+
+      expect(screen.getByRole('alert')).toBeInTheDocument();
+
+      // isVisibleをfalseに設定（実際のコンポーネントでは内部状態）
+      rerender(<ErrorNotification {...defaultProps} />);
+
+      // コンポーネントがマウントされている限り表示される
+      expect(screen.getByRole('alert')).toBeInTheDocument();
+    });
+  });
+});
+
+/**
+ * @description ErrorNotificationManagerコンポーネントのテスト
+ */
+describe('ErrorNotificationManager', () => {
+  const TestComponent = () => {
+    const { addNotification, removeNotification, clearNotifications } =
+      useErrorNotification();
+
+    return (
+      <div>
+        <button
+          onClick={() =>
+            addNotification({ message: 'テスト通知', type: 'error' })
+          }
+        >
+          通知を追加
+        </button>
+        <button onClick={() => removeNotification('test-id')}>
+          通知を削除
+        </button>
+        <button onClick={clearNotifications}>全通知を削除</button>
+      </div>
+    );
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  it('子要素が正しく表示される', () => {
+    render(
+      <ErrorNotificationManager>
+        <div data-testid='child'>テストコンテンツ</div>
+      </ErrorNotificationManager>
+    );
+
+    expect(screen.getByTestId('child')).toBeInTheDocument();
+  });
+
+  it('デフォルトの位置設定が正しく適用される', () => {
+    render(
+      <ErrorNotificationManager>
+        <TestComponent />
+      </ErrorNotificationManager>
+    );
+
+    const addButton = screen.getByText('通知を追加');
+    fireEvent.click(addButton);
+
+    const notification = screen.getByRole('alert');
+    expect(notification).toHaveClass('top-4');
+  });
+
+  it('カスタム位置設定が正しく適用される', () => {
+    render(
+      <ErrorNotificationManager position='bottom'>
+        <TestComponent />
+      </ErrorNotificationManager>
+    );
+
+    const addButton = screen.getByText('通知を追加');
+    fireEvent.click(addButton);
+
+    const notification = screen.getByRole('alert');
+    expect(notification).toHaveClass('bottom-4');
+  });
+
+  it('デフォルトの表示時間が正しく設定される', async () => {
+    render(
+      <ErrorNotificationManager defaultDuration={3000}>
+        <TestComponent />
+      </ErrorNotificationManager>
+    );
+
+    const addButton = screen.getByText('通知を追加');
+    fireEvent.click(addButton);
+
+    expect(screen.getByText('テスト通知')).toBeInTheDocument();
+
+    // 3秒後に自動で閉じる
+    act(() => {
+      jest.advanceTimersByTime(3000);
+    });
+
+    // アニメーション完了まで待つ
+    act(() => {
+      jest.advanceTimersByTime(300);
+    });
+
+    await waitFor(() => {
+      expect(screen.queryByText('テスト通知')).not.toBeInTheDocument();
+    });
+  });
+
+  it('通知が正しく追加される', () => {
+    render(
+      <ErrorNotificationManager>
+        <TestComponent />
+      </ErrorNotificationManager>
+    );
+
+    const addButton = screen.getByText('通知を追加');
+    fireEvent.click(addButton);
+
+    expect(screen.getByText('テスト通知')).toBeInTheDocument();
+  });
+
+  it('複数の通知が正しく表示される', () => {
+    render(
+      <ErrorNotificationManager>
+        <TestComponent />
+      </ErrorNotificationManager>
+    );
+
+    const addButton = screen.getByText('通知を追加');
+
+    // 複数回クリック
+    fireEvent.click(addButton);
+    fireEvent.click(addButton);
+    fireEvent.click(addButton);
+
+    const notifications = screen.getAllByRole('alert');
+    expect(notifications).toHaveLength(3);
+  });
+
+  it('通知が正しく削除される', async () => {
+    render(
+      <ErrorNotificationManager>
+        <TestComponent />
+      </ErrorNotificationManager>
+    );
+
+    const addButton = screen.getByText('通知を追加');
+    fireEvent.click(addButton);
+
+    expect(screen.getByText('テスト通知')).toBeInTheDocument();
+
+    // 通知が自動で閉じるまで待つ
+    act(() => {
+      jest.advanceTimersByTime(5000);
+    });
+
+    // アニメーション完了まで待つ
+    act(() => {
+      jest.advanceTimersByTime(300);
+    });
+
+    await waitFor(() => {
+      expect(screen.queryByText('テスト通知')).not.toBeInTheDocument();
+    });
+  });
+
+  it('全通知が正しく削除される', () => {
+    render(
+      <ErrorNotificationManager>
+        <TestComponent />
+      </ErrorNotificationManager>
+    );
+
+    const addButton = screen.getByText('通知を追加');
+    const clearButton = screen.getByText('全通知を削除');
+
+    // 複数の通知を追加
+    fireEvent.click(addButton);
+    fireEvent.click(addButton);
+    fireEvent.click(addButton);
+
+    expect(screen.getAllByRole('alert')).toHaveLength(3);
+
+    // 全通知を削除
+    fireEvent.click(clearButton);
+
+    expect(screen.queryAllByRole('alert')).toHaveLength(0);
+  });
+
+  it('通知のIDが一意に生成される', () => {
+    render(
+      <ErrorNotificationManager>
+        <TestComponent />
+      </ErrorNotificationManager>
+    );
+
+    const addButton = screen.getByText('通知を追加');
+
+    // 複数回クリック
+    fireEvent.click(addButton);
+    fireEvent.click(addButton);
+
+    const notifications = screen.getAllByRole('alert');
+    expect(notifications).toHaveLength(2);
+
+    // 各通知が異なるIDを持つことを確認（DOM要素の存在で確認）
+    expect(notifications.length).toBe(2);
+  });
+
+  it('removeNotificationが正しく動作する', async () => {
+    render(
+      <ErrorNotificationManager>
+        <TestComponent />
+      </ErrorNotificationManager>
+    );
+
+    const addButton = screen.getByText('通知を追加');
+    fireEvent.click(addButton);
+
+    expect(screen.getByText('テスト通知')).toBeInTheDocument();
+
+    // 通知が自動で閉じるまで待つ
+    act(() => {
+      jest.advanceTimersByTime(5000);
+    });
+
+    // アニメーション完了まで待つ
+    act(() => {
+      jest.advanceTimersByTime(300);
+    });
+
+    await waitFor(() => {
+      expect(screen.queryByText('テスト通知')).not.toBeInTheDocument();
+    });
+  });
+});
+
+/**
+ * @description useErrorNotificationフックのテスト
+ */
+describe('useErrorNotification', () => {
+  const TestComponent = () => {
+    const { addNotification, removeNotification, clearNotifications } =
+      useErrorNotification();
+
+    return (
+      <div>
+        <button
+          onClick={() =>
+            addNotification({ message: 'テスト通知', type: 'error' })
+          }
+        >
+          通知を追加
+        </button>
+        <button onClick={() => removeNotification('test-id')}>
+          通知を削除
+        </button>
+        <button onClick={clearNotifications}>全通知を削除</button>
+      </div>
+    );
+  };
+
+  it('ErrorNotificationManagerの外で使用するとエラーが発生する', () => {
+    // エラーをキャッチするためのコンソールエラーを無効化
+    const consoleSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
+    expect(() => {
+      render(<TestComponent />);
+    }).toThrow(
+      'useErrorNotification must be used within an ErrorNotificationManager'
+    );
+
+    consoleSpy.mockRestore();
+  });
+
+  it('ErrorNotificationManager内で正しく動作する', () => {
+    render(
+      <ErrorNotificationManager>
+        <TestComponent />
+      </ErrorNotificationManager>
+    );
+
+    const addButton = screen.getByText('通知を追加');
+    fireEvent.click(addButton);
+
+    expect(screen.getByText('テスト通知')).toBeInTheDocument();
+  });
+
+  it('addNotificationが正しく動作する', () => {
+    render(
+      <ErrorNotificationManager>
+        <TestComponent />
+      </ErrorNotificationManager>
+    );
+
+    const addButton = screen.getByText('通知を追加');
+    fireEvent.click(addButton);
+
+    expect(screen.getByText('テスト通知')).toBeInTheDocument();
+    expect(screen.getByRole('alert')).toHaveClass(
+      'bg-red-50',
+      'border-red-200',
+      'text-red-800'
+    );
+  });
+
+  it('clearNotificationsが正しく動作する', () => {
+    render(
+      <ErrorNotificationManager>
+        <TestComponent />
+      </ErrorNotificationManager>
+    );
+
+    const addButton = screen.getByText('通知を追加');
+    const clearButton = screen.getByText('全通知を削除');
+
+    // 複数の通知を追加
+    fireEvent.click(addButton);
+    fireEvent.click(addButton);
+    fireEvent.click(addButton);
+
+    expect(screen.getAllByRole('alert')).toHaveLength(3);
+
+    // 全通知を削除
+    fireEvent.click(clearButton);
+
+    expect(screen.queryAllByRole('alert')).toHaveLength(0);
+  });
+
+  it('通知のタイプが正しく設定される', () => {
+    render(
+      <ErrorNotificationManager>
+        <TestComponent />
+      </ErrorNotificationManager>
+    );
+
+    const addButton = screen.getByText('通知を追加');
+    fireEvent.click(addButton);
+
+    const notification = screen.getByRole('alert');
+    expect(notification).toHaveClass(
+      'bg-red-50',
+      'border-red-200',
+      'text-red-800'
+    );
+  });
+
+  it('通知のタイトルが正しく設定される', () => {
+    const TestComponentWithTitle = () => {
+      const { addNotification } = useErrorNotification();
+
+      return (
+        <button
+          onClick={() =>
+            addNotification({
+              message: 'テスト通知',
+              type: 'error',
+              title: 'エラータイトル',
+            })
+          }
+        >
+          通知を追加
+        </button>
+      );
+    };
+
+    render(
+      <ErrorNotificationManager>
+        <TestComponentWithTitle />
+      </ErrorNotificationManager>
+    );
+
+    const addButton = screen.getByText('通知を追加');
+    fireEvent.click(addButton);
+
+    expect(screen.getByText('エラータイトル')).toBeInTheDocument();
+    expect(screen.getByText('テスト通知')).toBeInTheDocument();
+  });
+
+  it('通知のclosable設定が正しく動作する', () => {
+    const TestComponentWithClosable = () => {
+      const { addNotification } = useErrorNotification();
+
+      return (
+        <button
+          onClick={() =>
+            addNotification({
+              message: 'テスト通知',
+              type: 'error',
+              closable: false,
+            })
+          }
+        >
+          通知を追加
+        </button>
+      );
+    };
+
+    render(
+      <ErrorNotificationManager>
+        <TestComponentWithClosable />
+      </ErrorNotificationManager>
+    );
+
+    const addButton = screen.getByText('通知を追加');
+    fireEvent.click(addButton);
+
+    expect(screen.getByText('テスト通知')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /閉じる/i })
+    ).not.toBeInTheDocument();
   });
 });

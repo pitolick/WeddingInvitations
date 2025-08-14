@@ -437,7 +437,10 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
   // 送信完了時の表示
   if (submitSuccess || hasSubmitted) {
     return (
-      <div className='w-full max-w-2xl mx-auto text-center space-y-6'>
+      <div
+        className='w-full max-w-2xl mx-auto text-center space-y-6'
+        data-testid='submission-complete'
+      >
         <div className='p-8'>
           <div className='mb-4'>
             <svg
@@ -471,6 +474,7 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
               variant='primary'
               size='md'
               onClick={handleResubmit}
+              data-testid='resubmit-button'
             >
               再回答する
             </Button>
@@ -505,7 +509,7 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
         <input type='hidden' {...form.register('name')} />
 
         {/* 連絡先情報 */}
-        <div className='space-y-4'>
+        <div className='space-y-4' data-testid='contact-info-section'>
           <h3 className='text-xl font-semibold text-gray-900 border-b border-gray-200 pb-2'>
             連絡先
           </h3>
@@ -597,7 +601,10 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
         {attendeeFields.map((attendee, index) => (
           <Fragment key={attendee.id}>
             <Hr />
-            <div className='space-y-4'>
+            <div
+              className='space-y-4'
+              data-testid={`attendee-section-${index}`}
+            >
               {/* 出席者の隠しフィールド */}
               <input
                 type='hidden'
@@ -623,6 +630,7 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
                       variant='danger'
                       size='sm'
                       onClick={() => handleRemoveAttendee(index)}
+                      data-testid={`remove-attendee-${index}`}
                     >
                       削除
                     </Button>
@@ -879,13 +887,17 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
         ))}
 
         {/* お連れ様追加ボタン */}
-        <div className='flex flex-col items-center justify-center gap-2'>
+        <div
+          className='flex flex-col items-center justify-center gap-2'
+          data-testid='add-companion-section'
+        >
           <Button
             type='button'
             variant='secondary'
             size='lg'
             onClick={handleAddAttendee}
             disabled={isSubmitting}
+            data-testid='add-companion-button'
           >
             + お連れ様を追加
           </Button>
@@ -914,13 +926,17 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
         />
 
         {/* 送信ボタン */}
-        <div className='flex flex-col items-center gap-4 mt-6'>
+        <div
+          className='flex flex-col items-center gap-4 mt-6'
+          data-testid='submit-section'
+        >
           <Button
             type='submit'
             variant='primary'
             size='lg'
             className='w-full md:max-w-md mx-auto'
             disabled={isSubmitting}
+            data-testid='submit-button'
           >
             {isSubmitting ? (
               <div className='flex items-center justify-center gap-2'>
@@ -953,7 +969,10 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
 
           {/* エラーメッセージ */}
           {submitError && (
-            <div className='w-full md:max-w-md mx-auto p-4 bg-red-50 border border-red-200 rounded-lg text-center'>
+            <div
+              className='w-full md:max-w-md mx-auto p-4 bg-red-50 border border-red-200 rounded-lg text-center'
+              data-testid='submit-error'
+            >
               <p className='text-red-700 text-sm'>{submitError}</p>
             </div>
           )}
