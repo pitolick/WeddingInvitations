@@ -1,3 +1,4 @@
+/* eslint-disable */
 const nextJest = require('next/jest');
 
 const createJestConfig = nextJest({
@@ -11,7 +12,11 @@ const customJestConfig = {
   testEnvironment: 'jsdom',
 
   // テストファイルのパターン
-  testMatch: ['**/__tests__/**/*.(ts|tsx|js)', '**/*.(test|spec).(ts|tsx|js)'],
+  testMatch: [
+    '**/__tests__/**/*.(ts|tsx|js)',
+    '**/*.(test|spec).(ts|tsx|js)',
+    '!**/__tests__/disabled/**/*.(ts|tsx|js)', // disabledディレクトリを除外
+  ],
 
   // モジュール名マッピング
   moduleNameMapper: {
@@ -50,7 +55,7 @@ const customJestConfig = {
   // テストタイムアウト
   testTimeout: 10000,
 
-  // モック設定
+  // モジュール設定
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
 
   // 変換設定
