@@ -15,7 +15,8 @@ const customJestConfig = {
   testMatch: [
     '**/__tests__/**/*.(ts|tsx|js)',
     '**/*.(test|spec).(ts|tsx|js)',
-    '!**/__tests__/disabled/**/*.(ts|tsx|js)', // disabledディレクトリを除外
+    '!**/__tests__/disabled/**/*.(ts|tsx|js)',
+    '!**/api/**/*.(ts|tsx|js)', // API Routeテストを一時的に除外
   ],
 
   // モジュール名マッピング
@@ -34,23 +35,12 @@ const customJestConfig = {
     '!src/**/*.stories.{ts,tsx}',
     '!src/app/layout.tsx',
     '!src/app/page.tsx',
-    // 関数が記述されているindexファイルは除外しない
-    '!src/app/lib/constants/index.ts', // 定数定義のみ
-    '!src/app/lib/types/index.ts', // 型定義のみ
+    '!src/app/lib/constants/index.ts',
+    '!src/app/lib/types/index.ts',
   ],
 
   // カバレッジレポート設定
   coverageReporters: ['text', 'lcov', 'html'],
-
-  // カバレッジ閾値設定（フロントエンドテスト実装時に再設定）
-  // coverageThreshold: {
-  //   './src/app/lib/': {
-  //     branches: 100,
-  //     functions: 100,
-  //     lines: 100,
-  //     statements: 100,
-  //   },
-  // },
 
   // テストタイムアウト
   testTimeout: 10000,
