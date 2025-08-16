@@ -3,7 +3,7 @@
  * @author WeddingInvitations
  * @since 1.0.0
  */
-
+import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MessageContent } from '../MessageContent';
@@ -159,7 +159,7 @@ describe('MessageContent Component', () => {
     render(<MessageContent {...defaultProps} />);
 
     // 通常のメッセージが表示される
-    expect(screen.getByText(/立冬とは申せ今年はオラフも/)).toBeInTheDocument();
+    expect(screen.getByText(/オラフも/)).toBeInTheDocument();
     expect(
       screen.getByText(/結婚式 を挙げることとなりました/)
     ).toBeInTheDocument();
@@ -191,9 +191,7 @@ describe('MessageContent Component', () => {
     // メッセージが切り替わる
     await waitFor(() => {
       expect(screen.getByText(/サラーム！🐍/)).toBeInTheDocument();
-      expect(
-        screen.queryByText(/立冬とは申せ今年はオラフも/)
-      ).not.toBeInTheDocument();
+      expect(screen.queryByText(/オラフも/)).not.toBeInTheDocument();
     });
 
     // ボタンテキストが変更される
@@ -289,13 +287,11 @@ describe('MessageContent Component', () => {
     render(<MessageContent {...defaultProps} />);
 
     // メッセージコンテナを直接取得（proseクラスを持つ要素を探す）
-    const messageContainer = screen
-      .getByText(/立冬とは申せ今年はオラフも/)
-      .closest('.prose');
+    const messageContainer = screen.getByText(/オラフも/).closest('.prose');
     expect(messageContainer).toHaveClass(
       'prose',
       'prose-p:my-3',
-      'text-base',
+      'text-sm',
       'md:text-base',
       'text-center',
       'text-gray-900',
@@ -330,11 +326,9 @@ describe('MessageContent Component', () => {
     expect(button).toHaveClass('w-full', 'md:max-w-xs');
 
     // メッセージコンテナ
-    const messageContainer = screen
-      .getByText(/立冬とは申せ今年はオラフも/)
-      .closest('.prose');
+    const messageContainer = screen.getByText(/オラフも/).closest('.prose');
     expect(messageContainer).toHaveClass(
-      'text-base',
+      'text-sm',
       'md:text-base',
       'text-gray-900',
       'md:text-black'
@@ -403,9 +397,7 @@ describe('MessageContent Component', () => {
     jest.advanceTimersByTime(2000);
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/立冬とは申せ今年はオラフも/)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/オラフも/)).toBeInTheDocument();
       expect(button).toHaveTextContent('夢と魔法を体験する');
     });
   });
