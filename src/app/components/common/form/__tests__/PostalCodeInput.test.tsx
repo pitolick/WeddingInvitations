@@ -5,7 +5,7 @@
  */
 
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import PostalCodeInput from '../PostalCodeInput';
 
 // fetch APIのモック
@@ -460,5 +460,147 @@ describe('PostalCodeInput Component', () => {
     // 数字とハイフンのみ
     fireEvent.change(input, { target: { value: '123-4567' } });
     expect(handleChange).toHaveBeenCalledWith('123-4567');
+  });
+
+  /**
+   * @description 未カバレッジケースのテスト
+   */
+  describe('Uncovered Cases', () => {
+    beforeEach(() => {
+      // fetch APIをモック
+      global.fetch = jest.fn();
+    });
+
+    it('does not search address for invalid postal code', async () => {
+      const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
+      const onAddressChange = jest.fn();
+      
+      render(<PostalCodeInput {...defaultProps} onAddressChange={onAddressChange} />);
+
+      const input = screen.getByRole('textbox');
+      
+      // 無効な郵便番号を入力（validatePostalCodeがfalseを返すケース）
+      fireEvent.change(input, { target: { value: '12' } }); // 短すぎる
+      
+      // 少し待機してもfetchが呼ばれないことを確認
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      expect(mockFetch).not.toHaveBeenCalled();
+      expect(onAddressChange).not.toHaveBeenCalled();
+    });
+
+    it('handles API response with data wrapper', async () => {
+      const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          data: {
+            addresses: [
+              {
+                pref_name: '東京都',
+                city_name: '渋谷区',
+                town_name: '渋谷',
+              },
+            ],
+          },
+        }),
+      } as Response);
+
+      const onAddressChange = jest.fn();
+      
+      render(<PostalCodeInput {...defaultProps} onAddressChange={onAddressChange} />);
+
+      const input = screen.getByRole('textbox');
+      
+      // 有効な郵便番号を入力
+      fireEvent.change(input, { target: { value: '150-0002' } });
+      
+      // 住所変更コールバックが呼ばれることを確認
+      await waitFor(() => {
+        expect(onAddressChange).toHaveBeenCalledWith({
+          prefecture: '東京都',
+          address: '東京都渋谷区渋谷',
+        });
+      });
+    });
+
+    it('shows error when no addresses found in response', async () => {
+      const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          addresses: [], // 空の配列
+        }),
+      } as Response);
+
+      const onAddressChange = jest.fn();
+      
+      render(<PostalCodeInput {...defaultProps} onAddressChange={onAddressChange} />);
+
+      const input = screen.getByRole('textbox');
+      
+      // 有効な郵便番号を入力
+      fireEvent.change(input, { target: { value: '999-9999' } });
+      
+      // エラーメッセージが表示されることを確認
+      await waitFor(() => {
+        expect(screen.getByText('該当する住所が見つかりませんでした')).toBeInTheDocument();
+      });
+
+      expect(onAddressChange).not.toHaveBeenCalled();
+    });
+
+    it('shows error when addresses property is null', async () => {
+      const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          addresses: null, // null
+        }),
+      } as Response);
+
+      const onAddressChange = jest.fn();
+      
+      render(<PostalCodeInput {...defaultProps} onAddressChange={onAddressChange} />);
+
+      const input = screen.getByRole('textbox');
+      
+      // 有効な郵便番号を入力
+      fireEvent.change(input, { target: { value: '999-9999' } });
+      
+      // エラーメッセージが表示されることを確認
+      await waitFor(() => {
+        expect(screen.getByText('該当する住所が見つかりませんでした')).toBeInTheDocument();
+      });
+
+      expect(onAddressChange).not.toHaveBeenCalled();
+    });
+
+    it('shows error when response has no addresses property', async () => {
+      const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          // addresses プロパティがない
+          results: null,
+        }),
+      } as Response);
+
+      const onAddressChange = jest.fn();
+      
+      render(<PostalCodeInput {...defaultProps} onAddressChange={onAddressChange} />);
+
+      const input = screen.getByRole('textbox');
+      
+      // 有効な郵便番号を入力
+      fireEvent.change(input, { target: { value: '999-9999' } });
+      
+      // エラーメッセージが表示されることを確認
+      await waitFor(() => {
+        expect(screen.getByText('該当する住所が見つかりませんでした')).toBeInTheDocument();
+      });
+
+      expect(onAddressChange).not.toHaveBeenCalled();
+    });
   });
 });
