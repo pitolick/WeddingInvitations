@@ -6,7 +6,7 @@ describe('ResponsiveGrid', () => {
   it('デフォルトのpropsでレンダリングされる', () => {
     render(
       <ResponsiveGrid>
-        <div data-testid="child">テストアイテム</div>
+        <div data-testid='child'>テストアイテム</div>
       </ResponsiveGrid>
     );
 
@@ -24,9 +24,9 @@ describe('ResponsiveGrid', () => {
   it('複数の子要素が正しくレンダリングされる', () => {
     render(
       <ResponsiveGrid>
-        <div data-testid="item1">アイテム1</div>
-        <div data-testid="item2">アイテム2</div>
-        <div data-testid="item3">アイテム3</div>
+        <div data-testid='item1'>アイテム1</div>
+        <div data-testid='item2'>アイテム2</div>
+        <div data-testid='item3'>アイテム3</div>
       </ResponsiveGrid>
     );
 
@@ -42,7 +42,7 @@ describe('ResponsiveGrid', () => {
     it('mobileCols=1（デフォルト）が正しく適用される', () => {
       render(
         <ResponsiveGrid>
-          <div data-testid="child">コンテンツ</div>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -53,7 +53,7 @@ describe('ResponsiveGrid', () => {
     it('mobileCols=2 が正しく適用される', () => {
       render(
         <ResponsiveGrid mobileCols={2}>
-          <div data-testid="child">コンテンツ</div>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -67,7 +67,7 @@ describe('ResponsiveGrid', () => {
     it('tabletCols=2（デフォルト）が正しく適用される', () => {
       render(
         <ResponsiveGrid>
-          <div data-testid="child">コンテンツ</div>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -78,7 +78,7 @@ describe('ResponsiveGrid', () => {
     it('tabletCols=1 が正しく適用される', () => {
       render(
         <ResponsiveGrid tabletCols={1}>
-          <div data-testid="child">コンテンツ</div>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -89,7 +89,7 @@ describe('ResponsiveGrid', () => {
     it('tabletCols=3 が正しく適用される', () => {
       render(
         <ResponsiveGrid tabletCols={3}>
-          <div data-testid="child">コンテンツ</div>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -100,7 +100,7 @@ describe('ResponsiveGrid', () => {
     it('tabletCols=4 が正しく適用される', () => {
       render(
         <ResponsiveGrid tabletCols={4}>
-          <div data-testid="child">コンテンツ</div>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -113,7 +113,7 @@ describe('ResponsiveGrid', () => {
     it('desktopCols=3（デフォルト）が正しく適用される', () => {
       render(
         <ResponsiveGrid>
-          <div data-testid="child">コンテンツ</div>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -124,7 +124,7 @@ describe('ResponsiveGrid', () => {
     it('desktopCols=1 が正しく適用される', () => {
       render(
         <ResponsiveGrid desktopCols={1}>
-          <div data-testid="child">コンテンツ</div>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -135,7 +135,7 @@ describe('ResponsiveGrid', () => {
     it('desktopCols=2 が正しく適用される', () => {
       render(
         <ResponsiveGrid desktopCols={2}>
-          <div data-testid="child">コンテンツ</div>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -146,7 +146,7 @@ describe('ResponsiveGrid', () => {
     it('desktopCols=4 が正しく適用される', () => {
       render(
         <ResponsiveGrid desktopCols={4}>
-          <div data-testid="child">コンテンツ</div>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -157,7 +157,7 @@ describe('ResponsiveGrid', () => {
     it('desktopCols=5 が正しく適用される', () => {
       render(
         <ResponsiveGrid desktopCols={5}>
-          <div data-testid="child">コンテンツ</div>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -168,7 +168,7 @@ describe('ResponsiveGrid', () => {
     it('desktopCols=6 が正しく適用される', () => {
       render(
         <ResponsiveGrid desktopCols={6}>
-          <div data-testid="child">コンテンツ</div>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -181,7 +181,7 @@ describe('ResponsiveGrid', () => {
     it('gap="md"（デフォルト）が正しく適用される', () => {
       render(
         <ResponsiveGrid>
-          <div data-testid="child">コンテンツ</div>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -191,8 +191,8 @@ describe('ResponsiveGrid', () => {
 
     it('gap="sm" が正しく適用される', () => {
       render(
-        <ResponsiveGrid gap="sm">
-          <div data-testid="child">コンテンツ</div>
+        <ResponsiveGrid gap='sm'>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -203,8 +203,8 @@ describe('ResponsiveGrid', () => {
 
     it('gap="lg" が正しく適用される', () => {
       render(
-        <ResponsiveGrid gap="lg">
-          <div data-testid="child">コンテンツ</div>
+        <ResponsiveGrid gap='lg'>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -214,8 +214,8 @@ describe('ResponsiveGrid', () => {
 
     it('gap="xl" が正しく適用される', () => {
       render(
-        <ResponsiveGrid gap="xl">
-          <div data-testid="child">コンテンツ</div>
+        <ResponsiveGrid gap='xl'>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -227,8 +227,8 @@ describe('ResponsiveGrid', () => {
   describe('className プロパティ', () => {
     it('追加のclassNameが正しく適用される', () => {
       render(
-        <ResponsiveGrid className="custom-grid bg-gray-100">
-          <div data-testid="child">コンテンツ</div>
+        <ResponsiveGrid className='custom-grid bg-gray-100'>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -239,8 +239,8 @@ describe('ResponsiveGrid', () => {
 
     it('空のclassNameでもエラーにならない', () => {
       render(
-        <ResponsiveGrid className="">
-          <div data-testid="child">コンテンツ</div>
+        <ResponsiveGrid className=''>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -256,10 +256,10 @@ describe('ResponsiveGrid', () => {
           mobileCols={2}
           tabletCols={3}
           desktopCols={4}
-          gap="lg"
-          className="bg-white border rounded"
+          gap='lg'
+          className='bg-white border rounded'
         >
-          <div data-testid="child">コンテンツ</div>
+          <div data-testid='child'>コンテンツ</div>
         </ResponsiveGrid>
       );
 
@@ -278,17 +278,17 @@ describe('ResponsiveGrid', () => {
 
     it('レスポンシブ設定の段階的な変化', () => {
       render(
-        <ResponsiveGrid mobileCols={1} tabletCols={2} desktopCols={6} gap="sm">
-          <div data-testid="child">レスポンシブアイテム</div>
+        <ResponsiveGrid mobileCols={1} tabletCols={2} desktopCols={6} gap='sm'>
+          <div data-testid='child'>レスポンシブアイテム</div>
         </ResponsiveGrid>
       );
 
       const container = screen.getByTestId('child').parentElement;
       expect(container).toHaveClass(
-        'grid-cols-1',    // モバイル: 1列
+        'grid-cols-1', // モバイル: 1列
         'md:grid-cols-2', // タブレット: 2列
         'lg:grid-cols-6', // デスクトップ: 6列
-        'gap-2'           // 小さなギャップ
+        'gap-2' // 小さなギャップ
       );
     });
   });
@@ -296,7 +296,7 @@ describe('ResponsiveGrid', () => {
   describe('エラーハンドリング', () => {
     it('childrenが空でもエラーにならない', () => {
       render(<ResponsiveGrid>{null}</ResponsiveGrid>);
-      
+
       // コンテナ自体は存在する
       const container = document.querySelector('.grid');
       expect(container).toBeInTheDocument();
@@ -305,21 +305,23 @@ describe('ResponsiveGrid', () => {
     it('単一の子要素を正しく処理する', () => {
       render(
         <ResponsiveGrid>
-          <div data-testid="single-child">単一アイテム</div>
+          <div data-testid='single-child'>単一アイテム</div>
         </ResponsiveGrid>
       );
 
       expect(screen.getByTestId('single-child')).toBeInTheDocument();
-      expect(screen.getByTestId('single-child')).toHaveTextContent('単一アイテム');
+      expect(screen.getByTestId('single-child')).toHaveTextContent(
+        '単一アイテム'
+      );
     });
 
     it('異なる種類の子要素を正しく処理する', () => {
       render(
         <ResponsiveGrid>
-          <div data-testid="div-child">DIV要素</div>
-          <span data-testid="span-child">SPAN要素</span>
-          <p data-testid="p-child">P要素</p>
-          <button data-testid="button-child">ボタン要素</button>
+          <div data-testid='div-child'>DIV要素</div>
+          <span data-testid='span-child'>SPAN要素</span>
+          <p data-testid='p-child'>P要素</p>
+          <button data-testid='button-child'>ボタン要素</button>
         </ResponsiveGrid>
       );
 
@@ -334,7 +336,7 @@ describe('ResponsiveGrid', () => {
     it('グリッドコンテナとして正しく設定される', () => {
       render(
         <ResponsiveGrid>
-          <div data-testid="child">グリッドアイテム</div>
+          <div data-testid='child'>グリッドアイテム</div>
         </ResponsiveGrid>
       );
 
@@ -345,17 +347,17 @@ describe('ResponsiveGrid', () => {
 
     it('極端な設定でも正しく動作する', () => {
       render(
-        <ResponsiveGrid mobileCols={2} tabletCols={1} desktopCols={6} gap="xl">
-          <div data-testid="child">極端設定</div>
+        <ResponsiveGrid mobileCols={2} tabletCols={1} desktopCols={6} gap='xl'>
+          <div data-testid='child'>極端設定</div>
         </ResponsiveGrid>
       );
 
       const container = screen.getByTestId('child').parentElement;
       expect(container).toHaveClass(
-        'grid-cols-2',     // モバイル: 2列
-        'md:grid-cols-1',  // タブレット: 1列（逆転）
-        'lg:grid-cols-6',  // デスクトップ: 6列
-        'gap-8'            // 最大ギャップ
+        'grid-cols-2', // モバイル: 2列
+        'md:grid-cols-1', // タブレット: 1列（逆転）
+        'lg:grid-cols-6', // デスクトップ: 6列
+        'gap-8' // 最大ギャップ
       );
     });
   });
@@ -363,7 +365,7 @@ describe('ResponsiveGrid', () => {
   describe('グリッドアイテムのテスト', () => {
     it('多数のアイテムを正しく処理する', () => {
       const items = Array.from({ length: 12 }, (_, i) => i + 1);
-      
+
       render(
         <ResponsiveGrid mobileCols={2} tabletCols={3} desktopCols={4}>
           {items.map(item => (
@@ -377,12 +379,18 @@ describe('ResponsiveGrid', () => {
       // 全てのアイテムがレンダリングされていることを確認
       items.forEach(item => {
         expect(screen.getByTestId(`item-${item}`)).toBeInTheDocument();
-        expect(screen.getByTestId(`item-${item}`)).toHaveTextContent(`アイテム ${item}`);
+        expect(screen.getByTestId(`item-${item}`)).toHaveTextContent(
+          `アイテム ${item}`
+        );
       });
 
       // グリッドクラスが正しく適用されていることを確認
       const container = screen.getByTestId('item-1').parentElement;
-      expect(container).toHaveClass('grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4');
+      expect(container).toHaveClass(
+        'grid-cols-2',
+        'md:grid-cols-3',
+        'lg:grid-cols-4'
+      );
     });
   });
 });
