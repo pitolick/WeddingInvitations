@@ -17,7 +17,7 @@
 
 ### ブランチ命名規則
 
-```
+```bash
 feature/issue-{number}-{title}
 例: feature/issue-24-mv-section-implementation
 ```
@@ -70,7 +70,7 @@ curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
 
 **プルリクエスト説明に記載:**
 
-```
+```bash
 fixes #123
 closes #123
 resolves #123
@@ -238,6 +238,7 @@ devLogger.info('debug_info', 'デバッグ情報', { data: 'value' });
    ```
 
 4. **ロールを使用**
+
    ```tsx
    screen.getByRole('button', { name: '送信' });
    screen.getByRole('form');
@@ -258,11 +259,13 @@ devLogger.info('debug_info', 'デバッグ情報', { data: 'value' });
    **理由：** Tailwind CSSとの相性が悪く、クラス名の変更でテストが壊れやすい
 
 2. **IDによる取得**
+
    ```tsx
    // 禁止
    screen.getByTestId('user-profile');
    container.querySelector('#user-profile');
    ```
+
    **理由：** IDは一意性が保証されず、再利用性が低い
 
 ##### 要素取得の優先順位
