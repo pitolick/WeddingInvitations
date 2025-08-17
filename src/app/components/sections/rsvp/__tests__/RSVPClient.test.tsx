@@ -435,10 +435,280 @@ describe('RSVPClient Component', () => {
     });
   });
 
-  // 一時的にコメントアウト - モックの設定を改善後に有効化
-  /*
-  describe('Guest Information Handling', () => {
-    it('handles guest info with family members', () => {
+  // 送信完了画面のテスト
+  describe('Submission Complete Screen', () => {
+    beforeEach(() => {
+      // 送信完了状態にするためlocalStorageをtrueに設定
+      localStorageMock.getItem.mockReturnValue('true');
+    });
+
+    it('displays submission complete screen when hasSubmitted is true', () => {
+      render(<RSVPClient {...defaultProps} />);
+
+      expect(screen.getByTestId('submission-complete')).toBeInTheDocument();
+      expect(screen.getByText('送信完了')).toBeInTheDocument();
+      expect(
+        screen.getByText('出欠のご回答をいただき誠にありがとうございます')
+      ).toBeInTheDocument();
+      expect(screen.getByTestId('resubmit-button')).toBeInTheDocument();
+    });
+
+    it('handles resubmit button click correctly', () => {
+      render(<RSVPClient {...defaultProps} />);
+
+      const resubmitButton = screen.getByTestId('resubmit-button');
+      fireEvent.click(resubmitButton);
+
+      expect(localStorageMock.removeItem).toHaveBeenCalledWith(
+        'rsvp_submitted_test-guest-123'
+      );
+    });
+
+    it('displays correct success icon and styling', () => {
+      render(<RSVPClient {...defaultProps} />);
+
+      const successIcon = screen
+        .getByTestId('submission-complete')
+        .querySelector('svg');
+      expect(successIcon).toBeInTheDocument();
+      expect(successIcon).toHaveClass('w-16', 'h-16', 'text-green-500');
+    });
+  });
+
+  // data-testid属性を使用したテスト
+  describe('Data Test ID Integration', () => {
+    beforeEach(() => {
+      // フォーム表示状態に戻す
+      localStorageMock.getItem.mockReturnValue('false');
+    });
+
+    it('can find elements using data-testid attributes', () => {
+      render(<RSVPClient {...defaultProps} />);
+
+      expect(screen.getByTestId('rsvp-client')).toBeInTheDocument();
+      expect(screen.getByTestId('contact-info-section')).toBeInTheDocument();
+      expect(screen.getByTestId('add-companion-section')).toBeInTheDocument();
+      expect(screen.getByTestId('add-companion-button')).toBeInTheDocument();
+      expect(screen.getByTestId('submit-section')).toBeInTheDocument();
+      expect(screen.getByTestId('submit-button')).toBeInTheDocument();
+    });
+
+    it('displays attendee sections with dynamic test ids', () => {
+      // 複数の出席者をシミュレート
+      mockUseFieldArray.fields = [{ id: '1' }, { id: '2' }];
+
+      render(<RSVPClient {...defaultProps} />);
+
+      expect(screen.getByTestId('attendee-section-0')).toBeInTheDocument();
+      expect(screen.getByTestId('attendee-section-1')).toBeInTheDocument();
+    });
+  });
+
+  // フォームの詳細動作テスト
+  describe('Form Behavior and Interactions', () => {
+    beforeEach(() => {
+      localStorageMock.getItem.mockReturnValue('false');
+    });
+
+    it('handles form field interactions correctly', () => {
+      render(<RSVPClient {...defaultProps} />);
+
+      // 各セクションの存在確認
+      expect(screen.getByTestId('contact-info-section')).toBeInTheDocument();
+      expect(screen.getByTestId('add-companion-section')).toBeInTheDocument();
+      expect(screen.getByTestId('submit-section')).toBeInTheDocument();
+    });
+
+    it('manages form state correctly', () => {
+      render(<RSVPClient {...defaultProps} />);
+
+      // register関数が呼ばれることを確認
+      expect(mockUseForm.register).toHaveBeenCalled();
+
+      // setValue関数の存在確認
+      expect(mockUseForm.setValue).toBeDefined();
+    });
+
+    it('handles postal code input correctly', () => {
+      render(<RSVPClient {...defaultProps} />);
+
+      const postalCodeSection = screen.getByTestId('contact-info-section');
+      const postalCodeInput = postalCodeSection.querySelector(
+        'input[placeholder="1234567"]'
+      );
+
+      expect(postalCodeInput).toBeInTheDocument();
+      expect(postalCodeInput).toHaveAttribute('maxLength', '8');
+    });
+
+    it('displays help text for postal code', () => {
+      render(<RSVPClient {...defaultProps} />);
+
+      expect(
+        screen.getByText('7桁の郵便番号を入力すると住所が自動で入力されます')
+      ).toBeInTheDocument();
+    });
+  });
+
+  // エラー状態のテスト
+  describe('Error States and Validation', () => {
+    beforeEach(() => {
+      localStorageMock.getItem.mockReturnValue('false');
+    });
+
+    it('displays form validation errors', () => {
+      mockUseForm.formState = {
+        errors: {
+          contactInfo: {
+            postalCode: { message: '郵便番号は必須です' },
+            email: { message: 'メールアドレスの形式が正しくありません' },
+          },
+        },
+      };
+
+      render(<RSVPClient {...defaultProps} />);
+
+      expect(screen.getByText('郵便番号は必須です')).toBeInTheDocument();
+      expect(
+        screen.getByText('メールアドレスの形式が正しくありません')
+      ).toBeInTheDocument();
+    });
+
+    it('handles different error types correctly', () => {
+      mockUseForm.formState = {
+        errors: {
+          contactInfo: {
+            prefecture: { message: '都道府県は必須です' },
+            phone: { message: '電話番号は必須です' },
+            address: { message: 'ご住所は必須です' },
+          },
+        },
+      };
+
+      render(<RSVPClient {...defaultProps} />);
+
+      expect(screen.getByText('都道府県は必須です')).toBeInTheDocument();
+      expect(screen.getByText('電話番号は必須です')).toBeInTheDocument();
+      expect(screen.getByText('ご住所は必須です')).toBeInTheDocument();
+    });
+  });
+
+  // レスポンシブ対応のテスト
+  describe('Responsive Design', () => {
+    beforeEach(() => {
+      localStorageMock.getItem.mockReturnValue('false');
+    });
+
+    it('has responsive grid layout for contact form', () => {
+      render(<RSVPClient {...defaultProps} />);
+
+      const contactSection = screen.getByTestId('contact-info-section');
+      const gridContainer = contactSection.querySelector('.grid');
+
+      expect(gridContainer).toHaveClass('grid-cols-1', 'md:grid-cols-2');
+    });
+
+    it('has responsive text breaks in deadline section', () => {
+      render(<RSVPClient {...defaultProps} />);
+
+      // sm:hiddenクラスを持つbrタグが存在することを確認
+      const breaks = screen
+        .getByTestId('rsvp-client')
+        .querySelectorAll('br.sm\\:hidden');
+      expect(breaks.length).toBeGreaterThan(0);
+    });
+
+    it('has responsive button sizing', () => {
+      render(<RSVPClient {...defaultProps} />);
+
+      const submitButton = screen.getByTestId('submit-button');
+      expect(submitButton).toHaveClass('w-full', 'md:max-w-md');
+    });
+  });
+
+  // フォームの完全性テスト
+  describe('Form Completeness', () => {
+    beforeEach(() => {
+      localStorageMock.getItem.mockReturnValue('false');
+    });
+
+    it('includes all required form fields', () => {
+      render(<RSVPClient {...defaultProps} />);
+
+      // 隠しフィールドの確認
+      const form = screen.getByTestId('rsvp-client').querySelector('form');
+      const hiddenInputs = form?.querySelectorAll('input[type="hidden"]');
+      expect(hiddenInputs?.length).toBeGreaterThanOrEqual(2); // guestId, name
+
+      // 必須フィールドの確認
+      const requiredInputs = form?.querySelectorAll('input[required]');
+      expect(requiredInputs?.length).toBeGreaterThan(0);
+    });
+
+    it('has proper form structure with all sections', () => {
+      render(<RSVPClient {...defaultProps} />);
+
+      expect(screen.getByTestId('contact-info-section')).toBeInTheDocument();
+      expect(screen.getByTestId('add-companion-section')).toBeInTheDocument();
+      expect(screen.getByTestId('submit-section')).toBeInTheDocument();
+    });
+
+    it('displays all prefecture options', () => {
+      render(<RSVPClient {...defaultProps} />);
+
+      // 都道府県セレクトボックスの確認
+      expect(screen.getByText('選択してください')).toBeInTheDocument();
+      expect(screen.getByText('北海道')).toBeInTheDocument();
+      expect(screen.getByText('東京都')).toBeInTheDocument();
+      expect(screen.getByText('大阪府')).toBeInTheDocument();
+      expect(screen.getByText('沖縄県')).toBeInTheDocument();
+    });
+  });
+
+  // 招待種別別のテスト
+  describe('Invite Type Handling', () => {
+    beforeEach(() => {
+      localStorageMock.getItem.mockReturnValue('false');
+    });
+
+    it('handles multiple invite types correctly', () => {
+      const propsWithMultipleInvites = {
+        guestInfo: {
+          ...defaultProps.guestInfo,
+          invite: ['挙式', '披露宴', '二次会'],
+        },
+      };
+
+      render(<RSVPClient {...propsWithMultipleInvites} />);
+
+      // フォームが正常に表示されることを確認
+      expect(screen.getByTestId('rsvp-client')).toBeInTheDocument();
+      expect(screen.getByTestId('add-companion-button')).toBeInTheDocument();
+    });
+
+    it('handles single invite type correctly', () => {
+      const propsWithSingleInvite = {
+        guestInfo: {
+          ...defaultProps.guestInfo,
+          invite: ['二次会'],
+        },
+      };
+
+      render(<RSVPClient {...propsWithSingleInvite} />);
+
+      // フォームが正常に表示されることを確認
+      expect(screen.getByTestId('rsvp-client')).toBeInTheDocument();
+      expect(screen.getByTestId('add-companion-button')).toBeInTheDocument();
+    });
+  });
+
+  // 家族情報のテスト
+  describe('Family Member Handling', () => {
+    beforeEach(() => {
+      localStorageMock.getItem.mockReturnValue('false');
+    });
+
+    it('handles guest with family members', () => {
       const propsWithFamily = {
         guestInfo: {
           ...defaultProps.guestInfo,
@@ -455,135 +725,24 @@ describe('RSVPClient Component', () => {
 
       render(<RSVPClient {...propsWithFamily} />);
 
-      // 家族情報が適切に処理されることを確認
-      expect(screen.getByText('+ お連れ様を追加')).toBeInTheDocument();
+      // フォームが正常に表示されることを確認
+      expect(screen.getByTestId('rsvp-client')).toBeInTheDocument();
+      expect(screen.getByTestId('add-companion-button')).toBeInTheDocument();
     });
 
-    it('handles guest info with invite types', () => {
-      const propsWithInvite = {
+    it('handles guest without family members', () => {
+      const propsWithoutFamily = {
         guestInfo: {
           ...defaultProps.guestInfo,
-          invite: ['挙式', '披露宴', '二次会'],
+          family: [],
         },
       };
 
-      render(<RSVPClient {...propsWithFamily} />);
+      render(<RSVPClient {...propsWithoutFamily} />);
 
-      // 招待種別が適切に処理されることを確認
-      expect(screen.getByText('+ お連れ様を追加')).toBeInTheDocument();
+      // フォームが正常に表示されることを確認
+      expect(screen.getByTestId('rsvp-client')).toBeInTheDocument();
+      expect(screen.getByTestId('add-companion-button')).toBeInTheDocument();
     });
   });
-
-  describe('Form Validation Logic', () => {
-    it('validates required fields correctly', () => {
-      const mockFormState = {
-        errors: {
-          contactInfo: {
-            postalCode: { message: '郵便番号は必須です' },
-            prefecture: { message: '都道府県は必須です' },
-            address: { message: 'ご住所は必須です' },
-            phone: { message: '電話番号は必須です' },
-            email: { message: 'メールアドレスの形式が正しくありません' },
-          },
-        },
-      };
-      mockUseForm.formState = mockFormState;
-
-      render(<RSVPClient {...defaultProps} />);
-
-      // 必須フィールドのエラーメッセージが表示されることを確認
-      expect(screen.getByText('郵便番号は必須です')).toBeInTheDocument();
-      expect(screen.getByText('都道府県は必須です')).toBeInTheDocument();
-      expect(screen.getByText('ご住所は必須です')).toBeInTheDocument();
-      expect(screen.getByText('電話番号は必須です')).toBeInTheDocument();
-      expect(
-        screen.getByText('メールアドレスの形式が正しくありません')
-      ).toBeInTheDocument();
-    });
-
-    it('handles attendance validation for different invite types', () => {
-      const propsWithSpecificInvite = {
-        guestInfo: {
-          ...defaultProps.guestInfo,
-          invite: ['二次会'], // 二次会のみの招待
-        },
-      };
-
-      render(<RSVPClient {...propsWithSpecificInvite} />);
-
-      // 特定の招待種別に対する適切な処理が行われることを確認
-      expect(screen.getByText('+ お連れ様を追加')).toBeInTheDocument();
-    });
-  });
-
-  describe('Error Handling', () => {
-    it('displays submission errors correctly', () => {
-      // 送信エラー状態をシミュレート
-      const mockFormState = {
-        errors: {
-          attendees: {
-            message:
-              '全ての出席者の招待されているイベントの出欠を選択してください',
-          },
-        },
-      };
-      mockUseForm.formState = mockFormState;
-
-      render(<RSVPClient {...defaultProps} />);
-
-      // エラーメッセージが表示されることを確認
-      expect(
-        screen.getByText(
-          '全ての出席者の招待されているイベントの出欠を選択してください'
-        )
-      ).toBeInTheDocument();
-    });
-
-    it('handles network errors gracefully', () => {
-      // ネットワークエラー状態をシミュレート
-      const mockFormState = {
-        errors: {
-          submit: {
-            message:
-              '送信に失敗しました。しばらく時間をおいて再度お試しください。',
-          },
-        },
-      };
-      mockUseForm.formState = mockFormState;
-
-      render(<RSVPClient {...defaultProps} />);
-
-      // エラーメッセージが表示されることを確認
-      expect(
-        screen.getByText(
-          '送信に失敗しました。しばらく時間をおいて再度お試しください。'
-        )
-      ).toBeInTheDocument();
-    });
-  });
-
-  describe('Accessibility and UX', () => {
-    it('maintains focus management during form interactions', () => {
-      render(<RSVPClient {...defaultProps} />);
-
-      const postalCodeInput = screen
-        .getByText('郵便番号')
-        .closest('div')
-        ?.querySelector('input');
-
-      if (postalCodeInput) {
-        fireEvent.focus(postalCodeInput);
-        expect(postalCodeInput).toHaveFocus();
-      }
-    });
-
-    it('provides appropriate ARIA labels for form elements', () => {
-      render(<RSVPClient {...defaultProps} />);
-
-      // フォーム要素に適切なARIA属性が設定されていることを確認
-      const form = screen.getByTestId('rsvp-client').querySelector('form');
-      expect(form).toHaveAttribute('style', 'pointer-events: auto;');
-    });
-  });
-  */
 });

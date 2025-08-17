@@ -5,17 +5,20 @@
  */
 
 import '@testing-library/jest-dom';
-// renderとscreenは使用していないため削除
+import { render } from '@testing-library/react';
 import { validateInvitationId, normalizeInvitationId } from '../utils';
+import InvitationPage, { generateMetadata, generateStaticParams } from '../page';
+import { notFound } from 'next/navigation';
+import { getMicroCMSClient } from '@/app/lib/api/microcms';
 
 // microCMS APIのモック
+const mockClient = {
+  get: jest.fn(),
+  getAllContentIds: jest.fn(),
+};
+
 jest.mock('@/app/lib/api/microcms', () => ({
-  getMicroCMSClient: jest.fn().mockResolvedValue({
-    get: jest.fn().mockResolvedValue({
-      dear: '田中太郎',
-      message: '特別なメッセージです。',
-    }),
-  }),
+  getMicroCMSClient: jest.fn(),
 }));
 
 // Next.jsのnotFound関数のモック
@@ -29,10 +32,16 @@ jest.mock('@/app/components/sections', () => ({
   Navigation: () => <div data-testid='navigation'>Navigation</div>,
   Countdown: () => <div data-testid='countdown'>Countdown</div>,
   Host: () => <div data-testid='host'>Host</div>,
-  Message: () => <div data-testid='message'>Message</div>,
+  Message: ({ invitationId, draftKey }: any) => (
+    <div data-testid='message'>Message - {invitationId} {draftKey}</div>
+  ),
   Gallery: () => <div data-testid='gallery'>Gallery</div>,
-  Event: () => <div data-testid='event'>Event</div>,
-  RSVP: () => <div data-testid='rsvp'>RSVP</div>,
+  Event: ({ invitationId, draftKey }: any) => (
+    <div data-testid='event'>Event - {invitationId} {draftKey}</div>
+  ),
+  RSVP: ({ invitationId, draftKey }: any) => (
+    <div data-testid='rsvp'>RSVP - {invitationId} {draftKey}</div>
+  ),
   Footer: () => <div data-testid='footer'>Footer</div>,
 }));
 
@@ -47,14 +56,61 @@ jest.mock('@/app/components/common/button', () => ({
  * @description 招待ページのテスト
  */
 describe('InvitationPage', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    mockClient.get.mockResolvedValue({ dear: 'テスト様' });
+    (getMicroCMSClient as jest.Mock).mockResolvedValue(mockClient);
+  });
+
   /**
-   * @description ページがレンダリングされることを確認
+   * @description ページコンポーネントのレンダリングテスト
    */
-  it('ページがレンダリングされる', async () => {
-    // このテストは実際のページコンポーネントのレンダリングをテスト
-    // ただし、Server Componentのため、実際のレンダリングテストは困難
-    // 代わりに、コンポーネントの存在確認を行う
-    expect(true).toBe(true);
+  describe('Component Rendering', () => {
+    it('renders all page sections correctly', async () => {
+      const params = Promise.resolve({ id: 'test-123' });
+      const { container } = render(await InvitationPage({ params }));
+
+      expect(container.querySelector('[data-testid="main-visual"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="countdown"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="navigation"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="host"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="message"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="gallery"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="event"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="rsvp"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="footer"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="back-to-top-button"]')).toBeInTheDocument();
+    });
+
+    it('has correct page structure and styling', async () => {
+      const params = Promise.resolve({ id: 'test-123' });
+      const { container } = render(await InvitationPage({ params }));
+
+      const mainContainer = container.firstChild as HTMLElement;
+      expect(mainContainer).toHaveClass('min-h-screen');
+    });
+
+    it('passes invitation ID and draft key to relevant sections', async () => {
+      const params = Promise.resolve({ id: 'test-123', draftKey: 'draft-456' });
+      const { container } = render(await InvitationPage({ params }));
+
+      expect(container.querySelector('[data-testid="message"]')).toHaveTextContent('test-123 draft-456');
+      expect(container.querySelector('[data-testid="event"]')).toHaveTextContent('test-123 draft-456');
+      expect(container.querySelector('[data-testid="rsvp"]')).toHaveTextContent('test-123 draft-456');
+    });
+  });
+
+  describe('Error Handling', () => {
+    it('calls notFound when guest data is not found', async () => {
+      mockClient.get.mockRejectedValue(new Error('Guest not found'));
+      (getMicroCMSClient as jest.Mock).mockResolvedValue(mockClient);
+
+      const params = Promise.resolve({ id: 'invalid-id' });
+      
+      await InvitationPage({ params });
+
+      expect(notFound).toHaveBeenCalled();
+    });
   });
 
   /**
