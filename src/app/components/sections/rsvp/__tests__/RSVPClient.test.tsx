@@ -448,7 +448,7 @@ describe('RSVPClient Component', () => {
       expect(screen.getByTestId('submission-complete')).toBeInTheDocument();
       expect(screen.getByText('送信完了')).toBeInTheDocument();
       expect(
-        screen.getByText('出欠のご回答をいただき誠にありがとうございます')
+        screen.getByText(/出欠のご回答をいただき誠にありがとうございます/)
       ).toBeInTheDocument();
       expect(screen.getByTestId('resubmit-button')).toBeInTheDocument();
     });

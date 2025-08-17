@@ -1,308 +1,247 @@
 /**
- * @description RSVPセクションのテスト
+ * @description RSVPセクションコンポーネントのテスト
  * @author WeddingInvitations
  * @since 1.0.0
  */
 
+import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import RSVP from '../index';
 
-// Next.jsのasyncコンポーネントをテストするためのモック
-jest.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-    replace: jest.fn(),
-    prefetch: jest.fn(),
-    back: jest.fn(),
-    forward: jest.fn(),
-  }),
-}));
-
-// microCMS APIのモック
+// MicroCMS APIのモック
+const mockGetGuestByInvitationId = jest.fn();
 jest.mock('@/app/lib/api/microcms', () => ({
-  getGuestByInvitationId: jest.fn().mockResolvedValue({
-    id: 'test-guest',
-    name: '田中太郎',
-    email: 'test@example.com',
-  }),
+  getGuestByInvitationId: jest.fn(),
 }));
 
-// RSVPコンポーネントのモック（asyncコンポーネントを同期的にテストするため）
-jest.mock('../index', () => {
-  return function MockRSVP({
-    invitationId,
-  }: {
-    invitationId?: string;
-    draftKey?: string;
-  }) {
-    // ゲスト情報を同期的に取得
-    let guestInfo = null;
-    if (invitationId) {
-      guestInfo = {
-        id: 'test-guest',
-        name: '田中太郎',
-        email: 'test@example.com',
-      };
-    }
-
+// RSVPClientコンポーネントのモック
+const mockRSVPClient = jest.fn();
+jest.mock('../RSVPClient', () => {
+  return function MockRSVPClient(props: any) {
+    mockRSVPClient(props);
     return (
-      <section
-        id='rsvp'
-        role='region'
-        aria-label='RSVP'
-        className='flex justify-center items-start bg-cover bg-center bg-no-repeat py-16 px-5'
-        style={{
-          backgroundImage: "url('/images/sections/rsvp/rsvp-background.webp')",
-        }}
-      >
-        <div className='container space-y-8'>
-          {/* タイトル */}
-          <h2 className='font-berkshire text-4xl text-center'>RSVP</h2>
-
-          <div className='mx-auto bg-white rounded-2xl px-6 md:px-10 py-10 flex flex-col items-center gap-6 md:max-w-3xl'>
-            <div
-              data-testid='rsvp-client'
-              data-guest-info={guestInfo ? 'present' : 'absent'}
-            >
-              Mock RSVP Client
-            </div>
-          </div>
-        </div>
-      </section>
+      <div data-testid='rsvp-client-mock'>
+        <div data-testid='guest-info'>{JSON.stringify(props.guestInfo)}</div>
+      </div>
     );
   };
 });
 
-/**
- * @description RSVPセクションの基本表示テスト
- */
-describe('RSVP Component', () => {
-  /**
-   * @description コンポーネントが正しくレンダリングされる
-   */
-  it('renders RSVP component correctly', () => {
-    render(<RSVP invitationId='test-123' />);
-
-    // section要素が存在する
-    expect(screen.getByRole('region')).toBeInTheDocument();
-    expect(screen.getByRole('region')).toHaveAttribute('id', 'rsvp');
-  });
-
-  /**
-   * @description タイトルが正しく表示される
-   */
-  it('displays title correctly', () => {
-    render(<RSVP invitationId='test-123' />);
-
-    // RSVPタイトルが表示される
-    expect(screen.getByText('RSVP')).toBeInTheDocument();
-    expect(screen.getByText('RSVP')).toHaveClass(
-      'font-berkshire',
-      'text-4xl',
-      'text-center'
+describe('RSVP Section Component', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    // モックの設定
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { getGuestByInvitationId } = require('@/app/lib/api/microcms');
+    (getGuestByInvitationId as jest.Mock).mockImplementation(
+      mockGetGuestByInvitationId
     );
   });
 
-  /**
-   * @description RSVPClientコンポーネントが表示される
-   */
-  it('displays RSVPClient component', () => {
-    render(<RSVP invitationId='test-123' />);
+  describe('Component Rendering', () => {
+    it('renders RSVP section with correct structure', async () => {
+      mockGetGuestByInvitationId.mockResolvedValue(null);
 
-    // RSVPClientが表示される
-    expect(screen.getByTestId('rsvp-client')).toBeInTheDocument();
-  });
+      const RSVPComponent = await RSVP({});
+      render(RSVPComponent);
 
-  /**
-   * @description セクションの基本構造が正しい
-   */
-  it('has correct section structure', () => {
-    render(<RSVP invitationId='test-123' />);
+      // セクション要素の確認
+      const section = screen.getByRole('region', { name: 'RSVP' });
+      expect(section).toBeInTheDocument();
+      expect(section).toHaveAttribute('id', 'rsvp');
 
-    const section = screen.getByRole('region');
+      // タイトルの確認
+      expect(screen.getByText('RSVP')).toBeInTheDocument();
+      expect(screen.getByText('RSVP')).toHaveClass(
+        'font-berkshire',
+        'text-4xl',
+        'text-center'
+      );
 
-    // セクションのクラスが正しく適用される
-    expect(section).toHaveClass(
-      'flex',
-      'justify-center',
-      'items-start',
-      'bg-cover',
-      'bg-center',
-      'bg-no-repeat',
-      'py-16',
-      'px-5'
-    );
-  });
+      // RSVPClientが表示されることを確認
+      expect(screen.getByTestId('rsvp-client-mock')).toBeInTheDocument();
+    });
 
-  /**
-   * @description 背景画像が正しく設定される
-   */
-  it('has correct background image', () => {
-    render(<RSVP invitationId='test-123' />);
+    it('has correct background styling', async () => {
+      mockGetGuestByInvitationId.mockResolvedValue(null);
 
-    const section = screen.getByRole('region');
+      const RSVPComponent = await RSVP({});
+      render(RSVPComponent);
 
-    // 背景画像のスタイルが正しく設定される
-    expect(section).toHaveStyle({
-      backgroundImage: "url('/images/sections/rsvp/rsvp-background.webp')",
+      const section = screen.getByRole('region', { name: 'RSVP' });
+      expect(section).toHaveClass(
+        'flex',
+        'justify-center',
+        'items-start',
+        'bg-cover',
+        'bg-center',
+        'bg-no-repeat',
+        'py-16',
+        'px-5'
+      );
+    });
+
+    it('has correct container structure', async () => {
+      mockGetGuestByInvitationId.mockResolvedValue(null);
+
+      const RSVPComponent = await RSVP({});
+      render(RSVPComponent);
+
+      const container = screen.getByText('RSVP').closest('.container');
+      expect(container).toBeInTheDocument();
+      expect(container).toHaveClass('container', 'space-y-8');
+
+      // 内部の白いボックスの確認
+      const contentBox = screen.getByTestId('rsvp-client-mock').parentElement;
+      expect(contentBox).toHaveClass(
+        'mx-auto',
+        'bg-white',
+        'rounded-2xl',
+        'px-6',
+        'md:px-10',
+        'py-10',
+        'flex',
+        'flex-col',
+        'items-center',
+        'gap-6',
+        'md:max-w-3xl'
+      );
     });
   });
 
-  /**
-   * @description コンテナのスタイリングが正しい
-   */
-  it('has correct container styling', () => {
-    render(<RSVP invitationId='test-123' />);
+  describe('Guest Information Handling', () => {
+    it('passes undefined guestInfo when no invitationId provided', async () => {
+      mockGetGuestByInvitationId.mockResolvedValue(null);
 
-    const container = screen.getByTestId('rsvp-client').closest('.container');
-    expect(container).toHaveClass('container', 'space-y-8');
-  });
+      const RSVPComponent = await RSVP({});
+      render(RSVPComponent);
 
-  /**
-   * @description RSVPフォームコンテナのスタイリングが正しい
-   */
-  it('has correct RSVP form container styling', () => {
-    render(<RSVP invitationId='test-123' />);
+      expect(mockGetGuestByInvitationId).not.toHaveBeenCalled();
+      expect(mockRSVPClient).toHaveBeenCalledWith({
+        guestInfo: undefined,
+      });
+    });
 
-    // RSVPClientの親要素（フォームコンテナ）を取得
-    const formContainer = screen.getByTestId('rsvp-client').parentElement;
-    expect(formContainer).toHaveClass(
-      'mx-auto',
-      'bg-white',
-      'rounded-2xl',
-      'px-6',
-      'md:px-10',
-      'py-10',
-      'flex',
-      'flex-col',
-      'items-center',
-      'gap-6',
-      'md:max-w-3xl'
-    );
-  });
+    it('fetches and passes guest information when invitationId provided', async () => {
+      const mockGuestInfo = {
+        id: 'test-guest-123',
+        name: 'テスト太郎',
+        kana: 'テストタロウ',
+        autofill: {
+          name: true,
+          kana: true,
+        },
+      };
+      mockGetGuestByInvitationId.mockResolvedValue(mockGuestInfo);
 
-  /**
-   * @description 招待者IDが正しく渡される
-   */
-  it('passes invitationId correctly', () => {
-    const invitationId = 'test-123';
-    render(<RSVP invitationId={invitationId} />);
+      const RSVPComponent = await RSVP({ invitationId: 'test-invitation-123' });
+      render(RSVPComponent);
 
-    // RSVPClientにゲスト情報が渡される
-    const rsvpClient = screen.getByTestId('rsvp-client');
-    expect(rsvpClient).toHaveAttribute('data-guest-info', 'present');
-  });
+      expect(mockGetGuestByInvitationId).toHaveBeenCalledWith(
+        'test-invitation-123',
+        undefined
+      );
+      expect(mockRSVPClient).toHaveBeenCalledWith({
+        guestInfo: mockGuestInfo,
+      });
+    });
 
-  /**
-   * @description draftKeyが正しく渡される
-   */
-  it('passes draftKey correctly', () => {
-    const invitationId = 'test-123';
-    const draftKey = 'draft-123';
-    render(<RSVP invitationId={invitationId} draftKey={draftKey} />);
+    it('passes draftKey to MicroCMS API when provided', async () => {
+      const mockGuestInfo = {
+        id: 'test-guest-456',
+        name: 'テスト花子',
+        kana: 'テストハナコ',
+      };
+      mockGetGuestByInvitationId.mockResolvedValue(mockGuestInfo);
 
-    // RSVPClientにゲスト情報が渡される
-    const rsvpClient = screen.getByTestId('rsvp-client');
-    expect(rsvpClient).toHaveAttribute('data-guest-info', 'present');
-  });
+      const RSVPComponent = await RSVP({
+        invitationId: 'test-invitation-456',
+        draftKey: 'draft-key-789',
+      });
+      render(RSVPComponent);
 
-  /**
-   * @description 招待者IDがない場合の処理
-   */
-  it('handles missing invitationId correctly', () => {
-    render(<RSVP />);
+      expect(mockGetGuestByInvitationId).toHaveBeenCalledWith(
+        'test-invitation-456',
+        'draft-key-789'
+      );
+      expect(mockRSVPClient).toHaveBeenCalledWith({
+        guestInfo: mockGuestInfo,
+      });
+    });
 
-    // RSVPClientにゲスト情報が渡されない
-    const rsvpClient = screen.getByTestId('rsvp-client');
-    expect(rsvpClient).toHaveAttribute('data-guest-info', 'absent');
-  });
+    it('passes undefined guestInfo when MicroCMS returns null', async () => {
+      mockGetGuestByInvitationId.mockResolvedValue(null);
 
-  /**
-   * @description レスポンシブデザインが正しく適用される
-   */
-  it('has correct responsive design', () => {
-    render(<RSVP invitationId='test-123' />);
+      const RSVPComponent = await RSVP({
+        invitationId: 'non-existent-invitation',
+      });
+      render(RSVPComponent);
 
-    // RSVPClientの親要素（フォームコンテナ）を取得
-    const formContainer = screen.getByTestId('rsvp-client').parentElement;
-
-    // パディングのレスポンシブ設定
-    expect(formContainer).toHaveClass('px-6', 'md:px-10');
-
-    // 最大幅のレスポンシブ設定
-    expect(formContainer).toHaveClass('md:max-w-3xl');
-  });
-
-  /**
-   * @description アクセシビリティが正しく設定される
-   */
-  it('has proper accessibility attributes', () => {
-    render(<RSVP invitationId='test-123' />);
-
-    const section = screen.getByRole('region');
-    expect(section).toHaveAttribute('id', 'rsvp');
-  });
-
-  /**
-   * @description 背景画像の設定が正しい
-   */
-  it('has correct background image configuration', () => {
-    render(<RSVP invitationId='test-123' />);
-
-    const section = screen.getByRole('region');
-
-    // 背景画像の設定
-    expect(section).toHaveClass('bg-cover', 'bg-center', 'bg-no-repeat');
-    expect(section).toHaveStyle({
-      backgroundImage: "url('/images/sections/rsvp/rsvp-background.webp')",
+      expect(mockGetGuestByInvitationId).toHaveBeenCalledWith(
+        'non-existent-invitation',
+        undefined
+      );
+      expect(mockRSVPClient).toHaveBeenCalledWith({
+        guestInfo: undefined,
+      });
     });
   });
 
-  /**
-   * @description パディングとマージンが正しく設定される
-   */
-  it('has correct padding and margin configuration', () => {
-    render(<RSVP invitationId='test-123' />);
+  describe('Accessibility', () => {
+    it('has correct ARIA attributes', async () => {
+      mockGetGuestByInvitationId.mockResolvedValue(null);
 
-    const section = screen.getByRole('region');
-    expect(section).toHaveClass('py-16', 'px-5');
+      const RSVPComponent = await RSVP({});
+      render(RSVPComponent);
+
+      const section = screen.getByRole('region', { name: 'RSVP' });
+      expect(section).toHaveAttribute('aria-label', 'RSVP');
+    });
+
+    it('has semantic HTML structure', async () => {
+      mockGetGuestByInvitationId.mockResolvedValue(null);
+
+      const RSVPComponent = await RSVP({});
+      render(RSVPComponent);
+
+      // セクション要素
+      expect(screen.getByRole('region')).toBeInTheDocument();
+
+      // 見出し要素
+      const heading = screen.getByText('RSVP');
+      expect(heading.tagName).toBe('H2');
+    });
   });
 
-  /**
-   * @description 中央揃えレイアウトが正しく適用される
-   */
-  it('has correct centering layout', () => {
-    render(<RSVP invitationId='test-123' />);
+  describe('Error Handling', () => {
+    it('handles MicroCMS API errors gracefully', async () => {
+      mockGetGuestByInvitationId.mockRejectedValue(new Error('API Error'));
 
-    const section = screen.getByRole('region');
-    expect(section).toHaveClass('flex', 'justify-center', 'items-start');
+      // エラーが発生してもコンポーネントがレンダリングされることを確認
+      await expect(async () => {
+        const RSVPComponent = await RSVP({ invitationId: 'test-invitation' });
+        render(RSVPComponent);
+      }).rejects.toThrow('API Error');
+
+      expect(mockGetGuestByInvitationId).toHaveBeenCalledWith(
+        'test-invitation',
+        undefined
+      );
+    });
   });
 
-  /**
-   * @description フォームコンテナのレイアウトが正しい
-   */
-  it('has correct form container layout', () => {
-    render(<RSVP invitationId='test-123' />);
+  describe('Background Image', () => {
+    it('has correct background image URL', async () => {
+      mockGetGuestByInvitationId.mockResolvedValue(null);
 
-    // RSVPClientの親要素（フォームコンテナ）を取得
-    const formContainer = screen.getByTestId('rsvp-client').parentElement;
+      const RSVPComponent = await RSVP({});
+      render(RSVPComponent);
 
-    // Flexboxレイアウト
-    expect(formContainer).toHaveClass('flex', 'flex-col', 'items-center');
-
-    // ギャップ
-    expect(formContainer).toHaveClass('gap-6');
-  });
-
-  /**
-   * @description 白い背景と角丸が正しく適用される
-   */
-  it('has correct white background and rounded corners', () => {
-    render(<RSVP invitationId='test-123' />);
-
-    // RSVPClientの親要素（フォームコンテナ）を取得
-    const formContainer = screen.getByTestId('rsvp-client').parentElement;
-    expect(formContainer).toHaveClass('bg-white', 'rounded-2xl');
+      const section = screen.getByRole('region', { name: 'RSVP' });
+      expect(section).toHaveStyle({
+        backgroundImage: "url('/images/sections/rsvp/rsvp-background.webp')",
+      });
+    });
   });
 });

@@ -474,17 +474,19 @@ describe('PostalCodeInput Component', () => {
     it('does not search address for invalid postal code', async () => {
       const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
       const onAddressChange = jest.fn();
-      
-      render(<PostalCodeInput {...defaultProps} onAddressChange={onAddressChange} />);
+
+      render(
+        <PostalCodeInput {...defaultProps} onAddressChange={onAddressChange} />
+      );
 
       const input = screen.getByRole('textbox');
-      
+
       // 無効な郵便番号を入力（validatePostalCodeがfalseを返すケース）
       fireEvent.change(input, { target: { value: '12' } }); // 短すぎる
-      
+
       // 少し待機してもfetchが呼ばれないことを確認
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       expect(mockFetch).not.toHaveBeenCalled();
       expect(onAddressChange).not.toHaveBeenCalled();
     });
@@ -507,14 +509,16 @@ describe('PostalCodeInput Component', () => {
       } as Response);
 
       const onAddressChange = jest.fn();
-      
-      render(<PostalCodeInput {...defaultProps} onAddressChange={onAddressChange} />);
+
+      render(
+        <PostalCodeInput {...defaultProps} onAddressChange={onAddressChange} />
+      );
 
       const input = screen.getByRole('textbox');
-      
+
       // 有効な郵便番号を入力
       fireEvent.change(input, { target: { value: '150-0002' } });
-      
+
       // 住所変更コールバックが呼ばれることを確認
       await waitFor(() => {
         expect(onAddressChange).toHaveBeenCalledWith({
@@ -534,17 +538,21 @@ describe('PostalCodeInput Component', () => {
       } as Response);
 
       const onAddressChange = jest.fn();
-      
-      render(<PostalCodeInput {...defaultProps} onAddressChange={onAddressChange} />);
+
+      render(
+        <PostalCodeInput {...defaultProps} onAddressChange={onAddressChange} />
+      );
 
       const input = screen.getByRole('textbox');
-      
+
       // 有効な郵便番号を入力
       fireEvent.change(input, { target: { value: '999-9999' } });
-      
+
       // エラーメッセージが表示されることを確認
       await waitFor(() => {
-        expect(screen.getByText('該当する住所が見つかりませんでした')).toBeInTheDocument();
+        expect(
+          screen.getByText('該当する住所が見つかりませんでした')
+        ).toBeInTheDocument();
       });
 
       expect(onAddressChange).not.toHaveBeenCalled();
@@ -560,17 +568,21 @@ describe('PostalCodeInput Component', () => {
       } as Response);
 
       const onAddressChange = jest.fn();
-      
-      render(<PostalCodeInput {...defaultProps} onAddressChange={onAddressChange} />);
+
+      render(
+        <PostalCodeInput {...defaultProps} onAddressChange={onAddressChange} />
+      );
 
       const input = screen.getByRole('textbox');
-      
+
       // 有効な郵便番号を入力
       fireEvent.change(input, { target: { value: '999-9999' } });
-      
+
       // エラーメッセージが表示されることを確認
       await waitFor(() => {
-        expect(screen.getByText('該当する住所が見つかりませんでした')).toBeInTheDocument();
+        expect(
+          screen.getByText('該当する住所が見つかりませんでした')
+        ).toBeInTheDocument();
       });
 
       expect(onAddressChange).not.toHaveBeenCalled();
@@ -587,17 +599,21 @@ describe('PostalCodeInput Component', () => {
       } as Response);
 
       const onAddressChange = jest.fn();
-      
-      render(<PostalCodeInput {...defaultProps} onAddressChange={onAddressChange} />);
+
+      render(
+        <PostalCodeInput {...defaultProps} onAddressChange={onAddressChange} />
+      );
 
       const input = screen.getByRole('textbox');
-      
+
       // 有効な郵便番号を入力
       fireEvent.change(input, { target: { value: '999-9999' } });
-      
+
       // エラーメッセージが表示されることを確認
       await waitFor(() => {
-        expect(screen.getByText('該当する住所が見つかりませんでした')).toBeInTheDocument();
+        expect(
+          screen.getByText('該当する住所が見つかりませんでした')
+        ).toBeInTheDocument();
       });
 
       expect(onAddressChange).not.toHaveBeenCalled();

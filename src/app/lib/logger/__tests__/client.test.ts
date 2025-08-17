@@ -113,10 +113,14 @@ describe('clientDevLogger', () => {
 
       expect(mockConsoleLog).toHaveBeenCalledTimes(1);
       const logData = mockConsoleLog.mock.calls[0][1];
-      
+
       expect(logData.timestamp).toBeTruthy();
-      expect(new Date(logData.timestamp).getTime()).toBeGreaterThanOrEqual(new Date(beforeTime).getTime());
-      expect(new Date(logData.timestamp).getTime()).toBeLessThanOrEqual(new Date(afterTime).getTime());
+      expect(new Date(logData.timestamp).getTime()).toBeGreaterThanOrEqual(
+        new Date(beforeTime).getTime()
+      );
+      expect(new Date(logData.timestamp).getTime()).toBeLessThanOrEqual(
+        new Date(afterTime).getTime()
+      );
     });
 
     it('includes all config properties in log data', () => {
@@ -241,7 +245,11 @@ describe('clientDevLogger', () => {
     });
 
     it('handles special characters in context and message', () => {
-      clientDevLogger.info('Test@Context#1', 'Message with special chars: äöü', mockConfig);
+      clientDevLogger.info(
+        'Test@Context#1',
+        'Message with special chars: äöü',
+        mockConfig
+      );
 
       expect(mockConsoleLog).toHaveBeenCalledWith(
         '[INFO] Test@Context#1: Message with special chars: äöü',
@@ -265,7 +273,7 @@ describe('clientDevLogger', () => {
       clientDevLogger.info('TestContext', 'Test message', mockConfig);
 
       const logData = mockConsoleLog.mock.calls[0][1];
-      
+
       expect(logData).toHaveProperty('timestamp');
       expect(logData).toHaveProperty('level', 'info');
       expect(logData).toHaveProperty('message', 'Test message');
@@ -314,10 +322,16 @@ describe('clientDevLogger', () => {
       clientDevLogger.error('Context3', 'Message 3', mockConfig);
 
       expect(mockConsoleLog).toHaveBeenCalledTimes(3);
-      
-      expect(mockConsoleLog.mock.calls[0][0]).toBe('[INFO] Context1: Message 1');
-      expect(mockConsoleLog.mock.calls[1][0]).toBe('[WARN] Context2: Message 2');
-      expect(mockConsoleLog.mock.calls[2][0]).toBe('[ERROR] Context3: Message 3');
+
+      expect(mockConsoleLog.mock.calls[0][0]).toBe(
+        '[INFO] Context1: Message 1'
+      );
+      expect(mockConsoleLog.mock.calls[1][0]).toBe(
+        '[WARN] Context2: Message 2'
+      );
+      expect(mockConsoleLog.mock.calls[2][0]).toBe(
+        '[ERROR] Context3: Message 3'
+      );
     });
 
     it('generates unique timestamps for rapid successive calls', () => {
@@ -330,7 +344,9 @@ describe('clientDevLogger', () => {
       expect(timestamp1).toBeTruthy();
       expect(timestamp2).toBeTruthy();
       // Timestamps should be at least equal (could be same if very rapid)
-      expect(new Date(timestamp2).getTime()).toBeGreaterThanOrEqual(new Date(timestamp1).getTime());
+      expect(new Date(timestamp2).getTime()).toBeGreaterThanOrEqual(
+        new Date(timestamp1).getTime()
+      );
     });
   });
 
@@ -344,7 +360,7 @@ describe('clientDevLogger', () => {
 
     it('handles undefined NODE_ENV as non-development', () => {
       delete process.env.NODE_ENV;
-      
+
       clientDevLogger.info('TestContext', 'Test message', mockConfig);
 
       expect(mockConsoleLog).not.toHaveBeenCalled();
@@ -373,7 +389,7 @@ describe('clientDevLogger', () => {
 
     it('handles very long messages correctly', () => {
       const longMessage = 'a'.repeat(1000);
-      
+
       expect(() => {
         clientDevLogger.info('TestContext', longMessage, mockConfig);
       }).not.toThrow();
@@ -392,7 +408,11 @@ describe('clientDevLogger', () => {
       };
 
       expect(() => {
-        clientDevLogger.info('TestContext', '✅ Success message ✅', unicodeConfig);
+        clientDevLogger.info(
+          'TestContext',
+          '✅ Success message ✅',
+          unicodeConfig
+        );
       }).not.toThrow();
 
       expect(mockConsoleLog).toHaveBeenCalledWith(

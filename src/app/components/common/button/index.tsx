@@ -27,6 +27,8 @@ interface ButtonProps {
   onClick?: () => void;
   /** 追加のCSSクラス */
   className?: string;
+  /** テスト用データ属性 */
+  'data-testid'?: string;
 }
 
 /**
@@ -46,6 +48,7 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   onClick,
   className = '',
+  'data-testid': dataTestId,
 }) => {
   const baseClasses =
     'inline-flex items-center justify-center rounded-lg font-noto font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none disabled:cursor-not-allowed transform hover:scale-105 active:scale-95';
@@ -72,6 +75,7 @@ const Button: React.FC<ButtonProps> = ({
       disabled={disabled}
       onClick={onClick}
       className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      data-testid={dataTestId}
     >
       {children}
     </button>

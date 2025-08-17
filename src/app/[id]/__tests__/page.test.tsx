@@ -7,7 +7,7 @@
 import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 import { validateInvitationId, normalizeInvitationId } from '../utils';
-import InvitationPage, { generateMetadata, generateStaticParams } from '../page';
+import InvitationPage from '../page';
 import { notFound } from 'next/navigation';
 import { getMicroCMSClient } from '@/app/lib/api/microcms';
 
@@ -33,14 +33,20 @@ jest.mock('@/app/components/sections', () => ({
   Countdown: () => <div data-testid='countdown'>Countdown</div>,
   Host: () => <div data-testid='host'>Host</div>,
   Message: ({ invitationId, draftKey }: any) => (
-    <div data-testid='message'>Message - {invitationId} {draftKey}</div>
+    <div data-testid='message'>
+      Message - {invitationId} {draftKey}
+    </div>
   ),
   Gallery: () => <div data-testid='gallery'>Gallery</div>,
   Event: ({ invitationId, draftKey }: any) => (
-    <div data-testid='event'>Event - {invitationId} {draftKey}</div>
+    <div data-testid='event'>
+      Event - {invitationId} {draftKey}
+    </div>
   ),
   RSVP: ({ invitationId, draftKey }: any) => (
-    <div data-testid='rsvp'>RSVP - {invitationId} {draftKey}</div>
+    <div data-testid='rsvp'>
+      RSVP - {invitationId} {draftKey}
+    </div>
   ),
   Footer: () => <div data-testid='footer'>Footer</div>,
 }));
@@ -70,16 +76,36 @@ describe('InvitationPage', () => {
       const params = Promise.resolve({ id: 'test-123' });
       const { container } = render(await InvitationPage({ params }));
 
-      expect(container.querySelector('[data-testid="main-visual"]')).toBeInTheDocument();
-      expect(container.querySelector('[data-testid="countdown"]')).toBeInTheDocument();
-      expect(container.querySelector('[data-testid="navigation"]')).toBeInTheDocument();
-      expect(container.querySelector('[data-testid="host"]')).toBeInTheDocument();
-      expect(container.querySelector('[data-testid="message"]')).toBeInTheDocument();
-      expect(container.querySelector('[data-testid="gallery"]')).toBeInTheDocument();
-      expect(container.querySelector('[data-testid="event"]')).toBeInTheDocument();
-      expect(container.querySelector('[data-testid="rsvp"]')).toBeInTheDocument();
-      expect(container.querySelector('[data-testid="footer"]')).toBeInTheDocument();
-      expect(container.querySelector('[data-testid="back-to-top-button"]')).toBeInTheDocument();
+      expect(
+        container.querySelector('[data-testid="main-visual"]')
+      ).toBeInTheDocument();
+      expect(
+        container.querySelector('[data-testid="countdown"]')
+      ).toBeInTheDocument();
+      expect(
+        container.querySelector('[data-testid="navigation"]')
+      ).toBeInTheDocument();
+      expect(
+        container.querySelector('[data-testid="host"]')
+      ).toBeInTheDocument();
+      expect(
+        container.querySelector('[data-testid="message"]')
+      ).toBeInTheDocument();
+      expect(
+        container.querySelector('[data-testid="gallery"]')
+      ).toBeInTheDocument();
+      expect(
+        container.querySelector('[data-testid="event"]')
+      ).toBeInTheDocument();
+      expect(
+        container.querySelector('[data-testid="rsvp"]')
+      ).toBeInTheDocument();
+      expect(
+        container.querySelector('[data-testid="footer"]')
+      ).toBeInTheDocument();
+      expect(
+        container.querySelector('[data-testid="back-to-top-button"]')
+      ).toBeInTheDocument();
     });
 
     it('has correct page structure and styling', async () => {
@@ -94,9 +120,15 @@ describe('InvitationPage', () => {
       const params = Promise.resolve({ id: 'test-123', draftKey: 'draft-456' });
       const { container } = render(await InvitationPage({ params }));
 
-      expect(container.querySelector('[data-testid="message"]')).toHaveTextContent('test-123 draft-456');
-      expect(container.querySelector('[data-testid="event"]')).toHaveTextContent('test-123 draft-456');
-      expect(container.querySelector('[data-testid="rsvp"]')).toHaveTextContent('test-123 draft-456');
+      expect(
+        container.querySelector('[data-testid="message"]')
+      ).toHaveTextContent('test-123 draft-456');
+      expect(
+        container.querySelector('[data-testid="event"]')
+      ).toHaveTextContent('test-123 draft-456');
+      expect(container.querySelector('[data-testid="rsvp"]')).toHaveTextContent(
+        'test-123 draft-456'
+      );
     });
   });
 
@@ -106,7 +138,7 @@ describe('InvitationPage', () => {
       (getMicroCMSClient as jest.Mock).mockResolvedValue(mockClient);
 
       const params = Promise.resolve({ id: 'invalid-id' });
-      
+
       await InvitationPage({ params });
 
       expect(notFound).toHaveBeenCalled();
