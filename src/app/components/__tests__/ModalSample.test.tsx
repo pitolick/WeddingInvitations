@@ -434,4 +434,58 @@ describe('ModalSample', () => {
       expect(screen.queryByTestId('modal')).not.toBeInTheDocument();
     });
   });
+
+  describe('現実的判断：既存テストでカバレッジ改善確認', () => {
+    it('確認モーダルを開いて基本動作確認（カバレッジ改善狙い）', async () => {
+      const user = userEvent.setup();
+      render(<ModalSample />);
+
+      // 確認モーダルを開く
+      const openButton = screen.getByText('確認モーダルを開く');
+      await user.click(openButton);
+      expect(screen.getByTestId('modal')).toBeInTheDocument();
+
+      // 「キャンセル」ボタンで閉じる（行83のonCloseが実行される可能性）
+      const cancelButton = screen.getByText('キャンセル');
+      await user.click(cancelButton);
+      expect(screen.queryByTestId('modal')).not.toBeInTheDocument();
+    });
+
+    it('フォームモーダルを開いて基本動作確認（カバレッジ改善狙い）', async () => {
+      const user = userEvent.setup();
+      render(<ModalSample />);
+
+      // フォームモーダルを開く
+      const openButton = screen.getByText('フォームモーダルを開く');
+      await user.click(openButton);
+      expect(screen.getByTestId('modal')).toBeInTheDocument();
+
+      // 「キャンセル」ボタンで閉じる（行123のonCloseが実行される可能性）
+      const cancelButton = screen.getByText('キャンセル');
+      await user.click(cancelButton);
+      expect(screen.queryByTestId('modal')).not.toBeInTheDocument();
+    });
+
+    it('大サイズモーダルを開いて表示内容確認（カバレッジ改善狙い）', async () => {
+      const user = userEvent.setup();
+      render(<ModalSample />);
+
+      // 大サイズモーダルを開く
+      const openButton = screen.getByText('大サイズモーダルを開く');
+      await user.click(openButton);
+      expect(screen.getByTestId('modal')).toBeInTheDocument();
+
+      // モーダル内容を確認
+      expect(
+        screen.getByText(
+          'これは大サイズのモーダルです。より多くのコンテンツを表示できます。'
+        )
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText('モーダルのサイズバリエーション')
+      ).toBeInTheDocument();
+
+      // 実際のクローズはこのテスト内では行わない（他のテストでカバーしている）
+    });
+  });
 });
