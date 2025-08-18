@@ -115,6 +115,46 @@ describe('Form Error Handling Utilities', () => {
       );
     });
 
+    it('メールアドレス形式のデフォルトメッセージを返す', () => {
+      expect(getDefaultFormUserMessage('email', 'email')).toBe(
+        'メールアドレスの形式が正しくありません。'
+      );
+    });
+
+    it('電話番号形式のデフォルトメッセージを返す', () => {
+      expect(getDefaultFormUserMessage('phone', 'phone')).toBe(
+        '電話番号の形式が正しくありません。'
+      );
+    });
+
+    it('郵便番号形式のデフォルトメッセージを返す', () => {
+      expect(getDefaultFormUserMessage('postalCode', 'postalCode')).toBe(
+        '郵便番号は7桁の数字で入力してください。'
+      );
+    });
+
+    it('最大文字数エラーのデフォルトメッセージを返す', () => {
+      expect(getDefaultFormUserMessage('name', 'maxLength')).toBe(
+        'お名前が長すぎます。'
+      );
+    });
+
+    it('最小文字数エラーのデフォルトメッセージを返す', () => {
+      expect(getDefaultFormUserMessage('name', 'minLength')).toBe(
+        'お名前が短すぎます。'
+      );
+    });
+
+    it('パターンエラーのデフォルトメッセージを返す', () => {
+      expect(getDefaultFormUserMessage('name', 'pattern')).toBe(
+        'お名前の形式が正しくありません。'
+      );
+    });
+
+    it('フィールド未指定時のデフォルトメッセージを返す', () => {
+      expect(getDefaultFormUserMessage()).toBe('入力内容に問題があります。');
+    });
+
     it('未知のフィールドとルールのデフォルトメッセージを返す', () => {
       expect(getDefaultFormUserMessage('unknown', 'unknown')).toBe(
         'unknownの入力内容をご確認ください。'
@@ -132,6 +172,42 @@ describe('Form Error Handling Utilities', () => {
     it('郵便番号バリデーションのデフォルトメッセージを返す', () => {
       expect(getDefaultValidationUserMessage('postalCode', 'postalCode')).toBe(
         '郵便番号は7桁の数字で入力してください。'
+      );
+    });
+
+    it('電話番号バリデーションのデフォルトメッセージを返す', () => {
+      expect(getDefaultValidationUserMessage('phone', 'phone')).toBe(
+        '電話番号は正しい形式で入力してください。'
+      );
+    });
+
+    it('最大文字数バリデーションのデフォルトメッセージを返す', () => {
+      expect(getDefaultValidationUserMessage('name', 'maxLength')).toBe(
+        'お名前は指定された文字数以内で入力してください。'
+      );
+    });
+
+    it('最小文字数バリデーションのデフォルトメッセージを返す', () => {
+      expect(getDefaultValidationUserMessage('name', 'minLength')).toBe(
+        'お名前は指定された文字数以上で入力してください。'
+      );
+    });
+
+    it('パターンバリデーションのデフォルトメッセージを返す', () => {
+      expect(getDefaultValidationUserMessage('name', 'pattern')).toBe(
+        'お名前の形式が正しくありません。'
+      );
+    });
+
+    it('必須バリデーションのデフォルトメッセージを返す', () => {
+      expect(getDefaultValidationUserMessage('name', 'required')).toBe(
+        'お名前は必須項目です。'
+      );
+    });
+
+    it('フィールド未指定時のデフォルトメッセージを返す', () => {
+      expect(getDefaultValidationUserMessage()).toBe(
+        '入力内容の形式が正しくありません。'
       );
     });
 
