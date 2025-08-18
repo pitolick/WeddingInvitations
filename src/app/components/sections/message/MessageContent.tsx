@@ -6,7 +6,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageProps } from './Message.types';
 import DearBlock from './DearBlock';
@@ -26,17 +26,33 @@ export const MessageContent: React.FC<MessageProps> = ({
 }) => {
   const [isDream, setIsDream] = useState(false);
   const [showMagicEffect, setShowMagicEffect] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleClick = () => {
     // 魔法のエフェクトを表示
     setShowMagicEffect(true);
 
+    // 既存のタイマーがあればクリア
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
     // 少し遅延してから文章を切り替え
-    setTimeout(() => {
-      setIsDream(!isDream);
+    timerRef.current = setTimeout(() => {
+      setIsDream(prev => !prev);
       setShowMagicEffect(false);
+      timerRef.current = null;
     }, 2000);
   };
+
+  // コンポーネントアンマウント時のクリーンアップ
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <>

@@ -102,15 +102,27 @@ const rsvpSchema = z.object({
     phone: z
       .string()
       .min(1, '電話番号は必須です')
-      .regex(/^[\d-]+$/, '電話番号は数字とハイフンのみで入力してください')
-      .refine(
-        val => val.replace(/-/g, '').length >= 10,
-        '電話番号は10桁以上で入力してください'
-      )
-      .refine(
-        val => val.replace(/-/g, '').length <= 15,
-        '電話番号は15桁以下で入力してください'
-      )
+      .superRefine((val, ctx) => {
+        const digits = val.replace(/-/g, '');
+        if (!/^\d+$/.test(digits)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: '電話番号は数字とハイフンのみで入力してください',
+          });
+        }
+        if (digits.length < 10) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: '電話番号は10桁以上で入力してください',
+          });
+        }
+        if (digits.length > 15) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: '電話番号は15桁以下で入力してください',
+          });
+        }
+      })
       .transform(val => val.replace(/-/g, '')), // ハイフンを除去して保存
     email: z.email('メールアドレスの形式が正しくありません'),
   }),
@@ -410,9 +422,12 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
       });
 
       if (!response.ok) {
-        setSubmitError('サーバーエラーが発生しました');
-        setIsSubmitting(false);
-        throw new Error(`送信に失敗しました (${response.status})`);
+        // 具体的なメッセージでthrowし、catch側でその文言を表示
+        throw new Error(
+          response.status >= 500
+            ? 'サーバーエラーが発生しました'
+            : `送信に失敗しました (${response.status})`
+        );
       }
 
       await response.json();
@@ -428,8 +443,12 @@ const RSVPClient: React.FC<RSVPClientProps> = ({ guestInfo }) => {
         const submittedKey = `rsvp_submitted_${guestId}`;
         localStorage.setItem(submittedKey, 'true');
       }
-    } catch {
-      setSubmitError('送信中にエラーが発生しました');
+    } catch (e) {
+      const msg =
+        e instanceof Error && e.message
+          ? e.message
+          : '送信中にエラーが発生しました';
+      setSubmitError(msg);
       setIsSubmitting(false);
     }
   };
