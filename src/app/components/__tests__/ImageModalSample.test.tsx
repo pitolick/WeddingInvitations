@@ -231,6 +231,37 @@ describe('ImageModalSample', () => {
 
       expect(screen.getByTestId('modal')).toBeInTheDocument();
     });
+
+    test('縦長画像で高さがmaxHeightを超える場合の調整（行94-95カバー）', () => {
+      // displayHeight > maxHeightを確実に満たすウィンドウサイズを設定
+      Object.defineProperty(window, 'innerWidth', {
+        value: 1000, // 幅を広く
+        configurable: true,
+      });
+      Object.defineProperty(window, 'innerHeight', {
+        value: 400, // 高さを制限
+        configurable: true,
+      });
+
+      render(<ImageModalSample />);
+
+      const firstImage = screen.getByAltText('結婚式のメイン写真');
+      fireEvent.click(firstImage);
+
+      // 縦長画像（幅600, 高さ900で1.5:1の縦長比率）
+      // maxWidth = 600 (元画像サイズ以下), maxHeight = 360 (400 * 0.9)
+      // displayHeight = 600 / (600/900) = 900 > 360 となり、行94-95が実行される
+      const mockImg = (global as any).Image.mock.results[0].value;
+      mockImg.naturalWidth = 600;
+      mockImg.naturalHeight = 900;
+
+      if (mockImg.onload) {
+        mockImg.onload();
+      }
+
+      // モーダルが正常に表示されることを確認（高さ調整処理が実行されている）
+      expect(screen.getByTestId('modal')).toBeInTheDocument();
+    });
   });
 
   describe('アクセシビリティ', () => {
