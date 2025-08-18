@@ -181,6 +181,100 @@ describe('TypeDefinitionExample', () => {
     });
   });
 
+  describe('createConvertedDataExample', () => {
+    it('convertToDearBlockData関数を使用してデータを変換する', () => {
+      const result = TypeDefinitionExample.createConvertedDataExample();
+
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('guestName', 'テスト太郎');
+      expect(result).toHaveProperty('kana', 'テストタロウ');
+      expect(result).toHaveProperty('dear', 'テスト太郎様');
+      expect(result).toHaveProperty('message', 'おめでとうございます！');
+      expect(result).toHaveProperty('inviteTypes');
+      expect(result).toHaveProperty('autofill');
+      expect(result).toHaveProperty('familyMembers');
+    });
+
+    it('変換されたデータがDearBlockData型に適合する', () => {
+      const result = TypeDefinitionExample.createConvertedDataExample();
+
+      // TypeScriptの型チェックを通過することを確認
+      const dearBlockData: DearBlockData = result;
+      expect(dearBlockData).toBeDefined();
+    });
+
+    it('元のGuestContentと変換後のDearBlockDataが一致する', () => {
+      const originalData = TypeDefinitionExample.createGuestContentExample();
+      const convertedData = TypeDefinitionExample.createConvertedDataExample();
+
+      expect(convertedData.guestName).toBe(originalData.name);
+      expect(convertedData.kana).toBe(originalData.kana);
+      expect(convertedData.dear).toBe(originalData.dear);
+      expect(convertedData.message).toBe(originalData.message);
+      expect(convertedData.inviteTypes).toEqual(originalData.invite);
+    });
+  });
+
+  describe('getConstantsExample', () => {
+    it('全ての定数オブジェクトを含むオブジェクトを返す', () => {
+      const result = TypeDefinitionExample.getConstantsExample();
+
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('appConfig');
+      expect(result).toHaveProperty('breakpoints');
+      expect(result).toHaveProperty('sectionIds');
+      expect(result).toHaveProperty('rsvpStatus');
+      expect(result).toHaveProperty('eventInfo');
+      expect(result).toHaveProperty('imagePaths');
+      expect(result).toHaveProperty('apiConfig');
+      expect(result).toHaveProperty('formConfig');
+      expect(result).toHaveProperty('animationConfig');
+      expect(result).toHaveProperty('colors');
+      expect(result).toHaveProperty('navigationConfig');
+      expect(result).toHaveProperty('countdownConfig');
+      expect(result).toHaveProperty('galleryConfig');
+      expect(result).toHaveProperty('messageConfig');
+      expect(result).toHaveProperty('hostConfig');
+      expect(result).toHaveProperty('errorMessages');
+      expect(result).toHaveProperty('successMessages');
+      expect(result).toHaveProperty('validationConfig');
+      expect(result).toHaveProperty('performanceConfig');
+      expect(result).toHaveProperty('accessibilityConfig');
+    });
+
+    it('各定数が正しく定義されている', () => {
+      const result = TypeDefinitionExample.getConstantsExample();
+
+      // 重要な定数が存在することを確認
+      expect(result.appConfig).toBeDefined();
+      expect(result.breakpoints).toBeDefined();
+      expect(result.sectionIds).toBeDefined();
+      expect(result.rsvpStatus).toBeDefined();
+      expect(result.eventInfo).toBeDefined();
+      expect(result.imagePaths).toBeDefined();
+      expect(result.apiConfig).toBeDefined();
+      expect(result.formConfig).toBeDefined();
+      expect(result.animationConfig).toBeDefined();
+      expect(result.colors).toBeDefined();
+    });
+
+    it('設定系の定数が正しく定義されている', () => {
+      const result = TypeDefinitionExample.getConstantsExample();
+
+      // 設定系定数の存在確認
+      expect(result.navigationConfig).toBeDefined();
+      expect(result.countdownConfig).toBeDefined();
+      expect(result.galleryConfig).toBeDefined();
+      expect(result.messageConfig).toBeDefined();
+      expect(result.hostConfig).toBeDefined();
+      expect(result.errorMessages).toBeDefined();
+      expect(result.successMessages).toBeDefined();
+      expect(result.validationConfig).toBeDefined();
+      expect(result.performanceConfig).toBeDefined();
+      expect(result.accessibilityConfig).toBeDefined();
+    });
+  });
+
   describe('データの一貫性', () => {
     it('GuestContentとDearBlockDataの対応するフィールドが一致する', () => {
       const guestContent = TypeDefinitionExample.createGuestContentExample();
@@ -218,6 +312,18 @@ describe('TypeDefinitionExample', () => {
         expect(guestContent.autofill.kana).toBe(autofillConfig.kana);
         expect(dearBlockData.autofill.kana).toBe(autofillConfig.kana);
       }
+    });
+
+    it('変換関数を使用したデータの一貫性', () => {
+      const convertedData = TypeDefinitionExample.createConvertedDataExample();
+      const directData = TypeDefinitionExample.createDearBlockDataExample();
+
+      // 変換関数を使用したデータと直接作成されたデータの一貫性確認
+      expect(convertedData.guestName).toBe(directData.guestName);
+      expect(convertedData.kana).toBe(directData.kana);
+      expect(convertedData.dear).toBe(directData.dear);
+      expect(convertedData.message).toBe(directData.message);
+      expect(convertedData.inviteTypes).toEqual(directData.inviteTypes);
     });
   });
 });
