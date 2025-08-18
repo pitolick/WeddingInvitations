@@ -149,6 +149,7 @@ export const DEFAULT_EVENTS_DATA: EventData[] = [
             カチューシャ
           </span>
           や
+          <br className='block lg:hidden' />
           <span className='font-bold text-base text-lavender-600'>
             ファンキャップ
           </span>
@@ -159,6 +160,7 @@ export const DEFAULT_EVENTS_DATA: EventData[] = [
         <p>当日は着いてから更衣室で着替えられます</p>
         <p>お荷物は受付前にクロークへ預けられます</p>
         <p>駐車場は80台（全参加者分）収容可能です</p>
+        <br />
         <p>
           🦊🐻🐰 <span className='font-bold text-base'>ロストキッズたちへ</span>{' '}
           🦝🦝🦨
@@ -166,7 +168,9 @@ export const DEFAULT_EVENTS_DATA: EventData[] = [
         <p>
           会場内のキッズスペース・ベビーベッド
           <br />
-          おもちゃ・お子様ランチ・ベビーチェアに授乳室もあります
+          おもちゃ・お子様ランチ・ベビーチェアに
+          <br className='block lg:hidden' />
+          授乳室もあります
         </p>
       </>
     ),
@@ -214,7 +218,7 @@ export const DEFAULT_EVENTS_DATA: EventData[] = [
       },
       {
         key: '会費',
-        value: '0,000円',
+        value: '6,000円',
       },
     ],
     message: (
@@ -230,7 +234,7 @@ export const DEFAULT_EVENTS_DATA: EventData[] = [
         <p>
           たくさんの景品を用意したゲームと
           <br />
-          立食ビュッフェをお楽しみください
+          ビュッフェをお楽しみください
         </p>
         <p>
           新郎新婦との

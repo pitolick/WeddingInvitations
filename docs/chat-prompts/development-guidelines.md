@@ -17,7 +17,7 @@
 
 ### ブランチ命名規則
 
-```
+```bash
 feature/issue-{number}-{title}
 例: feature/issue-24-mv-section-implementation
 ```
@@ -70,7 +70,7 @@ curl -X POST -H "Authorization: token $GITHUB_TOKEN" \
 
 **プルリクエスト説明に記載:**
 
-```
+```bash
 fixes #123
 closes #123
 resolves #123
@@ -164,6 +164,128 @@ devLogger.info('debug_info', 'デバッグ情報', { data: 'value' });
 - Jest + Testing Libraryを使用
 - コンポーネント、ユーティリティ、APIのテストを実装
 - カバレッジ80%以上を目標
+
+### テストコード作成時のルール
+
+#### 基本原則：対象処理の変更禁止
+
+**すでに対象となる処理の動作確認が完了しているものに対してテストコードを作成する際は、基本的にテスト対象となる処理をテストコードに合わせて変更することは禁止します。**
+
+#### 例外として許可される変更
+
+##### 1. テスト用属性の追加（動作に影響しない場合のみ）
+
+**許可される変更：**
+
+- `data-testid`属性の追加
+- `data-test-*`属性の追加
+- その他、テストコードでのみ使用される属性の追加
+
+**条件：**
+
+- 対象処理の動作や仕様が変動しないこと
+- ユーザーインターフェースに影響しないこと
+- パフォーマンスに影響しないこと
+
+**例：**
+
+```tsx
+// 許可される変更
+<div data-testid="user-profile-section">
+  <h1>ユーザープロフィール</h1>
+</div>
+
+// 禁止される変更
+<div className="user-profile" data-testid="user-profile-section">
+  <h1>ユーザープロフィール</h1>
+</div>
+```
+
+##### 2. 明らかなバグの修正（事前承認が必要）
+
+**許可される変更：**
+
+- テストケースの方が動作として明らかに正しい場合
+- 対象処理のどの部分がどのように誤っているかが明確な場合
+
+**手順：**
+
+1. バグの内容と修正方法を明確に説明
+2. リーダーまたはチームメンバーからの承認を得る
+3. 承認後に修正を実施
+
+#### フロントエンドテストでの要素取得方法
+
+##### 推奨される要素取得方法
+
+1. **`data-testid`属性を使用**
+
+   ```tsx
+   screen.getByTestId('user-profile-section');
+   ```
+
+2. **テキスト内容を使用**
+
+   ```tsx
+   screen.getByText('ユーザープロフィール');
+   screen.getByText(/ユーザー.*プロフィール/);
+   ```
+
+3. **ラベルを使用**
+
+   ```tsx
+   screen.getByLabelText('ユーザー名');
+   ```
+
+4. **ロールを使用**
+
+   ```tsx
+   screen.getByRole('button', { name: '送信' });
+   screen.getByRole('form');
+   ```
+
+##### 禁止される要素取得方法
+**以下の方法での要素取得は基本禁止：**
+
+1. **クラス名による取得**
+
+   **理由：** アクセシビリティに基づく取得（ロール/ラベル/テキスト）や data-testid に比べて
+   テストがドキュメント構造や命名変更に脆弱で、意図が伝わりにくいため非推奨
+##### 要素取得の優先順位
+
+1. **最優先：** `data-testid`属性
+2. **高優先：** テキスト内容、ラベル、ロール
+3. **中優先：** 親要素からの相対的な位置
+4. **低優先：** DOM構造に依存した取得
+
+##### 実装例
+
+```tsx
+// 良い例
+<div data-testid='contact-form'>
+  <h2>連絡先フォーム</h2>
+  <form>
+    <label htmlFor='name'>お名前</label>
+    <input id='name' type='text' />
+    <button type='submit'>送信</button>
+  </form>
+</div>;
+
+// テストコード
+const form = screen.getByTestId('contact-form');
+const nameInput = screen.getByLabelText('お名前');
+const submitButton = screen.getByRole('button', { name: '送信' });
+```
+
+#### テストコード作成時のチェックリスト
+
+- [ ] 対象処理の動作確認が完了している
+- [ ] テスト用属性の追加のみで対応可能
+- [ ] 動作や仕様に影響がない
+- [ ] 要素取得方法が適切（クラス名・ID使用禁止）
+- [ ] `data-testid`属性を適切に配置
+- [ ] テストケースが網羅的
+- [ ] テストが安定して動作する
 
 ## Git運用
 

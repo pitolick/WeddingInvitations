@@ -6,7 +6,7 @@
 
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageProps } from './Message.types';
 import DearBlock from './DearBlock';
@@ -26,17 +26,33 @@ export const MessageContent: React.FC<MessageProps> = ({
 }) => {
   const [isDream, setIsDream] = useState(false);
   const [showMagicEffect, setShowMagicEffect] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleClick = () => {
     // 魔法のエフェクトを表示
     setShowMagicEffect(true);
 
+    // 既存のタイマーがあればクリア
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
     // 少し遅延してから文章を切り替え
-    setTimeout(() => {
-      setIsDream(!isDream);
+    timerRef.current = setTimeout(() => {
+      setIsDream(prev => !prev);
       setShowMagicEffect(false);
+      timerRef.current = null;
     }, 2000);
   };
+
+  // コンポーネントアンマウント時のクリーンアップ
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -63,7 +79,7 @@ export const MessageContent: React.FC<MessageProps> = ({
           className='w-full'
         >
           <div className='flex flex-col items-center gap-4'>
-            <div className='prose prose-p:my-3 text-base md:text-base  text-center text-gray-900 md:text-black whitespace-pre-line relative'>
+            <div className='prose prose-p:my-3 text-sm md:text-base text-center text-gray-900 md:text-black whitespace-pre-line relative'>
               {/* 魔法のエフェクト */}
               <MagicEffect
                 isActive={showMagicEffect}
@@ -84,11 +100,11 @@ export const MessageContent: React.FC<MessageProps> = ({
                   {!isDream ? (
                     <>
                       <p>
-                        立冬とは申せ今年はオラフも
+                        立秋とは名ばかりのオラフも
                         <br className='block md:hidden' />
                         溶けてしまいそうな
                         <br className='block md:hidden' />
-                        晩秋でございます⛄️
+                        猛暑が続いております⛄️
                       </p>
                       <p>
                         皆様にはお健やかにお過ごしのことと

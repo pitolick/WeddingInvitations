@@ -27,7 +27,7 @@ const Message: React.FC<MessageProps> = ({ invitationId, draftKey }) => {
       {/* container */}
       <div className='flex flex-col items-center w-full px-6 container'>
         {/* Frame 1（半透明白・角丸） */}
-        <div className='relative flex flex-col items-center w-full max-w-full p-6 md:p-8 bg-white/40 rounded-2xl overflow-hidden'>
+        <div className='relative flex flex-col items-center w-full max-w-full py-6 px-3 md:p-8 bg-white/40 rounded-2xl overflow-hidden'>
           {/* アニメーション付きコンテンツ */}
           <MessageContent invitationId={invitationId} draftKey={draftKey} />
 
