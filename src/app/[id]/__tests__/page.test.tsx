@@ -7,7 +7,10 @@
 import '@testing-library/jest-dom';
 import { render } from '@testing-library/react';
 import { validateInvitationId, normalizeInvitationId } from '../utils';
-import InvitationPage from '../page';
+import InvitationPage, {
+  generateMetadata,
+  generateStaticParams,
+} from '../page';
 import { notFound } from 'next/navigation';
 import { getMicroCMSClient } from '@/app/lib/api/microcms';
 
@@ -267,24 +270,43 @@ describe('InvitationPage', () => {
         name: 'テスト太郎',
       });
 
-      // generateMetadataを直接テストするのは困難なので、
-      // 同等のロジックをテストする
-      const mockParams = Promise.resolve({ id: 'test-id' });
+      const result = await generateMetadata({
+        params: Promise.resolve({ id: 'test-id' }),
+      });
 
-      // getMicroCMSClientが呼ばれることを確認
-      await mockParams;
-      expect(getMicroCMSClient).toBeDefined();
+      expect(result.title).toBe(
+        'Dear テスト様 | 栗原 誠・森下 紗伎 結婚式のご案内'
+      );
+      expect(result.description).toBe(
+        '人生の門出に際し、栗原 誠と森下 紗伎の結婚式にご招待申し上げます。Web招待状で詳細をご確認の上、ご返信をお願いいたします。'
+      );
+      expect(result.robots).toBe('noindex');
+      expect(mockClient.get).toHaveBeenCalledWith({
+        endpoint: 'guests',
+        contentId: 'test-id',
+      });
     });
 
     it('microCMS APIエラー時にデフォルト値が使用される', async () => {
       // エラーを発生させるモック
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
       (getMicroCMSClient as jest.Mock).mockResolvedValue(mockClient);
       mockClient.get.mockRejectedValue(new Error('API Error'));
 
-      const mockParams = Promise.resolve({ id: 'test-id' });
+      const result = await generateMetadata({
+        params: Promise.resolve({ id: 'test-id' }),
+      });
 
-      // エラーハンドリングのパスを通ることを確認
-      await expect(mockParams).resolves.toBeDefined();
+      expect(result.title).toBe('栗原 誠・森下 紗伎 結婚式のご案内');
+      expect(result.description).toBe(
+        '人生の門出に際し、栗原 誠と森下 紗伎の結婚式にご招待申し上げます。Web招待状で詳細をご確認の上、ご返信をお願いいたします。'
+      );
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'メタデータ生成時にゲスト情報の取得に失敗しました:',
+        expect.any(Error)
+      );
+
+      consoleErrorSpy.mockRestore();
     });
 
     it('draftKeyが存在する場合に正しく渡される', async () => {
@@ -294,14 +316,50 @@ describe('InvitationPage', () => {
         name: 'テスト太郎',
       });
 
-      const mockParams = Promise.resolve({
-        id: 'test-id',
-        draftKey: 'test-draft-key',
+      await generateMetadata({
+        params: Promise.resolve({
+          id: 'test-id',
+          draftKey: 'test-draft-key',
+        }),
       });
 
-      await mockParams;
-      // draftKeyが含まれることを確認
-      expect(getMicroCMSClient).toBeDefined();
+      expect(mockClient.get).toHaveBeenCalledWith({
+        endpoint: 'guests',
+        contentId: 'test-id',
+        draftKey: 'test-draft-key',
+      });
+    });
+
+    it('dearフィールドが存在しない場合はデフォルトタイトルが使用される', async () => {
+      (getMicroCMSClient as jest.Mock).mockResolvedValue(mockClient);
+      mockClient.get.mockResolvedValue({
+        name: 'テスト太郎', // dearフィールドなし
+      });
+
+      const result = await generateMetadata({
+        params: Promise.resolve({ id: 'test-id' }),
+      });
+
+      expect(result.title).toBe('栗原 誠・森下 紗伎 結婚式のご案内');
+    });
+
+    it('getMicroCMSClient自体がエラーの場合もハンドリングされる', async () => {
+      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+      (getMicroCMSClient as jest.Mock).mockRejectedValue(
+        new Error('Client Error')
+      );
+
+      const result = await generateMetadata({
+        params: Promise.resolve({ id: 'test-id' }),
+      });
+
+      expect(result.title).toBe('栗原 誠・森下 紗伎 結婚式のご案内');
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'メタデータ生成時にゲスト情報の取得に失敗しました:',
+        expect.any(Error)
+      );
+
+      consoleErrorSpy.mockRestore();
     });
   });
 
@@ -404,6 +462,53 @@ describe('InvitationPage', () => {
         endpoint: 'guests',
         contentId: 'test-id',
       });
+    });
+  });
+
+  // generateStaticParams関数のテスト
+  describe('generateStaticParams function', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('すべてのコンテンツIDを取得して正しい形式で返す', async () => {
+      const mockContentIds = ['id1', 'id2', 'id3'];
+      (getMicroCMSClient as jest.Mock).mockResolvedValue(mockClient);
+      mockClient.getAllContentIds.mockResolvedValue(mockContentIds);
+
+      const result = await generateStaticParams();
+
+      expect(result).toEqual([{ id: 'id1' }, { id: 'id2' }, { id: 'id3' }]);
+      expect(mockClient.getAllContentIds).toHaveBeenCalledWith({
+        endpoint: 'guests',
+      });
+    });
+
+    it('空の配列が返された場合も正しくハンドリングされる', async () => {
+      (getMicroCMSClient as jest.Mock).mockResolvedValue(mockClient);
+      mockClient.getAllContentIds.mockResolvedValue([]);
+
+      const result = await generateStaticParams();
+
+      expect(result).toEqual([]);
+      expect(mockClient.getAllContentIds).toHaveBeenCalledWith({
+        endpoint: 'guests',
+      });
+    });
+
+    it('APIエラー時も適切にエラーが伝播される', async () => {
+      (getMicroCMSClient as jest.Mock).mockResolvedValue(mockClient);
+      mockClient.getAllContentIds.mockRejectedValue(new Error('API Error'));
+
+      await expect(generateStaticParams()).rejects.toThrow('API Error');
+    });
+
+    it('getMicroCMSClientエラー時も適切にエラーが伝播される', async () => {
+      (getMicroCMSClient as jest.Mock).mockRejectedValue(
+        new Error('Client Error')
+      );
+
+      await expect(generateStaticParams()).rejects.toThrow('Client Error');
     });
   });
 });
