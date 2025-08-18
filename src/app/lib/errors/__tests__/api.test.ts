@@ -94,6 +94,48 @@ describe('API Error Handling Utilities', () => {
       );
     });
 
+    it('401エラーのメッセージを返す', () => {
+      expect(getDefaultUserMessage(401)).toBe(
+        '認証が必要です。ログインしてください。'
+      );
+    });
+
+    it('403エラーのメッセージを返す', () => {
+      expect(getDefaultUserMessage(403)).toBe('アクセスが拒否されました。');
+    });
+
+    it('409エラーのメッセージを返す', () => {
+      expect(getDefaultUserMessage(409)).toBe('データの競合が発生しました。');
+    });
+
+    it('422エラーのメッセージを返す', () => {
+      expect(getDefaultUserMessage(422)).toBe('入力データが正しくありません。');
+    });
+
+    it('429エラーのメッセージを返す', () => {
+      expect(getDefaultUserMessage(429)).toBe(
+        'リクエストが多すぎます。しばらく時間をおいてから再度お試しください。'
+      );
+    });
+
+    it('502エラーのメッセージを返す', () => {
+      expect(getDefaultUserMessage(502)).toBe(
+        'サーバーが一時的に利用できません。しばらく時間をおいてから再度お試しください。'
+      );
+    });
+
+    it('503エラーのメッセージを返す', () => {
+      expect(getDefaultUserMessage(503)).toBe(
+        'サービスが一時的に利用できません。しばらく時間をおいてから再度お試しください。'
+      );
+    });
+
+    it('504エラーのメッセージを返す', () => {
+      expect(getDefaultUserMessage(504)).toBe(
+        'リクエストがタイムアウトしました。しばらく時間をおいてから再度お試しください。'
+      );
+    });
+
     it('未知のステータスコードのデフォルトメッセージを返す', () => {
       expect(getDefaultUserMessage(999)).toBe(
         'エラーが発生しました。しばらく時間をおいてから再度お試しください。'
@@ -167,6 +209,18 @@ describe('API Error Handling Utilities', () => {
   });
 
   describe('handleApiResponse', () => {
+    let consoleErrorSpy: jest.SpyInstance;
+    const originalNodeEnv = process.env.NODE_ENV;
+
+    beforeEach(() => {
+      consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    });
+
+    afterEach(() => {
+      consoleErrorSpy.mockRestore();
+      process.env.NODE_ENV = originalNodeEnv;
+    });
+
     it('成功レスポンスを処理する', async () => {
       const mockResponse = {
         ok: true,
@@ -206,6 +260,26 @@ describe('API Error Handling Utilities', () => {
         expect(result.error.endpoint).toBe('/api/test');
         expect(result.error.requestId).toBe('req-123');
         expect(result.responseId).toBe('req-123');
+        expect(result.error.message).toBe('Not Found');
+      }
+    });
+
+    it('エラーレスポンスでerrorフィールドがない場合デフォルトメッセージを使用する', async () => {
+      const mockResponse = {
+        ok: false,
+        status: 500,
+        json: () => Promise.resolve({}),
+      } as Response;
+
+      const result = await handleApiResponse(
+        mockResponse,
+        '/api/test',
+        'req-123'
+      );
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toBe('API呼び出しに失敗しました (500)');
       }
     });
 
@@ -229,9 +303,60 @@ describe('API Error Handling Utilities', () => {
         expect(result.error.severity).toBe(ErrorSeverity.HIGH);
       }
     });
+
+    it('開発環境でエラーレスポンスをログ出力する', async () => {
+      process.env.NODE_ENV = 'development';
+
+      const mockResponse = {
+        ok: false,
+        status: 404,
+        json: () => Promise.resolve({ error: 'Not Found' }),
+      } as Response;
+
+      await handleApiResponse(mockResponse, '/api/test', 'req-123');
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith('API Error:', {
+        endpoint: '/api/test',
+        requestId: 'req-123',
+        responseStatus: 404,
+        error: expect.any(Object),
+      });
+    });
+
+    it('開発環境でJSON解析エラーをログ出力する', async () => {
+      process.env.NODE_ENV = 'development';
+
+      const mockResponse = {
+        ok: true,
+        status: 200,
+        json: () => Promise.reject(new Error('JSON Parse Error')),
+      } as Response;
+
+      await handleApiResponse(mockResponse, '/api/test', 'req-123');
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith('API Parse Error:', {
+        endpoint: '/api/test',
+        requestId: 'req-123',
+        responseStatus: 200,
+        parseError: expect.any(Error),
+        error: expect.any(Object),
+      });
+    });
   });
 
   describe('safeFetch', () => {
+    let consoleErrorSpy: jest.SpyInstance;
+    const originalNodeEnv = process.env.NODE_ENV;
+
+    beforeEach(() => {
+      consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+    });
+
+    afterEach(() => {
+      consoleErrorSpy.mockRestore();
+      process.env.NODE_ENV = originalNodeEnv;
+    });
+
     it('正常なfetchリクエストを実行する', async () => {
       const mockResponse = {
         ok: true,
@@ -258,6 +383,34 @@ describe('API Error Handling Utilities', () => {
         expect(result.error.statusCode).toBe(0);
         expect(result.error.severity).toBe(ErrorSeverity.HIGH);
       }
+    });
+
+    it('非Errorオブジェクトでのネットワークエラーを処理する', async () => {
+      (global.fetch as jest.Mock).mockRejectedValue('Network failure');
+
+      const result = await safeFetch('/api/test', {}, 'req-123');
+
+      expect(result.success).toBe(false);
+      if (!result.success) {
+        expect(result.error.message).toBe('ネットワークエラーが発生しました');
+        expect(result.error.statusCode).toBe(0);
+        expect(result.error.severity).toBe(ErrorSeverity.HIGH);
+      }
+    });
+
+    it('開発環境でネットワークエラーをログ出力する', async () => {
+      process.env.NODE_ENV = 'development';
+
+      (global.fetch as jest.Mock).mockRejectedValue(new Error('Network Error'));
+
+      await safeFetch('/api/test', {}, 'req-123');
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith('API Fetch Error:', {
+        endpoint: '/api/test',
+        requestId: 'req-123',
+        fetchError: expect.any(Error),
+        error: expect.any(Object),
+      });
     });
   });
 
