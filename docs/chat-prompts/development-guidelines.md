@@ -245,26 +245,9 @@ devLogger.info('debug_info', 'デバッグ情報', { data: 'value' });
    ```
 
 ##### 禁止される要素取得方法
-
 **以下の方法での要素取得は基本禁止：**
 
 1. **クラス名による取得**
-
-   ```tsx
-   // 禁止
-   screen.getByClassName('user-profile');
-   container.querySelector('.user-profile');
-   ```
-
-   **理由：** Tailwind CSSとの相性が悪く、クラス名の変更でテストが壊れやすい
-
-2. **IDによる取得**
-
-   ```tsx
-   // 禁止
-   screen.getByTestId('user-profile');
-   container.querySelector('#user-profile');
-   ```
 
    **理由：** IDは一意性が保証されず、再利用性が低い
 
