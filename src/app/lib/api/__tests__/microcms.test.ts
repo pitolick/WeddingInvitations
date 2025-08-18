@@ -8,6 +8,8 @@ import {
   getGuestByInvitationId,
   getDearBlockData,
   getGuests,
+  getGuestsByInviteType,
+  getMicroCMSClient,
 } from '../microcms';
 import { GuestContent, DearBlockData } from '../../types/microcms';
 
@@ -152,6 +154,20 @@ describe('microCMS API Client', () => {
 
       expect(result).toBeNull();
     });
+
+    it('convertToDearBlockDataでエラーが発生した場合はnullを返す', async () => {
+      mockClient.get.mockResolvedValue(mockGuestContent);
+      const { convertToDearBlockData } = jest.requireMock(
+        '../../types/microcms'
+      );
+      convertToDearBlockData.mockImplementation(() => {
+        throw new Error('Conversion Error');
+      });
+
+      const result = await getDearBlockData('test-id');
+
+      expect(result).toBeNull();
+    });
   });
 
   describe('getGuests', () => {
@@ -228,6 +244,117 @@ describe('microCMS API Client', () => {
       const result = await getGuests();
 
       expect(result).toEqual([]);
+    });
+  });
+
+  describe('getGuestsByInviteType', () => {
+    const mockGuests: GuestContent[] = [
+      {
+        id: 'guest-1',
+        name: 'ゲスト1',
+        email: 'guest1@example.com',
+        invite: ['挙式'],
+        createdAt: '2024-01-01T00:00:00.000Z',
+        updatedAt: '2024-01-01T00:00:00.000Z',
+        publishedAt: '2024-01-01T00:00:00.000Z',
+      },
+      {
+        id: 'guest-2',
+        name: 'ゲスト2',
+        email: 'guest2@example.com',
+        invite: ['挙式', '披露宴'],
+        createdAt: '2024-01-01T00:00:00.000Z',
+        updatedAt: '2024-01-01T00:00:00.000Z',
+        publishedAt: '2024-01-01T00:00:00.000Z',
+      },
+    ] as GuestContent[];
+
+    it('招待種別で招待者を正常に取得する', async () => {
+      mockClient.getList.mockResolvedValue({
+        contents: mockGuests,
+        totalCount: 2,
+        limit: 10,
+        offset: 0,
+      });
+
+      const result = await getGuestsByInviteType('挙式');
+
+      expect(mockClient.getList).toHaveBeenCalledWith({
+        endpoint: 'guests',
+        queries: {
+          filters: 'invite[contains]挙式',
+        },
+      });
+      expect(result).toEqual(mockGuests);
+    });
+
+    it('披露宴の招待者を取得する', async () => {
+      mockClient.getList.mockResolvedValue({
+        contents: mockGuests,
+        totalCount: 2,
+        limit: 10,
+        offset: 0,
+      });
+
+      const result = await getGuestsByInviteType('披露宴');
+
+      expect(mockClient.getList).toHaveBeenCalledWith({
+        endpoint: 'guests',
+        queries: {
+          filters: 'invite[contains]披露宴',
+        },
+      });
+      expect(result).toEqual(mockGuests);
+    });
+
+    it('二次会の招待者を取得する', async () => {
+      mockClient.getList.mockResolvedValue({
+        contents: mockGuests,
+        totalCount: 2,
+        limit: 10,
+        offset: 0,
+      });
+
+      const result = await getGuestsByInviteType('二次会');
+
+      expect(mockClient.getList).toHaveBeenCalledWith({
+        endpoint: 'guests',
+        queries: {
+          filters: 'invite[contains]二次会',
+        },
+      });
+      expect(result).toEqual(mockGuests);
+    });
+
+    it('APIエラーが発生した場合は空配列を返す', async () => {
+      mockClient.getList.mockRejectedValue(new Error('API Error'));
+
+      const result = await getGuestsByInviteType('挙式');
+
+      expect(result).toEqual([]);
+    });
+
+    it('該当する招待者が存在しない場合は空配列を返す', async () => {
+      mockClient.getList.mockResolvedValue({
+        contents: [],
+        totalCount: 0,
+        limit: 10,
+        offset: 0,
+      });
+
+      const result = await getGuestsByInviteType('挙式');
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('getMicroCMSClient', () => {
+    it('microCMSクライアントを作成する', async () => {
+      const client = await getMicroCMSClient();
+
+      expect(client).toBeDefined();
+      expect(client.get).toBeDefined();
+      expect(client.getList).toBeDefined();
     });
   });
 
