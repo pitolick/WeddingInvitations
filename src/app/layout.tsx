@@ -1,4 +1,10 @@
 import type { Metadata } from 'next';
+import { ScriptProps } from 'next/script';
+import {
+  GoogleTagManagerHead,
+  GoogleTagManagerBody,
+} from '@/app/lib/utils/gtm/gtm';
+import { Suspense } from 'react';
 import {
   Geist,
   Geist_Mono,
@@ -58,12 +64,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const gtmArgs: ScriptProps = { strategy: 'afterInteractive' };
   return (
     <html lang='ja' className='scroll-smooth'>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${notoSansJP.variable} ${greatVibes.variable} ${berkshireSwash.variable} ${rockSalt.variable} antialiased`}
       >
-        {children}
+        <Suspense>
+          <GoogleTagManagerHead {...gtmArgs} />
+          <GoogleTagManagerBody />
+          {children}
+        </Suspense>
       </body>
     </html>
   );

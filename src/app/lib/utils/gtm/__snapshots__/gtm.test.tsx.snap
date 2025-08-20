@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GoogleTagManagerBody コンポーネントが正しくレンダリングされること 1`] = `
+<div>
+  <noscript>
+    &lt;iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TEST123" height="0" width="0" style="display:none;visibility:hidden" /&gt;
+  </noscript>
+</div>
+`;
+
+exports[`GoogleTagManagerHead コンポーネントが正しくレンダリングされること 1`] = `<div />`;
