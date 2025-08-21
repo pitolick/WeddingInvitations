@@ -38,7 +38,7 @@ const GalleryImage: React.FC<GalleryImageProps> = ({
     <>
       <button
         type='button'
-        className='flex flex-col justify-center items-center size-full'
+        className='flex flex-col justify-center items-center size-full cursor-pointer'
         onClick={() => setIsOpen(true)}
         aria-label={alt}
       >
