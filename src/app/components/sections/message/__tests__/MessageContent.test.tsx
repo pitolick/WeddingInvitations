@@ -401,4 +401,116 @@ describe('MessageContent Component', () => {
       expect(button).toHaveTextContent('夢と魔法を体験する');
     });
   });
+
+  /**
+   * @description 既存のタイマーがある場合のクリーンアップが正しく動作する
+   */
+  it('cleans up existing timer correctly when clicked', () => {
+    render(<MessageContent {...defaultProps} />);
+
+    const button = screen.getByTestId('custom-button');
+
+    // 1回目のクリック
+    fireEvent.click(button);
+
+    // タイマーが設定される前に2回目のクリック
+    fireEvent.click(button);
+
+    // タイマーを進める
+    jest.advanceTimersByTime(2000);
+
+    // 2回目のクリックの効果が反映される
+    expect(screen.getByText(/オラフも/)).toBeInTheDocument();
+    expect(button).toHaveTextContent('夢と魔法を体験する');
+  });
+
+  /**
+   * @description 連続クリック時のタイマー管理が正しく動作する
+   */
+  it('manages timer correctly with rapid clicks', () => {
+    render(<MessageContent {...defaultProps} />);
+
+    const button = screen.getByTestId('custom-button');
+
+    // 連続で3回クリック
+    fireEvent.click(button);
+    fireEvent.click(button);
+    fireEvent.click(button);
+
+    // タイマーを進める
+    jest.advanceTimersByTime(2000);
+
+    // 最後のクリックの効果が反映される
+    expect(screen.getByText(/オラフも/)).toBeInTheDocument();
+    expect(button).toHaveTextContent('夢と魔法を体験する');
+  });
+
+  /**
+   * @description タイマーのクリーンアップが適切に実行される
+   */
+  it('executes timer cleanup properly', () => {
+    render(<MessageContent {...defaultProps} />);
+
+    const button = screen.getByTestId('custom-button');
+
+    // ボタンをクリック
+    fireEvent.click(button);
+
+    // タイマーが設定される前に再度クリック
+    fireEvent.click(button);
+
+    // 1秒後にタイマーを進める
+    jest.advanceTimersByTime(1000);
+
+    // まだメッセージは切り替わらない
+    expect(screen.queryByText(/サラーム！/)).not.toBeInTheDocument();
+
+    // さらに1秒進める
+    jest.advanceTimersByTime(1000);
+
+    // 2回目のクリックの効果が反映される
+    expect(screen.getByText(/オラフも/)).toBeInTheDocument();
+  });
+
+  /**
+   * @description コンポーネントアンマウント時のタイマークリーンアップが正しく動作する
+   */
+  it('cleans up timer on component unmount', () => {
+    const { unmount } = render(<MessageContent {...defaultProps} />);
+
+    const button = screen.getByTestId('custom-button');
+
+    // ボタンをクリック
+    fireEvent.click(button);
+
+    // コンポーネントをアンマウント
+    unmount();
+
+    // タイマーを進めてもエラーが発生しない
+    expect(() => {
+      jest.advanceTimersByTime(2000);
+    }).not.toThrow();
+  });
+
+  /**
+   * @description タイマーの状態管理が正しく動作する
+   */
+  it('manages timer state correctly', () => {
+    render(<MessageContent {...defaultProps} />);
+
+    const button = screen.getByTestId('custom-button');
+
+    // 初期状態ではタイマーが設定されていない
+    fireEvent.click(button);
+
+    // タイマーが設定される前に再度クリック
+    fireEvent.click(button);
+
+    // タイマーを進める
+    jest.advanceTimersByTime(2000);
+
+    // 2回目のクリックの効果が反映される
+    expect(screen.getByText(/オラフも/)).toBeInTheDocument();
+    expect(button).toHaveTextContent('夢と魔法を体験する');
+  });
 });

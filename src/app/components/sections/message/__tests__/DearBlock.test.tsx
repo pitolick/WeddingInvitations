@@ -124,6 +124,78 @@ describe('DearBlock Component', () => {
     });
   });
 
+  it('handles missing message data correctly', async () => {
+    const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        dear: '田中太郎',
+        message: '', // messageが空の場合
+      }),
+    } as Response);
+
+    render(<DearBlock invitationId='test-123' />);
+
+    // messageが空の場合は何も表示されない
+    await waitFor(() => {
+      expect(screen.queryByText('Dear')).not.toBeInTheDocument();
+      expect(screen.queryByText('田中太郎')).not.toBeInTheDocument();
+    });
+  });
+
+  it('handles null message data correctly', async () => {
+    const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        dear: '田中太郎',
+        message: null, // messageがnullの場合
+      }),
+    } as Response);
+
+    render(<DearBlock invitationId='test-123' />);
+
+    // messageがnullの場合は何も表示されない
+    await waitFor(() => {
+      expect(screen.queryByText('Dear')).not.toBeInTheDocument();
+      expect(screen.queryByText('田中太郎')).not.toBeInTheDocument();
+    });
+  });
+
+  it('handles undefined message data correctly', async () => {
+    const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        dear: '田中太郎',
+        // messageプロパティが存在しない場合
+      }),
+    } as Response);
+
+    render(<DearBlock invitationId='test-123' />);
+
+    // messageプロパティが存在しない場合は何も表示されない
+    await waitFor(() => {
+      expect(screen.queryByText('Dear')).not.toBeInTheDocument();
+      expect(screen.queryByText('田中太郎')).not.toBeInTheDocument();
+    });
+  });
+
+  it('handles null dearBlockData correctly', async () => {
+    const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      json: async () => null, // dearBlockData全体がnullの場合
+    } as Response);
+
+    render(<DearBlock invitationId='test-123' />);
+
+    // dearBlockDataがnullの場合は何も表示されない
+    await waitFor(() => {
+      expect(screen.queryByText('Dear')).not.toBeInTheDocument();
+    });
+  });
+
   it('uses draftKey correctly', async () => {
     const mockFetch = fetch as jest.MockedFunction<typeof fetch>;
     mockFetch.mockResolvedValueOnce({
