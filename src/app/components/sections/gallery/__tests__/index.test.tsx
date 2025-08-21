@@ -4,6 +4,7 @@
  * @since 1.0.0
  */
 
+import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
 import Gallery from '../index';
@@ -245,5 +246,54 @@ describe('Gallery Component', () => {
       .getAllByTestId('gallery-image')[0]
       .closest('.grid');
     expect(gridContainer).toHaveClass('gap-0');
+  });
+
+  /**
+   * @description グリッドコンテナが相対位置を持つ
+   */
+  it('has relative positioning for grid container', () => {
+    render(<Gallery />);
+
+    const gridContainer = screen
+      .getAllByTestId('gallery-image')[0]
+      .closest('.grid');
+    expect(gridContainer).toHaveClass('relative');
+  });
+
+  /**
+   * @description 画像の代替テキストが正しく設定される
+   */
+  it('has correct alt text for all images', () => {
+    render(<Gallery />);
+
+    const galleryImages = screen.getAllByTestId('gallery-image');
+
+    // 全ての画像に適切なalt属性がある
+    galleryImages.forEach((image, index) => {
+      const expectedAlt = `ギャラリー画像${index + 1}`;
+      expect(image).toHaveAttribute('data-alt', expectedAlt);
+    });
+  });
+
+  /**
+   * @description 画像のパスが正しく設定される
+   */
+  it('has correct image paths for all images', () => {
+    render(<Gallery />);
+
+    const galleryImages = screen.getAllByTestId('gallery-image');
+
+    // 全ての画像に適切なパスがある
+    galleryImages.forEach((image, index) => {
+      const imageNumber = index + 1;
+      expect(image).toHaveAttribute(
+        'data-image',
+        `/images/sections/gallery/gallery-${imageNumber}.webp`
+      );
+      expect(image).toHaveAttribute(
+        'data-thumbnail',
+        `/images/sections/gallery/gallery-${imageNumber}-thumbnail.webp`
+      );
+    });
   });
 });

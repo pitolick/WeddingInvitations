@@ -103,7 +103,7 @@ const DearBlock: React.FC<DearBlockProps> = ({ invitationId, draftKey }) => {
           {/* メッセージ本文 */}
           <div className='flex flex-col justify-center items-center px-0 gap-2 w-full'>
             <div
-              className='prose prose-p:!text-center prose-p:my-3 w-full font-normal text-base !text-center text-gray-900 whitespace-pre-line'
+              className='prose prose-p:!text-center prose-p:my-3 prose-p:py-0.5 w-full font-normal text-base !text-center text-gray-900 whitespace-pre-line'
               dangerouslySetInnerHTML={{ __html: dearBlockData.message }}
             />
           </div>
