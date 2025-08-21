@@ -26,17 +26,17 @@ const MainVisual: React.FC = () => {
       {/* 背景画像（レスポンシブ対応） */}
       <picture>
         <source
-          srcSet='/images/sections/mv/mv-hero-mobile.webp'
+          srcSet='/images/sections/mv/mv-hero-bg.webp'
           media='(max-width: 767px)'
           type='image/webp'
         />
         <source
-          srcSet='/images/sections/mv/mv-hero-desktop.webp'
+          srcSet='/images/sections/mv/mv-hero-bg.webp'
           media='(min-width: 768px)'
           type='image/webp'
         />
         <Image
-          src='/images/sections/mv/mv-hero-desktop.webp'
+          src='/images/sections/mv/mv-hero-bg.webp'
           alt='背景画像'
           fill
           className='object-cover z-10'
@@ -50,6 +50,27 @@ const MainVisual: React.FC = () => {
         className='absolute inset-0 flex items-center justify-center z-30'
         data-testid='main-visual-content'
       >
+        <picture>
+          <source
+            srcSet='/images/sections/mv/mv-hero-mobile.webp'
+            media='(max-width: 767px)'
+            type='image/webp'
+          />
+          <source
+            srcSet='/images/sections/mv/mv-hero-desktop.webp'
+            media='(min-width: 768px)'
+            type='image/webp'
+          />
+          <Image
+            src='/images/sections/mv/mv-hero-desktop.webp'
+            alt='メイン画像'
+            className='object-contain absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full'
+            priority
+            width={1575}
+            height={2448}
+          />
+        </picture>
+
         {/* メインタイトル - スクロールベースのアニメーション */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -58,7 +79,7 @@ const MainVisual: React.FC = () => {
           className='w-full'
         >
           <h1
-            className='font-great-vibes text-7xl md:text-9xl font-normal text-white leading-tight text-center drop-shadow-lg px-4 md:px-8 lg:px-12'
+            className='font-great-vibes absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-7xl md:text-9xl font-normal text-white leading-tight text-center drop-shadow-lg px-4 md:px-8 lg:px-12'
             data-testid='main-visual-title'
           >
             Wedding Celebration
